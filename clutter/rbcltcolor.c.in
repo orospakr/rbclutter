@@ -1,0 +1,193 @@
+/* Ruby bindings for the Clutter 'interactive canvas' library.
+ * Copyright (C) 2007  Neil Roberts
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+#include <clutter/clutter-color.h>
+
+/* MAKE_BOXED(ClutterColor INIT:0xff red:guint8 green:guint8 blue:guint8 alpha:guint8) */
+
+static VALUE
+rbclt_color_parse (VALUE self, VALUE name)
+{
+  ClutterColor color;
+
+  if (!clutter_color_parse (StringValuePtr (name), &color))
+    rb_raise (rb_eArgError, "can't parse color name `%s'", StringValuePtr (name));
+
+  return BOXED2RVAL (&color, CLUTTER_TYPE_COLOR);
+}
+
+static VALUE
+rbclt_color_equal (VALUE self, VALUE other)
+{
+  return clutter_color_equal (((ClutterColor *) RVAL2BOXED (self, CLUTTER_TYPE_COLOR)),
+                              ((ClutterColor *) RVAL2BOXED (other, CLUTTER_TYPE_COLOR)))
+    ? Qtrue : Qfalse;
+}
+
+static VALUE
+rbclt_color_to_s (VALUE self)
+{
+  ClutterColor *color = ((ClutterColor *) RVAL2BOXED (self, CLUTTER_TYPE_COLOR));
+  return CSTR2RVAL2 (clutter_color_to_string (color));
+}
+
+static VALUE
+rbclt_color_add (VALUE self, VALUE other)
+{
+  ClutterColor result;
+
+  clutter_color_add ((ClutterColor *) RVAL2BOXED (self, CLUTTER_TYPE_COLOR),
+                     (ClutterColor *) RVAL2BOXED (other, CLUTTER_TYPE_COLOR),
+                     &result);
+
+  return BOXED2RVAL (&result, CLUTTER_TYPE_COLOR);
+}
+
+static VALUE
+rbclt_color_subtract (VALUE self, VALUE other)
+{
+  ClutterColor result;
+
+  clutter_color_subtract ((ClutterColor *) RVAL2BOXED (self, CLUTTER_TYPE_COLOR),
+                          (ClutterColor *) RVAL2BOXED (other, CLUTTER_TYPE_COLOR),
+                          &result);
+  
+  return BOXED2RVAL (&result, CLUTTER_TYPE_COLOR);
+}
+
+static VALUE
+rbclt_color_from_hls (VALUE self, VALUE hue, VALUE luminance, VALUE saturation)
+{
+  ClutterColor color;
+  color.alpha = 255;
+  clutter_color_from_hls (&color, rbclt_num_to_guint8 (hue),
+                          rbclt_num_to_guint8 (luminance),
+                          rbclt_num_to_guint8 (saturation));
+  return BOXED2RVAL (&color, CLUTTER_TYPE_COLOR);
+}
+
+static VALUE
+rbclt_color_to_hls (VALUE self)
+{
+  guint8 hue, luminance, saturation;
+  clutter_color_to_hls ((ClutterColor *) RVAL2BOXED (self, CLUTTER_TYPE_COLOR),
+                        &hue, &luminance, &saturation);
+  return rb_ary_new3 (3, INT2FIX (hue), INT2FIX (luminance), INT2FIX (saturation));
+}
+
+static VALUE
+rbclt_color_from_pixel (VALUE self, VALUE pixel)
+{
+  ClutterColor color;
+  clutter_color_from_pixel (&color, NUM2UINT (pixel));
+  return BOXED2RVAL (&color, CLUTTER_TYPE_COLOR);
+}
+
+static VALUE
+rbclt_color_to_pixel (VALUE self)
+{
+  return UINT2NUM (clutter_color_to_pixel ((ClutterColor *) RVAL2BOXED (self, CLUTTER_TYPE_COLOR)));
+}
+
+static VALUE
+rbclt_color_shade (VALUE self, VALUE shade)
+{
+  ClutterColor *src = (ClutterColor *) RVAL2BOXED (self, CLUTTER_TYPE_COLOR);
+  ClutterColor dest;
+  dest.alpha = src->alpha;
+  clutter_color_shade (src, &dest, NUM2DBL (shade));
+  return BOXED2RVAL (&dest, CLUTTER_TYPE_COLOR);
+}
+
+static VALUE
+rbclt_color_shade_bang (VALUE self, VALUE shade)
+{
+  ClutterColor *src = (ClutterColor *) RVAL2BOXED (self, CLUTTER_TYPE_COLOR);
+  ClutterColor dest;
+  dest.alpha = src->alpha;
+  clutter_color_shade (src, &dest, NUM2DBL (shade));
+  *src = dest;
+  return self;
+}
+
+static VALUE
+rbclt_color_lighten (VALUE self)
+{
+  ClutterColor *src = (ClutterColor *) RVAL2BOXED (self, CLUTTER_TYPE_COLOR);
+  ClutterColor dest;
+  dest.alpha = src->alpha;
+  clutter_color_lighten (src, &dest);
+  return BOXED2RVAL (&dest, CLUTTER_TYPE_COLOR);
+}
+
+static VALUE
+rbclt_color_lighten_bang (VALUE self)
+{
+  ClutterColor *src = (ClutterColor *) RVAL2BOXED (self, CLUTTER_TYPE_COLOR);
+  ClutterColor dest;
+  dest.alpha = src->alpha;
+  clutter_color_lighten (src, &dest);
+  *src = dest;
+  return self;
+}
+
+static VALUE
+rbclt_color_darken (VALUE self)
+{
+  ClutterColor *src = (ClutterColor *) RVAL2BOXED (self, CLUTTER_TYPE_COLOR);
+  ClutterColor dest;
+  dest.alpha = src->alpha;
+  clutter_color_darken (src, &dest);
+  return BOXED2RVAL (&dest, CLUTTER_TYPE_COLOR);
+}
+
+static VALUE
+rbclt_color_darken_bang (VALUE self)
+{
+  ClutterColor *src = (ClutterColor *) RVAL2BOXED (self, CLUTTER_TYPE_COLOR);
+  ClutterColor dest;
+  dest.alpha = src->alpha;
+  clutter_color_darken (src, &dest);
+  *src = dest;
+  return self;
+}
+
+void
+rbclt_color_init ()
+{
+  VALUE klass = G_DEF_CLASS (CLUTTER_TYPE_COLOR, "Color", rbclt_c_clutter);
+
+  rb_define_singleton_method (klass, "parse", rbclt_color_parse, 1);
+  rb_define_singleton_method (klass, "from_hls", rbclt_color_from_hls, 3);
+  rb_define_singleton_method (klass, "from_pixel", rbclt_color_from_pixel, 1);
+  /* METHOD_DEFINITIONS */
+  rb_define_method (klass, "==", rbclt_color_equal, 1);
+  rb_define_method (klass, "to_s", rbclt_color_to_s, 0);
+  rb_define_method (klass, "+", rbclt_color_add, 1);
+  rb_define_method (klass, "-", rbclt_color_subtract, 1);
+  rb_define_method (klass, "to_hls", rbclt_color_to_hls, 0);
+  rb_define_method (klass, "to_pixel", rbclt_color_to_pixel, 0);
+  rb_define_method (klass, "shade", rbclt_color_shade, 1);
+  rb_define_method (klass, "shade!", rbclt_color_shade_bang, 1);
+  rb_define_method (klass, "lighten", rbclt_color_lighten, 0);
+  rb_define_method (klass, "lighten!", rbclt_color_lighten_bang, 0);
+  rb_define_method (klass, "darken", rbclt_color_darken, 0);
+  rb_define_method (klass, "darken!", rbclt_color_darken_bang, 0);
+
+  G_DEF_SETTERS (klass);
+}

@@ -1,0 +1,64 @@
+Ruby-Clutter -- Ruby bindings for Clutter-0.4.x
+===============================================
+
+This is a set of bindings for the Clutter 0.4 libraries for use from
+Ruby.
+
+Install
+-------
+
+ 1. ruby extconf.rb
+ 2. make
+ 3. su
+ 4. make install
+
+Dependencies
+------------
+
+To install the bindings the following is also needed:
+
+ - Ruby >= 1.8
+ - Clutter 0.4.x
+ - Ruby GLib bindings
+
+The optional clutter-gtk bindings depend on the Ruby GTK+ bindings and
+clutter-cairo depends on the Ruby clutter bindings.
+
+The clutter-gst bindings depend on the 0.10 version of the GStreamer
+bindings available from here:
+
+https://trac.luon.net/ruby-gstreamer0.10/
+
+Issues
+------
+
+There's a few issues to be aware of with this release:
+
+ - There's no documentation, however the method names try to follow
+   the same system as the Ruby GTK bindings so you can generally read
+   the Clutter API documentation and guess the Ruby method. See this
+   page for details: http://tinyurl.com/3btpoq
+
+ - There's no way to implement an interface or override a GObject
+   method in Ruby code yet. So for example, you can create a Ruby
+   object that is a subclass of Clutter::Actor, register it as a new
+   GType and create custom signals, but you can not implement the
+   ClutterLayout interface.
+
+ - The effect functions can't take a callback block for when the
+   effect is complete, even though the C API has a parameter for
+   it. I'm hoping Clutter will eventually get a GDestroyNotify
+   parameter for the effect functions which would make this a lot
+   easier.
+
+ - All of the ClutterTexture actors are tiled by default because the
+   default value of the tiled property is calculated when the type
+   class is created which in this case is before clutter_init is
+   called.
+
+ - Clutter::init isn't explictly called for you when you execute
+   'require "clutter"'. That way you can optionally use your own
+   argument array instead of ARGV. However, there appears to be a
+   problem wrapping clutter-gst before gst_init is called, so if you
+   execute 'require "clutter_gst"' it *will* explicitly call
+   clutter_gst_init.

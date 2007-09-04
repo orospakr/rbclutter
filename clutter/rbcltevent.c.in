@@ -1,0 +1,154 @@
+/* Ruby bindings for the Clutter 'interactive canvas' library.
+ * Copyright (C) 2007  Neil Roberts
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+#include <glib.h>
+#include <ruby.h>
+#include <rbgobject.h>
+#include <clutter/clutter-event.h>
+#include <clutter/clutter-enum-types.h>
+
+#include "rbclutter.h"
+
+static VALUE rbclt_event_class;
+
+/* EVENT_FUNCTIONS */
+
+static VALUE
+rbclt_event_initialize (VALUE self)
+{
+  ClutterEvent event;
+  memset (&event, '\0', sizeof (event));
+  event.type = CLUTTER_NOTHING;
+  G_INITIALIZE (self, &event);
+  return Qnil;
+}
+
+static VALUE
+rbclt_event_get_event_type (VALUE self)
+{
+  return GENUM2RVAL (((ClutterEvent *) RVAL2BOXED (self, CLUTTER_TYPE_EVENT))->type,
+                     CLUTTER_TYPE_EVENT_TYPE);
+}
+
+static VALUE
+rbclt_event_make (ClutterEvent *event)
+{
+  VALUE ret;
+
+  if (event == NULL)
+    return Qnil;
+  else
+  {
+    ret = BOXED2RVAL (event, CLUTTER_TYPE_EVENT);
+    /* This is copied from rbgdkevent.c and where it is commented as a hack */
+    RBASIC (ret)->klass = rbclt_event_get_class (event->type);
+    return ret;
+  }
+}
+
+static VALUE
+rbclt_event_g2r (const GValue *value)
+{
+  return rbclt_event_make (g_value_get_boxed (value));
+}
+
+static VALUE
+rbclt_event_pending (VALUE self)
+{
+  return clutter_events_pending () ? Qtrue : Qfalse;
+}
+
+static VALUE
+rbclt_event_get (VALUE self)
+{
+  return rbclt_event_make (clutter_event_get ());
+}
+
+static VALUE
+rbclt_event_peek (VALUE self)
+{
+  return rbclt_event_make (clutter_event_peek ());
+}
+
+static VALUE
+rbclt_event_put (VALUE self)
+{
+  clutter_event_put ((ClutterEvent *) RVAL2BOXED (self, CLUTTER_TYPE_EVENT));
+  return self;
+}
+
+static VALUE
+rbclt_key_event_symbol (VALUE self)
+{
+  ClutterKeyEvent *key_event = (ClutterKeyEvent *) RVAL2BOXED (self, CLUTTER_TYPE_EVENT);
+  return INT2NUM (clutter_key_event_symbol (key_event));
+}
+
+static VALUE
+rbclt_key_event_code (VALUE self)
+{
+  ClutterKeyEvent *key_event = (ClutterKeyEvent *) RVAL2BOXED (self, CLUTTER_TYPE_EVENT);
+  return UINT2NUM (clutter_key_event_code (key_event));
+}
+
+static VALUE
+rbclt_key_event_unicode (VALUE self)
+{
+  ClutterKeyEvent *key_event = (ClutterKeyEvent *) RVAL2BOXED (self, CLUTTER_TYPE_EVENT);
+  return UINT2NUM (clutter_key_event_unicode (key_event));
+}
+
+static VALUE
+rbclt_event_keysym_to_unicode (VALUE self, VALUE keysym)
+{
+  return UINT2NUM (clutter_keysym_to_unicode (NUM2UINT (keysym)));
+}
+
+void
+rbclt_event_init ()
+{
+  VALUE klass;
+
+  rbclt_event_class = G_DEF_CLASS (CLUTTER_TYPE_EVENT, "Event", rbclt_c_clutter);
+  rb_define_method (rbclt_event_class, "initialize", rbclt_event_initialize, 0);
+  rb_define_method (rbclt_event_class, "event_type", rbclt_event_get_event_type, 0);
+  rb_define_method (rbclt_event_class, "put", rbclt_event_put, 0);
+  rbgobj_register_g2r_func (CLUTTER_TYPE_EVENT, rbclt_event_g2r);
+
+  rb_define_singleton_method (rbclt_event_class, "pending?", rbclt_event_pending, 0);
+  rb_define_singleton_method (rbclt_event_class, "get", rbclt_event_get, 0);
+  rb_define_singleton_method (rbclt_event_class, "peek", rbclt_event_peek, 0);
+
+  G_RENAME_CONSTANT ("2BUTTON_PRESS", "BUTTON2_PRESS");
+  G_RENAME_CONSTANT ("3BUTTON_PRESS", "BUTTON3_PRESS");
+  G_DEF_CLASS (CLUTTER_TYPE_EVENT_TYPE, "Type", rbclt_event_class);
+  G_RENAME_CONSTANT ("2BUTTON_PRESS", "BUTTON2_PRESS");
+  G_RENAME_CONSTANT ("3BUTTON_PRESS", "BUTTON3_PRESS");
+  G_DEF_CONSTANTS (rbclt_event_class, CLUTTER_TYPE_EVENT_TYPE, "CLUTTER_");
+
+  /* ENUMS */
+
+  /* CLASS_DEFS */
+
+  rb_define_method (rbclt_key_event_class, "symbol", rbclt_key_event_symbol, 0);
+  rb_define_method (rbclt_key_event_class, "code", rbclt_key_event_code, 0);
+  rb_define_method (rbclt_key_event_class, "unicode", rbclt_key_event_unicode, 0);
+
+  rb_define_singleton_method (rbclt_c_clutter, "keysym_to_unicode",
+			      rbclt_event_keysym_to_unicode, 1);
+}
