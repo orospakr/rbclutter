@@ -53,12 +53,12 @@ rbclt_event_make (ClutterEvent *event)
   if (event == NULL)
     return Qnil;
   else
-  {
-    ret = BOXED2RVAL (event, CLUTTER_TYPE_EVENT);
-    /* This is copied from rbgdkevent.c and where it is commented as a hack */
-    RBASIC (ret)->klass = rbclt_event_get_class (event->type);
-    return ret;
-  }
+    {
+      ret = BOXED2RVAL (event, CLUTTER_TYPE_EVENT);
+      /* This is copied from rbgdkevent.c and where it is commented as a hack */
+      RBASIC (ret)->klass = rbclt_event_get_class (event->type);
+      return ret;
+    }
 }
 
 static VALUE

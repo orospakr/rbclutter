@@ -40,12 +40,12 @@ rbclt_container_add (int argc, VALUE *argv, VALUE self)
   int i;
 
   for (i = 0; i < argc; i++)
-  {
-    gpointer actor = RVAL2GOBJ (argv[i]);
-    if (!CLUTTER_IS_ACTOR (actor))
-      rb_raise (rb_eArgError, "Actor required");
-    clutter_container_add_actor (container, CLUTTER_ACTOR (actor));
-  }
+    {
+      gpointer actor = RVAL2GOBJ (argv[i]);
+      if (!CLUTTER_IS_ACTOR (actor))
+	rb_raise (rb_eArgError, "Actor required");
+      clutter_container_add_actor (container, CLUTTER_ACTOR (actor));
+    }
 
   return self;
 }
@@ -57,12 +57,12 @@ rbclt_container_remove (int argc, VALUE *argv, VALUE self)
   int i;
 
   for (i = 0; i < argc; i++)
-  {
-    gpointer actor = RVAL2GOBJ (argv[i]);
-    if (!CLUTTER_IS_ACTOR (actor))
-      rb_raise (rb_eArgError, "Actor required");
-    clutter_container_remove_actor (container, CLUTTER_ACTOR (actor));
-  }
+    {
+      gpointer actor = RVAL2GOBJ (argv[i]);
+      if (!CLUTTER_IS_ACTOR (actor))
+	rb_raise (rb_eArgError, "Actor required");
+      clutter_container_remove_actor (container, CLUTTER_ACTOR (actor));
+    }
 
   return self;
 }

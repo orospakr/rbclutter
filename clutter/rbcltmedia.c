@@ -51,10 +51,10 @@ rbclt_media_set_position (int argc, VALUE *argv, VALUE self)
   if (CLUTTER_IS_ACTOR (media))
     rb_scan_args (argc, argv, "11", &pos, &y);
   else
-  {
-    rb_scan_args (argc, argv, "10", &pos);
-    y = Qnil;
-  }
+    {
+      rb_scan_args (argc, argv, "10", &pos);
+      y = Qnil;
+    }
 
   if (y != Qnil)
     clutter_actor_set_position (CLUTTER_ACTOR (media),

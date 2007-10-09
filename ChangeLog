@@ -1,0 +1,14 @@
+2007-10-09  Neil Roberts  <bpeeluk@yahoo.co.uk>
+
+	* clutter/rbcltmedia.c:
+	* clutter/rbcltmain.c:
+	* clutter/rbcltevent.c.in:
+	* clutter/rbcltbehaviourbspline.c:
+	* clutter/rbcltbehaviourrotate.c:
+	* clutter/rbcltcontainer.c:
+	* clutter/rbcltbox.c:
+	* clutter/rbcltalphafunc.c:
+	* clutter-gst/rbcluttergst.c:
+	Converted to GNU style indentation for the opening bracket of
+	blocks folling 'if's and 'while's
+

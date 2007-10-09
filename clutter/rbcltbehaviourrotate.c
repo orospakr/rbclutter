@@ -62,14 +62,14 @@ rbclt_behaviour_rotate_set_center (int argc, VALUE *argv, VALUE self)
   VALUE x, y, z;
 
   if (rb_scan_args (argc, argv, "12", &x, &y, &z) == 1)
-  {
-    ClutterVertex *vertex = (ClutterVertex *) RVAL2BOXED (x, CLUTTER_TYPE_VERTEX);
+    {
+      ClutterVertex *vertex = (ClutterVertex *) RVAL2BOXED (x, CLUTTER_TYPE_VERTEX);
 
-    clutter_behaviour_rotate_set_center (brotate,
-					 CLUTTER_UNITS_TO_INT (vertex->x),
-					 CLUTTER_UNITS_TO_INT (vertex->y),
-					 CLUTTER_UNITS_TO_INT (vertex->z));
-  }
+      clutter_behaviour_rotate_set_center (brotate,
+					   CLUTTER_UNITS_TO_INT (vertex->x),
+					   CLUTTER_UNITS_TO_INT (vertex->y),
+					   CLUTTER_UNITS_TO_INT (vertex->z));
+    }
   else
     clutter_behaviour_rotate_set_center (brotate, NUM2INT (x), NUM2INT (y), NUM2INT (z));
 

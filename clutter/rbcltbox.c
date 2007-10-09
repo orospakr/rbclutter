@@ -31,20 +31,20 @@ rbclt_box_set_default_padding (int argc, VALUE *argv, VALUE self)
   ClutterBox *box = CLUTTER_BOX (RVAL2GOBJ (self));
 
   if (argc == 1)
-  {
-    ClutterPadding *padding = (ClutterPadding *) RVAL2BOXED (argv[0], CLUTTER_TYPE_PADDING);
-    clutter_box_set_default_padding (box,
-				     CLUTTER_UNITS_TO_INT (padding->top),
-				     CLUTTER_UNITS_TO_INT (padding->right),
-				     CLUTTER_UNITS_TO_INT (padding->bottom),
-				     CLUTTER_UNITS_TO_INT (padding->left));
-  }
+    {
+      ClutterPadding *padding = (ClutterPadding *) RVAL2BOXED (argv[0], CLUTTER_TYPE_PADDING);
+      clutter_box_set_default_padding (box,
+				       CLUTTER_UNITS_TO_INT (padding->top),
+				       CLUTTER_UNITS_TO_INT (padding->right),
+				       CLUTTER_UNITS_TO_INT (padding->bottom),
+				       CLUTTER_UNITS_TO_INT (padding->left));
+    }
   else
-  {
-    VALUE top, right, bottom, left;
-    rb_scan_args (argc, argv, "40", &top, &right, &bottom, &left);
-    clutter_box_set_default_padding (box, NUM2INT (top), NUM2INT (right), NUM2INT (bottom), NUM2INT (left));
-  }
+    {
+      VALUE top, right, bottom, left;
+      rb_scan_args (argc, argv, "40", &top, &right, &bottom, &left);
+      clutter_box_set_default_padding (box, NUM2INT (top), NUM2INT (right), NUM2INT (bottom), NUM2INT (left));
+    }
 
   return self;
 }
@@ -88,14 +88,14 @@ rbclt_box_pack (int argc, VALUE *argv, VALUE self)
   rb_scan_args (argc, argv, "12", &actor, &pack_type, &padding_arg);
 
   if (padding_arg == Qnil)
-  {
-    gint top, right, bottom, left;
-    clutter_box_get_default_padding (box, &top, &right, &bottom, &left);
-    padding.top = CLUTTER_UNITS_FROM_INT (top);
-    padding.right = CLUTTER_UNITS_FROM_INT (right);
-    padding.bottom = CLUTTER_UNITS_FROM_INT (bottom);
-    padding.left = CLUTTER_UNITS_FROM_INT (left);
-  }
+    {
+      gint top, right, bottom, left;
+      clutter_box_get_default_padding (box, &top, &right, &bottom, &left);
+      padding.top = CLUTTER_UNITS_FROM_INT (top);
+      padding.right = CLUTTER_UNITS_FROM_INT (right);
+      padding.bottom = CLUTTER_UNITS_FROM_INT (bottom);
+      padding.left = CLUTTER_UNITS_FROM_INT (left);
+    }
   else
     padding = *(ClutterPadding *) RVAL2BOXED (padding_arg, CLUTTER_TYPE_PADDING);
 

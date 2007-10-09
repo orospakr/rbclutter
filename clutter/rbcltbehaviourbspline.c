@@ -87,10 +87,10 @@ rbclt_behaviour_bspline_split (VALUE self, VALUE offset)
   if (other == NULL)
     ret = Qnil;
   else
-  {
-    ret = GOBJ2RVAL (other);
-    g_object_unref (other);
-  }
+    {
+      ret = GOBJ2RVAL (other);
+      g_object_unref (other);
+    }
 
   return ret;
 }

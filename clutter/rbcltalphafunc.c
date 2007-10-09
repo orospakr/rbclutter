@@ -39,7 +39,7 @@ static struct { const char *name; ClutterAlphaFunc func; }
       { "EXP_DEC", clutter_exp_dec_func }
     };
 
-#define RBCLT_ALPHA_FUNC_MAP_COUNT (sizeof (rbclt_alpha_func_map) \
+#define RBCLT_ALPHA_FUNC_MAP_COUNT (sizeof (rbclt_alpha_func_map)	\
 				    / sizeof (rbclt_alpha_func_map[0]))
 
 static ID id_call = 0;
@@ -77,29 +77,29 @@ rbclt_alpha_func_from_rb_value (VALUE func,
 {
   /* If there is no argument then get the function from the block */
   if (func == Qnil)
-  {
-    rb_need_block ();
-    func = rb_block_proc ();
-  }
+    {
+      rb_need_block ();
+      func = rb_block_proc ();
+    }
 
   /* If the function is an integer constant representing a builtin
      clutter function then use the function pointer directly
      instead */
   if (FIXNUM_P (func) && FIX2INT (func) >= 0 && FIX2INT (func) < RBCLT_ALPHA_FUNC_MAP_COUNT)
-  {
-    *func_ret = rbclt_alpha_func_map[FIX2INT (func)].func;
-    *data = NULL;
-    *notify = NULL;
-  }
+    {
+      *func_ret = rbclt_alpha_func_map[FIX2INT (func)].func;
+      *data = NULL;
+      *notify = NULL;
+    }
   else
-  {
-    AlphaFuncWrapper *wrapper = g_slice_new (AlphaFuncWrapper);
-    wrapper->proc = func;
-    rb_gc_register_address (&wrapper->proc);
-    *func_ret = rbclt_alpha_func_wrapper_call;
-    *data = wrapper;
-    *notify = rbclt_alpha_func_wrapper_destroy;
-  }
+    {
+      AlphaFuncWrapper *wrapper = g_slice_new (AlphaFuncWrapper);
+      wrapper->proc = func;
+      rb_gc_register_address (&wrapper->proc);
+      *func_ret = rbclt_alpha_func_wrapper_call;
+      *data = wrapper;
+      *notify = rbclt_alpha_func_wrapper_destroy;
+    }
 }
 
 void

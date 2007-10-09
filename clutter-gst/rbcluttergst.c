@@ -37,10 +37,10 @@ rbcltgst_initialize_gst_object (VALUE obj, gpointer gstobj)
   /* Grab the floating reference if the object is a subclass of
      GstObject */
   if (GST_IS_OBJECT (gstobj))
-  {
-    gst_object_ref (gstobj);
-    gst_object_sink (gstobj);
-  }
+    {
+      gst_object_ref (gstobj);
+      gst_object_sink (gstobj);
+    }
 
   G_INITIALIZE (obj, gstobj);
 }
@@ -87,23 +87,23 @@ rbcltgst_call_init ()
   
   /* If it worked then copy the altered arguments back */
   if (eval == CLUTTER_INIT_SUCCESS)
-  {
-    rb_ary_clear (init_args);
+    {
+      rb_ary_clear (init_args);
 
-    for (i = 1; i < init_argc; i++)
-      rb_ary_push (init_args, rb_str_new2 (args_copy[i]));
-  }
+      for (i = 1; i < init_argc; i++)
+	rb_ary_push (init_args, rb_str_new2 (args_copy[i]));
+    }
 
   free (args_copy);
 
   /* If it didn't work then throw an exception */
   if (eval != CLUTTER_INIT_SUCCESS)
-  {
-    VALUE init_error_class = rb_eval_string ("Clutter::InitError");
-    VALUE ex = rb_exc_new2 (init_error_class, "Failed to initalise clutter-gst");
-    rb_iv_set (ex, "@errnum", GENUM2RVAL (eval, CLUTTER_TYPE_INIT_ERROR));
-    rb_exc_raise (ex);
-  }
+    {
+      VALUE init_error_class = rb_eval_string ("Clutter::InitError");
+      VALUE ex = rb_exc_new2 (init_error_class, "Failed to initalise clutter-gst");
+      rb_iv_set (ex, "@errnum", GENUM2RVAL (eval, CLUTTER_TYPE_INIT_ERROR));
+      rb_exc_raise (ex);
+    }
 }
 
 void

@@ -59,22 +59,22 @@ rbclt_init (int argc, VALUE *argv)
   
   /* If it worked then copy the altered arguments back */
   if (eval == CLUTTER_INIT_SUCCESS)
-  {
-    rb_ary_clear (init_args);
+    {
+      rb_ary_clear (init_args);
 
-    for (i = 1; i < init_argc; i++)
-      rb_ary_push (init_args, rb_str_new2 (args_copy[i]));
-  }
+      for (i = 1; i < init_argc; i++)
+	rb_ary_push (init_args, rb_str_new2 (args_copy[i]));
+    }
 
   free (args_copy);
 
   /* If it didn't work then throw an exception */
   if (eval != CLUTTER_INIT_SUCCESS)
-  {
-    VALUE ex = rb_exc_new2 (rbclt_c_clutter_init_error, "Failed to initalise Clutter");
-    rb_iv_set (ex, "@errnum", GENUM2RVAL (eval, CLUTTER_TYPE_INIT_ERROR));
-    rb_exc_raise (ex);
-  }
+    {
+      VALUE ex = rb_exc_new2 (rbclt_c_clutter_init_error, "Failed to initalise Clutter");
+      rb_iv_set (ex, "@errnum", GENUM2RVAL (eval, CLUTTER_TYPE_INIT_ERROR));
+      rb_exc_raise (ex);
+    }
 
   return Qnil;
 }
