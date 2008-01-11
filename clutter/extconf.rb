@@ -20,19 +20,19 @@ require 'pkg-config'
 
 PKGConfig.have_package('glib-2.0') or show_fail
 PKGConfig.have_package('gdk-pixbuf-2.0') or show_fail
-PKGConfig.have_package('clutter-0.4') or show_fail
+PKGConfig.have_package('clutter-0.5') or show_fail
 
 find_header("rbgobject.h", *$:) or show_fail
 
-BOXED_TYPES = %w{ color geometry knot vertex actorbox perspective padding margin }
+BOXED_TYPES = %w{ color geometry knot vertex actorbox perspective }
 
 $objs = %w{ rbclutter.o rbcltactor.o rbcltalpha.o rbcltbehaviour.o rbcltbehaviourpath.o } \
 + %w{ rbcltcontainer.o rbcltgroup.o rbcltlabel.o rbcltmain.o rbcltstage.o rbclttexture.o } \
 + %w{ rbclttimeline.o rbcltevent.o rbcltkeysyms.o rbcltbehaviourscale.o } \
 + %w{ rbcltbehaviourbspline.o rbcltbehaviourdepth.o rbcltbehaviourellipse.o } \
 + %w{ rbcltbehaviouropacity.o rbcltbehaviourrotate.o rbcltalphafunc.o rbclteffect.o } \
-+ %w{ rbcltentry.o rbcltrectangle.o rbcltbox.o rbcltlayout.o rbcltclonetexture.o } \
-+ %w{ rbcltfeature.o rbcltbackend.o rbcltmedia.o }
++ %w{ rbcltentry.o rbcltrectangle.o rbcltclonetexture.o rbcltfeature.o rbcltbackend.o } \
++ %w{ rbcltmedia.o }
 
 # Add the boxed types to the object files list
 BOXED_TYPES.each { |bt| $objs << "rbclt#{bt}.o" }

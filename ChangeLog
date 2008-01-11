@@ -1,3 +1,26 @@
+2008-01-11  Neil Roberts  <bpeeluk@yahoo.co.uk>
+
+	* clutter/extconf.rb: Bumped up Clutter version requirement to
+	0.5. Removed rbclt{box,layout,padding,margin}.c because Clutter no
+	longer defines them.
+
+	* clutter/rbcltmargin.c.in: 
+	* clutter/rbcltpadding.c.in: 
+	* clutter/rbcltlayout.c: 
+	* clutter/rbcltbox.c: 
+	Removed
+
+	* clutter/rbclutter.c (Init_clutter): Removed calls to
+	rbclt_box_init, rbclt_padding_init, rbclt_margin_init and
+	rbclt_layout_init.
+
+	* clutter/rbclteffect.c (rbclt_effect_fade, rbclt_effect_scale):
+	Updated to new API which only has the end state.
+	(rbclt_effect_depth, rbclt_effect_move, rbclt_effect_do_path):
+	Added bindings for new effects.
+	(rbclt_effect_rotate): The rotate_? effects have been replaced
+	with a single rotate effect which takes the axis as a parameter.
+
 2007-10-09  Neil Roberts  <bpeeluk@yahoo.co.uk>
 
 	* clutter/rbcltmedia.c:
