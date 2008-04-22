@@ -47,8 +47,7 @@ EVENT_STRUCTS = [
                   "keyval", "guint",
                   "hardware_keycode", "guint16"),
   EventStruct.new("ClutterButtonEvent", "CLUTTER_BUTTON_PRESS",
-                  %w{ CLUTTER_BUTTON_PRESS CLUTTER_2BUTTON_PRESS } \
-                  + %w{ CLUTTER_3BUTTON_PRESS CLUTTER_BUTTON_RELEASE },
+                  %w{ CLUTTER_BUTTON_PRESS CLUTTER_BUTTON_RELEASE },
                   "time", "guint32",
                   "x", "gint",
                   "y", "gint",

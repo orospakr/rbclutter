@@ -25,15 +25,17 @@
 #include "rbclutter.h"
 
 static VALUE
-rbclt_behaviour_scale_initialize (VALUE self, VALUE alpha, VALUE scale_begin,
-				  VALUE scale_end, VALUE gravity)
+rbclt_behaviour_scale_initialize (VALUE self, VALUE alpha,
+				  VALUE x_scale_start, VALUE y_scale_start,
+				  VALUE x_scale_end, VALUE y_scale_end)
 {
   ClutterBehaviour *behaviour;
 
   behaviour = clutter_behaviour_scale_new (RVAL2GOBJ (alpha),
-					   NUM2DBL (scale_begin),
-					   NUM2DBL (scale_end),
-					   RVAL2GENUM (gravity, CLUTTER_TYPE_GRAVITY));
+					   NUM2DBL (x_scale_start),
+					   NUM2DBL (y_scale_start),
+					   NUM2DBL (x_scale_end),
+					   NUM2DBL (y_scale_end));
 
   G_INITIALIZE (self, behaviour);
 

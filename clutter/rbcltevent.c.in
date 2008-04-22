@@ -134,11 +134,7 @@ rbclt_event_init ()
   rb_define_singleton_method (rbclt_event_class, "get", rbclt_event_get, 0);
   rb_define_singleton_method (rbclt_event_class, "peek", rbclt_event_peek, 0);
 
-  G_RENAME_CONSTANT ("2BUTTON_PRESS", "BUTTON2_PRESS");
-  G_RENAME_CONSTANT ("3BUTTON_PRESS", "BUTTON3_PRESS");
   G_DEF_CLASS (CLUTTER_TYPE_EVENT_TYPE, "Type", rbclt_event_class);
-  G_RENAME_CONSTANT ("2BUTTON_PRESS", "BUTTON2_PRESS");
-  G_RENAME_CONSTANT ("3BUTTON_PRESS", "BUTTON3_PRESS");
   G_DEF_CONSTANTS (rbclt_event_class, CLUTTER_TYPE_EVENT_TYPE, "CLUTTER_");
 
   /* ENUMS */

@@ -1,3 +1,16 @@
+2008-04-22  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcltbehaviourscale.c
+	(rbclt_behaviour_scale_initialize): Updated to use a start and and
+	end parameter for both the x and y axes.
+
+	* clutter/rbcltevent.c.in (rbclt_event_init): 
+	* clutter/mkrbcltevent.rb: Removed CLUTTER_{2,3}BUTTON_PRESS.
+
+	* clutter/extconf.rb: Changed required clutter version to 0.7.
+
+	* .gitignore: Added a .gitignore file
+
 2008-01-11  Neil Roberts  <bpeeluk@yahoo.co.uk>
 
 	* clutter/extconf.rb: Bumped up Clutter version requirement to

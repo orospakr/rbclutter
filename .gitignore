@@ -1,0 +1,14 @@
+*~
+*.o
+/clutter/clutter.so
+/clutter/Makefile
+/clutter/mkmf.log
+/clutter/rbcltactorbox.c
+/clutter/rbcltcolor.c
+/clutter/rbcltevent.c
+/clutter/rbcltgeometry.c
+/clutter/rbcltknot.c
+/clutter/rbcltperspective.c
+/clutter/rbcltvertex.c
+/Makefile
+

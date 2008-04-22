@@ -20,7 +20,7 @@ require 'pkg-config'
 
 PKGConfig.have_package('glib-2.0') or show_fail
 PKGConfig.have_package('gdk-pixbuf-2.0') or show_fail
-PKGConfig.have_package('clutter-0.5') or show_fail
+PKGConfig.have_package('clutter-0.7') or show_fail
 
 find_header("rbgobject.h", *$:) or show_fail
 
