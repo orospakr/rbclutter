@@ -45,7 +45,8 @@ rbclt_behaviour_scale_initialize (VALUE self, VALUE alpha,
 void
 rbclt_behaviour_scale_init ()
 {
-  VALUE klass = G_DEF_CLASS (CLUTTER_TYPE_BEHAVIOUR_SCALE, "BehaviourScale", rbclt_c_clutter);
+  VALUE klass = G_DEF_CLASS (CLUTTER_TYPE_BEHAVIOUR_SCALE, "BehaviourScale",
+			     rbclt_c_clutter);
 
-  rb_define_method (klass, "initialize", rbclt_behaviour_scale_initialize, 4);
+  rb_define_method (klass, "initialize", rbclt_behaviour_scale_initialize, 5);
 }

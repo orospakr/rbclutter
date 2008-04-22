@@ -1,5 +1,10 @@
 2008-04-22  Neil Roberts  <neil@o-hand.com>
 
+	* clutter/rbcltbehaviourscale.c (rbclt_behaviour_scale_init):
+	Fixed number of arguments required the constructor.
+
+2008-04-22  Neil Roberts  <neil@o-hand.com>
+
 	* .gitignore: Added #*# files
 
 2008-04-22  Neil Roberts  <neil@o-hand.com>
