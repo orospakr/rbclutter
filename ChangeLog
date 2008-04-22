@@ -1,5 +1,9 @@
 2008-04-22  Neil Roberts  <neil@o-hand.com>
 
+	* .gitignore: Added #*# files
+
+2008-04-22  Neil Roberts  <neil@o-hand.com>
+
 	* clutter/rbcltbehaviourscale.c
 	(rbclt_behaviour_scale_initialize): Updated to use a start and and
 	end parameter for both the x and y axes.
