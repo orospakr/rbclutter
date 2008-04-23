@@ -1,3 +1,9 @@
+2008-04-23  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcltactor.c: Replaced the individual getters and
+	setters for each rotation value with a single {get,set}_rotation
+	method.
+
 2008-04-22  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcltbehaviourscale.c (rbclt_behaviour_scale_init):

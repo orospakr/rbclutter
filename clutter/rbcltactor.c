@@ -173,48 +173,33 @@ rbclt_actor_abs_position (VALUE self)
 }
 
 static VALUE
-rbclt_actor_rotate_x (VALUE self, VALUE angle, VALUE y, VALUE z)
+rbclt_actor_set_rotation (VALUE self, VALUE axis, VALUE angle,
+			  VALUE x, VALUE y, VALUE z)
 {
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
-  clutter_actor_rotate_x (actor, NUM2DBL (angle), NUM2INT (y), NUM2INT (z));
+  clutter_actor_set_rotation (actor,
+			      RVAL2GENUM (axis, CLUTTER_TYPE_ROTATE_AXIS),
+			      NUM2DBL (angle),
+			      NUM2INT (x),
+			      NUM2INT (y),
+			      NUM2INT (z));
   return self;
 }
 
 static VALUE
-rbclt_actor_rotate_y (VALUE self, VALUE angle, VALUE x, VALUE z)
+rbclt_actor_get_rotation (VALUE self, VALUE axis)
 {
+  gdouble angle;
+  gint x = 0, y = 0, z = 0;
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
-  clutter_actor_rotate_y (actor, NUM2DBL (angle), NUM2INT (x), NUM2INT (z));
-  return self;
-}
 
-static VALUE
-rbclt_actor_rotate_z (VALUE self, VALUE angle, VALUE x, VALUE y)
-{
-  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
-  clutter_actor_rotate_z (actor, NUM2DBL (angle), NUM2INT (x), NUM2INT (y));
-  return self;
-}
-
-static VALUE
-rbclt_actor_rxang (VALUE self)
-{
-  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
-  return rb_float_new (clutter_actor_get_rxang (actor));
-}
-
-static VALUE
-rbclt_actor_ryang (VALUE self)
-{
-  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
-  return rb_float_new (clutter_actor_get_ryang (actor));
-}
-
-static VALUE
-rbclt_actor_rzang (VALUE self)
-{
-  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
-  return rb_float_new (clutter_actor_get_rzang (actor));
+  angle = clutter_actor_get_rotation (actor,
+				      RVAL2GENUM (axis,
+						  CLUTTER_TYPE_ROTATE_AXIS),
+				      &x, &y, &z);
+  
+  return rb_ary_new3 (4, rb_float_new (angle),
+		      INT2NUM (x), INT2NUM (y), INT2NUM (z));
 }
 
 static VALUE
@@ -408,12 +393,8 @@ rbclt_actor_init ()
   rb_define_method (klass, "set_size", rbclt_actor_set_size, 2);
   rb_define_method (klass, "set_position", rbclt_actor_set_position, 2);
   rb_define_method (klass, "abs_position", rbclt_actor_abs_position, 0);
-  rb_define_method (klass, "rotate_x", rbclt_actor_rotate_x, 3);
-  rb_define_method (klass, "rotate_y", rbclt_actor_rotate_y, 3);
-  rb_define_method (klass, "rotate_z", rbclt_actor_rotate_z, 3);
-  rb_define_method (klass, "rxang", rbclt_actor_rxang, 0);
-  rb_define_method (klass, "ryang", rbclt_actor_ryang, 0);
-  rb_define_method (klass, "rzang", rbclt_actor_rzang, 0);
+  rb_define_method (klass, "set_rotation", rbclt_actor_set_rotation, 5);
+  rb_define_method (klass, "get_rotation", rbclt_actor_get_rotation, 1);
   rb_define_method (klass, "actor_id", rbclt_actor_actor_id, 0);
   rb_define_method (klass, "remove_clip", rbclt_actor_remove_clip, 0);
   rb_define_method (klass, "set_parent", rbclt_actor_set_parent, 1);
