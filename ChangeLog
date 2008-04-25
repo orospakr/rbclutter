@@ -1,3 +1,9 @@
+2008-04-25  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcltactor.c (rbclt_actor_abs_opacity): New function.
+	(rbclt_actor_actor_id): Rename to actor_gid
+	(rbclt_actor_set_scale): Remove gravity parameter.
+
 2008-04-23  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcltactor.c: Replaced the individual getters and

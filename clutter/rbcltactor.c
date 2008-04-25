@@ -203,10 +203,17 @@ rbclt_actor_get_rotation (VALUE self, VALUE axis)
 }
 
 static VALUE
-rbclt_actor_actor_id (VALUE self)
+rbclt_actor_abs_opacity (VALUE self)
 {
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
-  return UINT2NUM (clutter_actor_get_id (actor));
+  return INT2NUM (clutter_actor_get_abs_opacity (actor));
+}
+
+static VALUE
+rbclt_actor_gid (VALUE self)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  return UINT2NUM (clutter_actor_get_gid (actor));
 }
 
 static VALUE
@@ -300,16 +307,10 @@ rbclt_actor_depth (VALUE self)
 }
 
 static VALUE
-rbclt_actor_set_scale (int argc, VALUE *argv, VALUE self)
+rbclt_actor_set_scale (VALUE self, VALUE scale_x, VALUE scale_y)
 {
-  VALUE scale_x, scale_y, gravity;
-  rb_scan_args (argc, argv, "21", &scale_x, &scale_y, &gravity);
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
-  if (gravity == Qnil)
-    clutter_actor_set_scale (actor, NUM2DBL (scale_x), NUM2DBL (scale_y));
-  else
-    clutter_actor_set_scale_with_gravity (actor, NUM2DBL (scale_x), NUM2DBL (scale_y),
-					  RVAL2GENUM (gravity, CLUTTER_TYPE_GRAVITY));
+  clutter_actor_set_scale (actor, NUM2DBL (scale_x), NUM2DBL (scale_y));
   return self;
 }
 
@@ -395,7 +396,8 @@ rbclt_actor_init ()
   rb_define_method (klass, "abs_position", rbclt_actor_abs_position, 0);
   rb_define_method (klass, "set_rotation", rbclt_actor_set_rotation, 5);
   rb_define_method (klass, "get_rotation", rbclt_actor_get_rotation, 1);
-  rb_define_method (klass, "actor_id", rbclt_actor_actor_id, 0);
+  rb_define_method (klass, "abs_opacity", rbclt_actor_abs_opacity, 0);
+  rb_define_method (klass, "gid", rbclt_actor_gid, 0);
   rb_define_method (klass, "remove_clip", rbclt_actor_remove_clip, 0);
   rb_define_method (klass, "set_parent", rbclt_actor_set_parent, 1);
   rb_define_method (klass, "parent", rbclt_actor_parent, 0);
@@ -407,7 +409,7 @@ rbclt_actor_init ()
   rb_define_method (klass, "lower_bottom", rbclt_actor_lower_bottom, 0);
   rb_define_method (klass, "set_depth", rbclt_actor_set_depth, 1);
   rb_define_method (klass, "depth", rbclt_actor_depth, 0);
-  rb_define_method (klass, "set_scale", rbclt_actor_set_scale, -1);
+  rb_define_method (klass, "set_scale", rbclt_actor_set_scale, 2);
   rb_define_method (klass, "scale", rbclt_actor_scale, 0);
   rb_define_method (klass, "abs_size", rbclt_actor_abs_size, 0);
   rb_define_method (klass, "size", rbclt_actor_size, 0);
