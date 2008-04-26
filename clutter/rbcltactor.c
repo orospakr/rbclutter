@@ -365,10 +365,28 @@ static VALUE
 rbclt_actor_apply_transform_to_point (VALUE self, VALUE point_arg)
 {
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
-  ClutterVertex point = *(ClutterVertex *) RVAL2BOXED (point_arg, CLUTTER_TYPE_VERTEX);
+  ClutterVertex point = *(ClutterVertex *) RVAL2BOXED (point_arg,
+						       CLUTTER_TYPE_VERTEX);
   ClutterVertex vertex;
   clutter_actor_apply_transform_to_point (actor, &point, &vertex);
-  return BOXED2RVAL (&point, CLUTTER_TYPE_VERTEX);
+  return BOXED2RVAL (&vertex, CLUTTER_TYPE_VERTEX);
+}
+
+static VALUE
+rbclt_actor_apply_relative_transform_to_point (VALUE self,
+					       VALUE ancestor,
+					       VALUE point_arg)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterVertex point = *(ClutterVertex *) RVAL2BOXED (point_arg,
+						       CLUTTER_TYPE_VERTEX);
+  ClutterVertex vertex;
+
+  clutter_actor_apply_relative_transform_to_point (actor,
+						   RVAL2GOBJ (ancestor),
+						   &point, &vertex);
+						   
+  return BOXED2RVAL (&vertex, CLUTTER_TYPE_VERTEX);
 }
 
 void
@@ -415,7 +433,10 @@ rbclt_actor_init ()
   rb_define_method (klass, "size", rbclt_actor_size, 0);
   rb_define_method (klass, "move_by", rbclt_actor_move_by, 2);
   rb_define_method (klass, "vertices", rbclt_actor_vertices, 0);
-  rb_define_method (klass, "apply_transform_to_point", rbclt_actor_apply_transform_to_point, 1);
+  rb_define_method (klass, "apply_transform_to_point",
+		    rbclt_actor_apply_transform_to_point, 1);
+  rb_define_method (klass, "apply_relative_transform_to_point",
+		    rbclt_actor_apply_relative_transform_to_point, 2);
   
   G_DEF_SETTERS (klass);
 }

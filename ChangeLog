@@ -1,3 +1,11 @@
+2008-04-26  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcltactor.c (rbclt_actor_apply_transform_to_point):
+	Fixed to return the transformed vertex instead of the original
+	point.
+	(rbclt_actor_apply_relative_transform_to_point): New wrapper for
+	clutter_actor_apply_relative_transform_to_point.
+
 2008-04-25  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcltactor.c (rbclt_actor_abs_opacity): New function.
