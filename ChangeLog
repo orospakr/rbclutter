@@ -1,3 +1,10 @@
+2008-04-27  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcltactor.c (rbclt_actor_get_relative_vertices): Added
+	wrapper for clutter_actor_get_relative_vertices
+	(rbclt_actor_should_pick_paint): Added wrapper for
+	clutter_actor_should_pick_paint.
+
 2008-04-26  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcltactor.c (rbclt_actor_apply_transform_to_point):

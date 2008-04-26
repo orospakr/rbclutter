@@ -362,6 +362,22 @@ rbclt_actor_vertices (VALUE self)
 }
 
 static VALUE
+rbclt_actor_get_relative_vertices (VALUE self, VALUE ancestor)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterVertex vertices[4];
+
+  clutter_actor_get_relative_vertices (actor,
+				       RVAL2GOBJ (ancestor),
+				       vertices);
+
+  return rb_ary_new3 (4, BOXED2RVAL (vertices, CLUTTER_TYPE_VERTEX),
+		      BOXED2RVAL (vertices + 1, CLUTTER_TYPE_VERTEX),
+		      BOXED2RVAL (vertices + 2, CLUTTER_TYPE_VERTEX),
+		      BOXED2RVAL (vertices + 3, CLUTTER_TYPE_VERTEX));
+}
+
+static VALUE
 rbclt_actor_apply_transform_to_point (VALUE self, VALUE point_arg)
 {
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
@@ -387,6 +403,13 @@ rbclt_actor_apply_relative_transform_to_point (VALUE self,
 						   &point, &vertex);
 						   
   return BOXED2RVAL (&vertex, CLUTTER_TYPE_VERTEX);
+}
+
+static VALUE
+rbclt_actor_should_pick_paint (VALUE self)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  return clutter_actor_should_pick_paint (actor) ? Qtrue : Qfalse;
 }
 
 void
@@ -433,10 +456,15 @@ rbclt_actor_init ()
   rb_define_method (klass, "size", rbclt_actor_size, 0);
   rb_define_method (klass, "move_by", rbclt_actor_move_by, 2);
   rb_define_method (klass, "vertices", rbclt_actor_vertices, 0);
+  rb_define_method (klass, "get_relative_vertices",
+		    rbclt_actor_get_relative_vertices, 1);
   rb_define_method (klass, "apply_transform_to_point",
 		    rbclt_actor_apply_transform_to_point, 1);
   rb_define_method (klass, "apply_relative_transform_to_point",
 		    rbclt_actor_apply_relative_transform_to_point, 2);
+  rb_define_method (klass, "should_pick_paint",
+		    rbclt_actor_should_pick_paint, 0);
+  rb_define_alias (klass, "pick_paint?", "should_pick_paint");
   
   G_DEF_SETTERS (klass);
 }
