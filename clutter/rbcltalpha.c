@@ -49,7 +49,7 @@ rbclt_alpha_initialize (int argc, VALUE *argv, VALUE self)
   rb_scan_args (argc, argv, "02", &timeline, &func);
 
   alpha = clutter_alpha_new ();
-  G_INITIALIZE (self, alpha);
+  rbclt_initialize_unowned (self, alpha);
 
   if (timeline != Qnil)
     clutter_alpha_set_timeline (alpha, RVAL2GOBJ (timeline));

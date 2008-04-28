@@ -59,6 +59,7 @@ extern void rbclt_clone_texture_init ();
 extern void rbclt_feature_init ();
 extern void rbclt_backend_init ();
 extern void rbclt_media_init ();
+extern void rbclt_shader_init ();
 
 guint8
 rbclt_num_to_guint8 (VALUE val)
@@ -163,4 +164,5 @@ Init_clutter ()
   rbclt_feature_init ();
   rbclt_backend_init ();
   rbclt_media_init ();
+  rbclt_shader_init ();
 }

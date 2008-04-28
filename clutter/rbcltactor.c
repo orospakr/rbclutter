@@ -1,5 +1,5 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
- * Copyright (C) 2007  Neil Roberts
+ * Copyright (C) 2007-2008  Neil Roberts
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -412,6 +412,30 @@ rbclt_actor_should_pick_paint (VALUE self)
   return clutter_actor_should_pick_paint (actor) ? Qtrue : Qfalse;
 }
 
+static VALUE
+rbclt_actor_set_shader (VALUE self, VALUE shader)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  clutter_actor_set_shader (actor, CLUTTER_SHADER (RVAL2GOBJ (shader)));
+  return self;
+}
+
+static VALUE
+rbclt_actor_shader (VALUE self)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  return GOBJ2RVAL (clutter_actor_get_shader (actor));
+}
+
+static VALUE
+rbclt_actor_set_shader_param (VALUE self, VALUE param, VALUE value)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  clutter_actor_set_shader_param (actor, StringValuePtr (param),
+				  NUM2DBL (value));
+  return self;
+}
+
 void
 rbclt_actor_init ()
 {
@@ -465,6 +489,9 @@ rbclt_actor_init ()
   rb_define_method (klass, "should_pick_paint",
 		    rbclt_actor_should_pick_paint, 0);
   rb_define_alias (klass, "pick_paint?", "should_pick_paint");
-  
+  rb_define_method (klass, "set_shader", rbclt_actor_set_shader, 1);
+  rb_define_method (klass, "shader", rbclt_actor_shader, 0);
+  rb_define_method (klass, "set_shader_param", rbclt_actor_set_shader_param, 2);
+
   G_DEF_SETTERS (klass);
 }

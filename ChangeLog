@@ -1,3 +1,19 @@
+2008-04-28  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbclutter.c (Init_clutter): Added rbclt_shader_init
+
+	* clutter/rbcltactor.c (rbclt_actor_set_shader)
+	(rbclt_actor_shader, rbclt_actor_set_shader_param): New functions
+	to wrap shader methods
+
+	* clutter/rbcltshader.c: New wrapper for ClutterShader
+
+	* examples/test-shader.rb: Port of test-shader.c
+
+	* clutter/rbcltalpha.c (rbclt_alpha_initialize): ClutterAlpha
+	objects are now intially unowned so the constructor has changed to
+	reflect this
+
 2008-04-27  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcltactor.c (rbclt_actor_get_relative_vertices): Added
