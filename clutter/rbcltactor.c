@@ -436,6 +436,40 @@ rbclt_actor_set_shader_param (VALUE self, VALUE param, VALUE value)
   return self;
 }
 
+static VALUE
+rbclt_actor_set_anchor_point (VALUE self, VALUE x, VALUE y)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  clutter_actor_set_anchor_point (actor, NUM2INT (x), NUM2INT (y));
+  return self;
+}
+
+static VALUE
+rbclt_actor_move_anchor_point (VALUE self, VALUE x, VALUE y)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  clutter_actor_move_anchor_point (actor, NUM2INT (x), NUM2INT (y));
+  return self;
+}
+
+static VALUE
+rbclt_actor_set_anchor_point_from_gravity (VALUE self, VALUE gravity)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterGravity gravity_val = RVAL2GENUM (gravity, CLUTTER_TYPE_GRAVITY);
+  clutter_actor_set_anchor_point_from_gravity (actor, gravity_val);
+  return self;
+}
+
+static VALUE
+rbclt_actor_move_anchor_point_from_gravity (VALUE self, VALUE gravity)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterGravity gravity_val = RVAL2GENUM (gravity, CLUTTER_TYPE_GRAVITY);
+  clutter_actor_move_anchor_point_from_gravity (actor, gravity_val);
+  return self;
+}
+
 void
 rbclt_actor_init ()
 {
@@ -492,6 +526,13 @@ rbclt_actor_init ()
   rb_define_method (klass, "set_shader", rbclt_actor_set_shader, 1);
   rb_define_method (klass, "shader", rbclt_actor_shader, 0);
   rb_define_method (klass, "set_shader_param", rbclt_actor_set_shader_param, 2);
+  rb_define_method (klass, "set_anchor_point", rbclt_actor_set_anchor_point, 2);
+  rb_define_method (klass, "move_anchor_point",
+		    rbclt_actor_move_anchor_point, 2);
+  rb_define_method (klass, "set_anchor_point_from_gravity",
+		    rbclt_actor_set_anchor_point_from_gravity, 1);
+  rb_define_method (klass, "move_anchor_point_from_gravity",
+		    rbclt_actor_move_anchor_point_from_gravity, 1);
 
   G_DEF_SETTERS (klass);
 }

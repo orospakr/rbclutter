@@ -1,3 +1,8 @@
+2008-04-29  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcltactor.c: Added wrappers for methods to set the
+	anchor point.
+
 2008-04-28  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbclutter.c (Init_clutter): Added rbclt_shader_init
