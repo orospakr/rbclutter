@@ -1,3 +1,8 @@
+2008-04-30  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcltactor.c (rbclt_actor_is_rotated): Added wrappers
+	for clutter_actor_{is_rotated,is_scaled,get_stage}.
+
 2008-04-29  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcltactor.c: Added wrappers for methods to set the

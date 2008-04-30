@@ -470,6 +470,27 @@ rbclt_actor_move_anchor_point_from_gravity (VALUE self, VALUE gravity)
   return self;
 }
 
+static VALUE
+rbclt_actor_is_rotated (VALUE self)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  return clutter_actor_is_rotated (actor) ? Qtrue : Qfalse;
+}
+
+static VALUE
+rbclt_actor_is_scaled (VALUE self)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  return clutter_actor_is_scaled (actor) ? Qtrue : Qfalse;
+}
+
+static VALUE
+rbclt_actor_stage (VALUE self)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  return GOBJ2RVAL (clutter_actor_get_stage (actor));
+}
+
 void
 rbclt_actor_init ()
 {
@@ -533,6 +554,9 @@ rbclt_actor_init ()
 		    rbclt_actor_set_anchor_point_from_gravity, 1);
   rb_define_method (klass, "move_anchor_point_from_gravity",
 		    rbclt_actor_move_anchor_point_from_gravity, 1);
+  rb_define_method (klass, "rotated?", rbclt_actor_is_rotated, 0);
+  rb_define_method (klass, "scaled?", rbclt_actor_is_scaled, 0);
+  rb_define_method (klass, "stage", rbclt_actor_stage, 0);
 
   G_DEF_SETTERS (klass);
 }
