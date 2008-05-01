@@ -1,3 +1,9 @@
+2008-05-01  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcltbehaviourpath.c (rbclt_behaviour_path_init): 
+	* clutter/rbcltbehaviourbspline.c (rbclt_behaviour_bspline_init):
+	Added 'append' and '<<' alias for append_knot
+
 2008-04-30  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcltactor.c (rbclt_actor_is_rotated): Added wrappers

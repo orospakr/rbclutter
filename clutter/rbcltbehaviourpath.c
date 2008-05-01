@@ -93,6 +93,8 @@ rbclt_behaviour_path_init ()
   rb_define_method (klass, "knots", rbclt_behaviour_path_knots, 0);
   rb_define_method (klass, "append_knot", rbclt_behaviour_path_append_knot, -1);
   rb_define_alias (klass, "append_knots", "append_knot");
+  rb_define_alias (klass, "append", "append_knot");
+  rb_define_alias (klass, "<<", "append_knot");
   rb_define_method (klass, "insert_knot", rbclt_behaviour_path_insert_knot, 2);
   rb_define_method (klass, "remove_knot", rbclt_behaviour_path_remove_knot, 1);
   rb_define_method (klass, "clear", rbclt_behaviour_path_clear, 0);

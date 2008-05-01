@@ -130,6 +130,8 @@ rbclt_behaviour_bspline_init ()
   rb_define_method (klass, "initialize", rbclt_behaviour_bspline_initialize, -1);
   rb_define_method (klass, "append_knot", rbclt_behaviour_bspline_append_knot, -1);
   rb_define_alias (klass, "append_knots", "append_knot");
+  rb_define_alias (klass, "append", "append_knot");
+  rb_define_alias (klass, "<<", "append_knot");
   rb_define_method (klass, "clear", rbclt_behaviour_bspline_clear, 0);
   rb_define_method (klass, "truncate", rbclt_behaviour_bspline_truncate, 1);
   rb_define_method (klass, "join", rbclt_behaviour_bspline_join, 1);
