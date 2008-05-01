@@ -29,7 +29,7 @@ rbclt_behaviour_ellipse_initialize (VALUE self, VALUE alpha,
 				    VALUE x, VALUE y,
 				    VALUE width, VALUE height,
 				    VALUE direction,
-				    VALUE begin, VALUE end)
+				    VALUE start, VALUE end)
 {
   ClutterBehaviour *behaviour;
 
@@ -37,7 +37,7 @@ rbclt_behaviour_ellipse_initialize (VALUE self, VALUE alpha,
 					     NUM2INT (x), NUM2INT (y),
 					     NUM2INT (width), NUM2INT (height),
 					     RVAL2GENUM (direction, CLUTTER_TYPE_ROTATE_DIRECTION),
-					     NUM2DBL (begin), NUM2DBL (end));
+					     NUM2DBL (start), NUM2DBL (end));
 
   G_INITIALIZE (self, behaviour);
 

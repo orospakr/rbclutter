@@ -1,5 +1,16 @@
 2008-05-01  Neil Roberts  <neil@o-hand.com>
 
+	* clutter/rbcltbehaviourrotate.c: Renamed begin to start. Tidied
+	to wrap at 80 columns. Added a wrapper for get_bounds.
+
+	* clutter/rbcltbehaviouropacity.c: Added wrappers for
+	{get,set}_bounds.
+
+	* clutter/rbcltbehaviourellipse.c
+	(rbclt_behaviour_ellipse_initialize): Renamed begin to start.
+
+2008-05-01  Neil Roberts  <neil@o-hand.com>
+
 	* clutter/rbcltbehaviourdepth.c: Added wrappers for
 	clutter_behaviour_depth_{get,set}_bounds.
 
