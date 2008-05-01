@@ -1,5 +1,10 @@
 2008-05-01  Neil Roberts  <neil@o-hand.com>
 
+	* clutter/rbcltbehaviourdepth.c: Added wrappers for
+	clutter_behaviour_depth_{get,set}_bounds.
+
+2008-05-01  Neil Roberts  <neil@o-hand.com>
+
 	* clutter/rbcltbehaviourpath.c (rbclt_behaviour_path_init): 
 	* clutter/rbcltbehaviourbspline.c (rbclt_behaviour_bspline_init):
 	Added 'append' and '<<' alias for append_knot
