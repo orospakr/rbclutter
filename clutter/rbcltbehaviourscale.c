@@ -42,6 +42,41 @@ rbclt_behaviour_scale_initialize (VALUE self, VALUE alpha,
   return Qnil;
 }
 
+static VALUE
+rbclt_behaviour_scale_set_bounds (VALUE self,
+				  VALUE x_scale_start, VALUE y_scale_start,
+				  VALUE x_scale_end, VALUE y_scale_end)
+{
+  ClutterBehaviourScale *behaviour = CLUTTER_BEHAVIOUR_SCALE (RVAL2GOBJ (self));
+
+  clutter_behaviour_scale_set_bounds (behaviour,
+				      NUM2DBL (x_scale_start),
+				      NUM2DBL (y_scale_start),
+				      NUM2DBL (x_scale_end),
+				      NUM2DBL (y_scale_end));
+
+  return self;
+}
+
+static VALUE
+rbclt_behaviour_scale_get_bounds (VALUE self)
+{
+  ClutterBehaviourScale *behaviour = CLUTTER_BEHAVIOUR_SCALE (RVAL2GOBJ (self));
+  gdouble x_scale_start, y_scale_start;
+  gdouble x_scale_end, y_scale_end;
+
+  clutter_behaviour_scale_get_bounds (behaviour,
+				      &x_scale_start,
+				      &y_scale_start,
+				      &x_scale_end,
+				      &y_scale_end);
+
+  return rb_ary_new3 (4, rb_float_new (x_scale_start),
+		      rb_float_new (y_scale_start),
+		      rb_float_new (x_scale_end),
+		      rb_float_new (y_scale_end));
+}
+
 void
 rbclt_behaviour_scale_init ()
 {
@@ -49,4 +84,6 @@ rbclt_behaviour_scale_init ()
 			     rbclt_c_clutter);
 
   rb_define_method (klass, "initialize", rbclt_behaviour_scale_initialize, 5);
+  rb_define_method (klass, "set_bounds", rbclt_behaviour_scale_set_bounds, 4);
+  rb_define_method (klass, "get_bounds", rbclt_behaviour_scale_get_bounds, 0);
 }

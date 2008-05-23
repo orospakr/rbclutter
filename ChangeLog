@@ -1,3 +1,10 @@
+2008-05-23  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcltcontainer.c: Added wrappers for find_child_by_name,
+	raise_child, lower_child and sort_depth_order.
+
+	* clutter/rbcltbehaviourscale.c: Added wrappers {get,set}_bounds.
+
 2008-05-01  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcltbehaviourrotate.c: Renamed begin to start. Tidied

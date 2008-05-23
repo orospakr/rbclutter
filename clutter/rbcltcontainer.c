@@ -30,7 +30,8 @@ rbclt_container_mark_callback (ClutterActor *actor, gpointer data)
 static void
 rbclt_container_mark (void *p)
 {
-  clutter_container_foreach (CLUTTER_CONTAINER (p), rbclt_container_mark_callback, NULL);
+  clutter_container_foreach (CLUTTER_CONTAINER (p),
+			     rbclt_container_mark_callback, NULL);
 }
 
 static VALUE
@@ -101,15 +102,74 @@ rbclt_container_each (VALUE self)
   return self;
 }
 
+static VALUE
+rbclt_container_find_child_by_name (VALUE self, VALUE name)
+{
+  ClutterContainer *container = CLUTTER_CONTAINER (RVAL2GOBJ (self));
+  ClutterActor *child;
+
+  child = clutter_container_find_child_by_name (container,
+						StringValuePtr (name));
+
+  if (child == NULL)
+    return Qnil;
+  else
+    return GOBJ2RVAL (child);
+}
+
+static VALUE
+rbclt_container_raise_child (int argc, VALUE *argv, VALUE self)
+{
+  ClutterContainer *container = CLUTTER_CONTAINER (RVAL2GOBJ (self));
+  VALUE actor, sibling;
+
+  rb_scan_args (argc, argv, "11", &actor, &sibling);
+
+  clutter_container_raise_child (container,
+				 RVAL2GOBJ (actor),
+				 RVAL2GOBJ (sibling));
+
+  return self;
+}
+
+static VALUE
+rbclt_container_lower_child (int argc, VALUE *argv, VALUE self)
+{
+  ClutterContainer *container = CLUTTER_CONTAINER (RVAL2GOBJ (self));
+  VALUE actor, sibling;
+
+  rb_scan_args (argc, argv, "11", &actor, &sibling);
+
+  clutter_container_lower_child (container,
+				 RVAL2GOBJ (actor),
+				 RVAL2GOBJ (sibling));
+
+  return self;
+}
+
+static VALUE
+rbclt_container_sort_depth_order (VALUE self)
+{
+  ClutterContainer *container = CLUTTER_CONTAINER (RVAL2GOBJ (self));
+  clutter_container_sort_depth_order (container);
+  return self;
+}
+
 void
 rbclt_container_init ()
 {
-  VALUE klass = G_DEF_INTERFACE2 (CLUTTER_TYPE_CONTAINER, "Container", rbclt_c_clutter,
-				  rbclt_container_mark, NULL);
+  VALUE klass = G_DEF_INTERFACE2 (CLUTTER_TYPE_CONTAINER, "Container",
+				  rbclt_c_clutter, rbclt_container_mark, NULL);
 
   rb_define_method (klass, "add", rbclt_container_add, -1);
   rb_define_alias (klass, "<<", "add");
   rb_define_method (klass, "remove", rbclt_container_remove, -1);
   rb_define_method (klass, "children", rbclt_container_children, 0);
   rb_define_method (klass, "each", rbclt_container_each, 0);
+  rb_define_method (klass, "find_child_by_name",
+		    rbclt_container_find_child_by_name, 1);
+  rb_define_method (klass, "raise_child", rbclt_container_raise_child, -1);
+  rb_define_method (klass, "lower_child", rbclt_container_lower_child, -1);
+  rb_define_method (klass, "sort_depth_order",
+		    rbclt_container_sort_depth_order, 0);
 }
