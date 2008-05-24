@@ -38,6 +38,15 @@ rbclt_effect_template_initialize (int argc, VALUE *argv, VALUE self)
 
   rbclt_alpha_func_from_rb_value (func, &func_ptr, &data, &notify);
 
+  /* If the timeline argument is given as an integer then create a new
+     timeline with the duration as in
+     clutter_effect_template_new_for_duration */
+  if (rb_obj_is_kind_of (timeline, rb_cNumeric))
+    {
+      guint msecs = NUM2INT (timeline);
+      timeline = GOBJ2RVALU (clutter_timeline_new_for_duration (msecs));
+    }
+
   et = clutter_effect_template_new_full (RVAL2GOBJ (timeline),
 					 func_ptr, data, notify);
 
@@ -50,7 +59,8 @@ static VALUE
 rbclt_effect_fade (VALUE self, VALUE actor, VALUE end_opacity)
 {
   ClutterEffectTemplate *effect = CLUTTER_EFFECT_TEMPLATE (RVAL2GOBJ (self));
-  return GOBJ2RVAL (clutter_effect_fade (effect, CLUTTER_ACTOR (RVAL2GOBJ (actor)),
+  return GOBJ2RVAL (clutter_effect_fade (effect,
+					 CLUTTER_ACTOR (RVAL2GOBJ (actor)),
 					 rbclt_num_to_guint8 (end_opacity),
 					 NULL, NULL));
 }
@@ -59,7 +69,8 @@ static VALUE
 rbclt_effect_depth (VALUE self, VALUE actor, VALUE depth_end)
 {
   ClutterEffectTemplate *effect = CLUTTER_EFFECT_TEMPLATE (RVAL2GOBJ (self));
-  return GOBJ2RVAL (clutter_effect_depth (effect, CLUTTER_ACTOR (RVAL2GOBJ (actor)),
+  return GOBJ2RVAL (clutter_effect_depth (effect,
+					  CLUTTER_ACTOR (RVAL2GOBJ (actor)),
 					  NUM2INT (depth_end),
 					  NULL, NULL));
 }
@@ -68,7 +79,8 @@ static VALUE
 rbclt_effect_move (VALUE self, VALUE actor, VALUE x, VALUE y)
 {
   ClutterEffectTemplate *effect = CLUTTER_EFFECT_TEMPLATE (RVAL2GOBJ (self));
-  return GOBJ2RVAL (clutter_effect_move (effect, CLUTTER_ACTOR (RVAL2GOBJ (actor)),
+  return GOBJ2RVAL (clutter_effect_move (effect,
+					 CLUTTER_ACTOR (RVAL2GOBJ (actor)),
 					 NUM2INT (x), NUM2INT (y),
 					 NULL, NULL));
 }
@@ -84,16 +96,20 @@ rbclt_effect_do_path (VALUE arg)
 {
   struct RbcltEffectPathData *data = (struct RbcltEffectPathData *) arg;
   int i;
+  ClutterTimeline *tl;
 
   for (i = 0; i < RARRAY (data->knots)->len; i++)
-    data->knot_array[i] = *(ClutterKnot *) RVAL2BOXED (RARRAY (data->knots)->ptr[i],
-						       CLUTTER_TYPE_KNOT);
+    data->knot_array[i]
+      = *(ClutterKnot *) RVAL2BOXED (RARRAY (data->knots)->ptr[i],
+				     CLUTTER_TYPE_KNOT);
 
-  return GOBJ2RVAL (clutter_effect_path (CLUTTER_EFFECT_TEMPLATE (RVAL2GOBJ (data->self)),
-					 CLUTTER_ACTOR (RVAL2GOBJ (data->actor)),
-					 data->knot_array,
-					 RARRAY (data->knots)->len,
-					 NULL, NULL));
+  tl = clutter_effect_path (CLUTTER_EFFECT_TEMPLATE (RVAL2GOBJ (data->self)),
+			    CLUTTER_ACTOR (RVAL2GOBJ (data->actor)),
+			    data->knot_array,
+			    RARRAY (data->knots)->len,
+			    NULL, NULL);
+
+  return GOBJ2RVAL (tl);
 }
 
 static VALUE
@@ -120,13 +136,17 @@ rbclt_effect_path (int argc, VALUE *argv, VALUE self)
 }
 
 static VALUE
-rbclt_effect_scale (VALUE self, VALUE actor, VALUE scale_end, VALUE gravity)
+rbclt_effect_scale (VALUE self, VALUE actor,
+		    VALUE x_scale_end, VALUE y_scale_end)
 {
   ClutterEffectTemplate *effect = CLUTTER_EFFECT_TEMPLATE (RVAL2GOBJ (self));
-  return GOBJ2RVAL (clutter_effect_scale (effect, CLUTTER_ACTOR (RVAL2GOBJ (actor)),
-					  NUM2DBL (scale_end),
-					  RVAL2GENUM (gravity, CLUTTER_TYPE_GRAVITY),
-					  NULL, NULL));
+  ClutterTimeline *tl;
+
+  tl = clutter_effect_scale (effect, CLUTTER_ACTOR (RVAL2GOBJ (actor)),
+			     NUM2DBL (x_scale_end), NUM2DBL (y_scale_end),
+			     NULL, NULL);
+
+  return GOBJ2RVAL (tl);
 }
 
 static VALUE
@@ -137,22 +157,46 @@ rbclt_effect_rotate (VALUE self, VALUE actor,
 {
   ClutterEffectTemplate *effect =
     CLUTTER_EFFECT_TEMPLATE (RVAL2GOBJ (self));
-  return GOBJ2RVAL (clutter_effect_rotate
-		    (effect, CLUTTER_ACTOR (RVAL2GOBJ (actor)),
-		     RVAL2GENUM (axis, CLUTTER_TYPE_ROTATE_AXIS),
-		     NUM2DBL (angle),
-		     NUM2INT (center_x),
-		     NUM2INT (center_y),
-		     NUM2INT (center_z),
-		     RVAL2GENUM (direction,
-				 CLUTTER_TYPE_ROTATE_DIRECTION),
-		     NULL, NULL));
+  ClutterTimeline *tl;
+
+  tl = clutter_effect_rotate (effect, CLUTTER_ACTOR (RVAL2GOBJ (actor)),
+			      RVAL2GENUM (axis, CLUTTER_TYPE_ROTATE_AXIS),
+			      NUM2DBL (angle),
+			      NUM2INT (center_x),
+			      NUM2INT (center_y),
+			      NUM2INT (center_z),
+			      RVAL2GENUM (direction,
+					  CLUTTER_TYPE_ROTATE_DIRECTION),
+			      NULL, NULL);
+
+  return GOBJ2RVAL (tl);
+}
+
+static VALUE
+rbclt_effect_set_timeline_clone (VALUE self, VALUE val)
+{
+  ClutterEffectTemplate *effect =
+    CLUTTER_EFFECT_TEMPLATE (RVAL2GOBJ (self));
+
+  clutter_effect_template_set_timeline_clone (effect, RTEST (val));
+
+  return self;
+}
+
+static VALUE
+rbclt_effect_timeline_clone (VALUE self)
+{
+  ClutterEffectTemplate *effect =
+    CLUTTER_EFFECT_TEMPLATE (RVAL2GOBJ (self));
+
+  return clutter_effect_template_get_timeline_clone (effect) ? Qtrue : Qfalse;
 }
 
 void
 rbclt_effect_init ()
 {
-  VALUE klass = G_DEF_CLASS (CLUTTER_TYPE_EFFECT_TEMPLATE, "EffectTemplate", rbclt_c_clutter);
+  VALUE klass = G_DEF_CLASS (CLUTTER_TYPE_EFFECT_TEMPLATE, "EffectTemplate",
+			     rbclt_c_clutter);
 
   rb_define_method (klass, "initialize", rbclt_effect_template_initialize, -1);
   rb_define_method (klass, "fade", rbclt_effect_fade, 2);
@@ -161,4 +205,10 @@ rbclt_effect_init ()
   rb_define_method (klass, "path", rbclt_effect_path, -1);
   rb_define_method (klass, "scale", rbclt_effect_scale, 3);
   rb_define_method (klass, "rotate", rbclt_effect_rotate, 7);
+  rb_define_method (klass, "set_timeline_clone",
+		    rbclt_effect_set_timeline_clone, 1);
+  rb_define_method (klass, "timeline_clone",
+		    rbclt_effect_timeline_clone, 0);
+
+  G_DEF_SETTERS (klass);
 }

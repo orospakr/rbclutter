@@ -1,3 +1,17 @@
+2008-05-24  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbclteffect.c (rbclt_effect_template_initialize): Can
+	now accept an integer for the first argument to create a timeline
+	for that duration.
+	(rbclt_effect_fade, rbclt_effect_depth, rbclt_effect_move)
+	(rbclt_effect_do_path, rbclt_effect_rotate): Tidied up indentation
+	(rbclt_effect_scale): Fixed the third parameter which should be
+	the y-scale end instead of the gravity.
+	(rbclt_effect_rotate, rbclt_effect_set_timeline_clone)
+	(rbclt_effect_init): Added a getter and setter for the 'clone'
+	property. This can be created automatically because there is
+	already a 'clone' method in Object.
+
 2008-05-23  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcltcontainer.c: Added wrappers for find_child_by_name,
