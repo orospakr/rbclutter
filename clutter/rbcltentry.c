@@ -61,14 +61,6 @@ rbclt_entry_layout (VALUE self)
 }
 
 static VALUE
-rbclt_entry_handle_key_event (VALUE self, VALUE event)
-{
-  ClutterEntry *entry = CLUTTER_ENTRY (RVAL2GOBJ (self));
-  clutter_entry_handle_key_event (entry, RVAL2BOXED (event, CLUTTER_TYPE_EVENT));
-  return self;
-}
-
-static VALUE
 rbclt_entry_insert_unichar (VALUE self, VALUE wc)
 {
   ClutterEntry *entry = CLUTTER_ENTRY (RVAL2GOBJ (self));
@@ -93,7 +85,10 @@ rbclt_entry_insert_text (int argc, VALUE *argv, VALUE self)
 
   rb_scan_args (argc, argv, "11", &text, &pos);
 
-  posi = pos == Qnil ? clutter_entry_get_position (entry) : NUM2INT (pos);
+  if (pos == Qnil)
+    posi = clutter_entry_get_cursor_position (entry);
+  else
+    posi = NUM2INT (pos);
 
   clutter_entry_insert_text (entry, StringValuePtr (text), posi);
 
@@ -136,7 +131,7 @@ rbclt_entry_set_position (int argc, VALUE *argv, VALUE self)
   if (y != Qnil)
     rb_call_super (argc, argv);
   else
-    clutter_entry_set_position (entry, NUM2INT (pos));
+    clutter_entry_set_cursor_position (entry, NUM2INT (pos));
 
   return self;
 }
@@ -148,14 +143,17 @@ rbclt_entry_init ()
 
   rb_define_method (klass, "initialize", rbclt_entry_initialize, -1);
   rb_define_method (klass, "layout", rbclt_entry_layout, 0);
-  rb_define_method (klass, "handle_key_event", rbclt_entry_handle_key_event, 1);
   rb_define_method (klass, "insert_unichar", rbclt_entry_insert_unichar, 1);
   rb_define_method (klass, "delete_chars", rbclt_entry_delete_chars, 1);
   rb_define_method (klass, "insert_text", rbclt_entry_insert_text, -1);
   rb_define_method (klass, "delete_text", rbclt_entry_delete_text, 2);
-  rb_define_method (klass, "set_invisible_char", rbclt_entry_set_invisible_char, 1);
+  rb_define_method (klass, "set_invisible_char",
+		    rbclt_entry_set_invisible_char, 1);
   rb_define_method (klass, "invisible_char", rbclt_entry_get_invisible_char, 0);
   rb_define_method (klass, "set_position", rbclt_entry_set_position, -1);
+  rb_define_alias (klass, "set_cursor_position", "set_position");
+  rb_define_alias (klass, "cursor_position", "position");
+  rb_define_alias (klass, "cursor_position=", "position=");
 
   G_DEF_SETTERS (klass);
 }

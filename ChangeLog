@@ -1,5 +1,14 @@
 2008-05-24  Neil Roberts  <neil@o-hand.com>
 
+	* clutter/rbcltentry.c (rbclt_entry_handle_key_event): Removed as
+	the method is now deprecated.
+	(rbclt_entry_insert_text, rbclt_entry_set_position): Use renamed
+	cursor position functions.
+	(rbclt_entry_init): Add aliases for the position property methods
+	so the new 'cursor_position' names can be used.
+
+2008-05-24  Neil Roberts  <neil@o-hand.com>
+
 	* clutter/rbclteffect.c (rbclt_effect_template_initialize): Can
 	now accept an integer for the first argument to create a timeline
 	for that duration.
