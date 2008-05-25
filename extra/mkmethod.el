@@ -13,8 +13,8 @@
 ;; 
 ;; You should have received a copy of the GNU Lesser General Public
 ;; License along with this library; if not, write to the Free Software
-;; Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
+;; Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+;; MA  02110-1301  USA
 ;; 'mkmethod' is an Emacs lisp function that I found useful to make a
 ;; stub for a method definition. It edits the '_init' function to add
 ;; a call to rb_define_method and makes a skeleton function definition
