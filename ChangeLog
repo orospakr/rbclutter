@@ -1,5 +1,22 @@
 2008-05-26  Neil Roberts  <neil@o-hand.com>
 
+	* clutter/rbclutter.c (Init_clutter): Added calls to
+	rbclt_callback_func_init and rbclt_frame_source_init.
+
+	* clutter/rbcltframesource.c: Added a binding for
+	clutter_frame_source_add.
+
+	* clutter/extconf.rb: Added rbcltcallbackfunc.o and
+	rbcltframesource.o
+
+	* clutter/rbcltalphafunc.c: 
+	* clutter/rbcltcallbackfunc.h: 
+	* clutter/rbcltcallbackfunc.c: Moved the callback wrapper code
+	from rbcltalphafunc.c to a separate file so that it can be used by
+	the frame source as well.
+
+2008-05-26  Neil Roberts  <neil@o-hand.com>
+
 	* clutter/rbcltevent.c.in: 
 	* clutter/mkrbcltevent.rb: The root 'Event' class is now created
 	in mkrbcltevent.rb because it now has a lot of fields so the

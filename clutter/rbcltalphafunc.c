@@ -22,6 +22,7 @@
 #include <clutter/clutter-alpha.h>
 
 #include "rbcltalphafunc.h"
+#include "rbcltcallbackfunc.h"
 
 static struct { const char *name; ClutterAlphaFunc func; }
   rbclt_alpha_func_map[] =
@@ -43,31 +44,13 @@ static struct { const char *name; ClutterAlphaFunc func; }
 #define RBCLT_ALPHA_FUNC_MAP_COUNT (sizeof (rbclt_alpha_func_map)	\
 				    / sizeof (rbclt_alpha_func_map[0]))
 
-static ID id_call = 0;
-
-/* Wrapper so that we can store the proc value in a global variable
-   and register it with Ruby */
-typedef struct _AlphaFuncWrapper AlphaFuncWrapper;
-
-struct _AlphaFuncWrapper
-{
-  /* The proc to call */
-  VALUE proc;
-};
-
 static guint32
 rbclt_alpha_func_wrapper_call (ClutterAlpha *alpha, gpointer user_data)
 {
-  AlphaFuncWrapper *wrapper = (AlphaFuncWrapper *) user_data;
-  return NUM2UINT (rb_funcall (wrapper->proc, id_call, 1, GOBJ2RVAL (alpha)));
-}
+  RBCLTCallbackFunc *func = (RBCLTCallbackFunc *) user_data;
+  VALUE arg = GOBJ2RVAL (alpha);
 
-static void
-rbclt_alpha_func_wrapper_destroy (gpointer data)
-{
-  AlphaFuncWrapper *wrapper = (AlphaFuncWrapper *) data;
-  rb_gc_unregister_address (&wrapper->proc);
-  g_slice_free (AlphaFuncWrapper, wrapper);
+  return NUM2UINT (rbclt_callback_func_invoke (func, 1, &arg));
 }
 
 void
@@ -94,12 +77,9 @@ rbclt_alpha_func_from_rb_value (VALUE func,
     }
   else
     {
-      AlphaFuncWrapper *wrapper = g_slice_new (AlphaFuncWrapper);
-      wrapper->proc = func;
-      rb_gc_register_address (&wrapper->proc);
       *func_ret = rbclt_alpha_func_wrapper_call;
-      *data = wrapper;
-      *notify = rbclt_alpha_func_wrapper_destroy;
+      *data = rbclt_callback_func_new (func);
+      *notify = (GDestroyNotify) rbclt_callback_func_destroy;
     }
 }
 
@@ -107,8 +87,6 @@ void
 rbclt_alpha_func_init (VALUE alpha_klass)
 {
   int i;
-
-  id_call = rb_intern ("call");
 
   for (i = 0; i < RBCLT_ALPHA_FUNC_MAP_COUNT; i++)
     rb_define_const (alpha_klass, rbclt_alpha_func_map[i].name, INT2FIX (i));
