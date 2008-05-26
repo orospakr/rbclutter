@@ -1,5 +1,9 @@
 2008-05-26  Neil Roberts  <neil@o-hand.com>
 
+	* clutter/rbcltgroup.c: Removed deprecated methods.
+
+2008-05-26  Neil Roberts  <neil@o-hand.com>
+
 	* clutter/rbclutter.c (Init_clutter): Added calls to
 	rbclt_callback_func_init and rbclt_frame_source_init.
 
