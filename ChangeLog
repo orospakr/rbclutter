@@ -1,3 +1,12 @@
+2008-05-26  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcltevent.c.in: 
+	* clutter/mkrbcltevent.rb: The root 'Event' class is now created
+	in mkrbcltevent.rb because it now has a lot of fields so the
+	getters and setters are created automatically. The common fields
+	from the other classes (such as 'time') have been removed. All
+	classes have been updated to version 0.7
+
 2008-05-24  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcltentry.c (rbclt_entry_handle_key_event): Removed as
