@@ -1,3 +1,18 @@
+2008-06-03  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcltstagemanager.h: 
+	* clutter/rbcltstagemanager.c: Added a wrapper for
+	ClutterStageManager. A global variable is used to keep track of
+	the default stage manager so that all of the stages can be marked
+
+	* clutter/rbcltmain.c (rbclt_init): Added a call to
+	rbclt_stage_manager_init.
+
+	* clutter/extconf.rb: Added rbcltstagemanager.o
+
+	* clutter/rbclutter.c (Init_clutter): Added a call to
+	rbclt_stage_manager_init.
+
 2008-05-26  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcltgroup.c: Removed deprecated methods.

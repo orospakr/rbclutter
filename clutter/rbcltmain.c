@@ -22,6 +22,7 @@
 #include <rbgobject.h>
 
 #include "rbclutter.h"
+#include "rbcltstagemanager.h"
 
 static VALUE rbclt_c_clutter_init_error = Qnil;
 
@@ -76,6 +77,8 @@ rbclt_init (int argc, VALUE *argv)
       rb_iv_set (ex, "@errnum", GENUM2RVAL (eval, CLUTTER_TYPE_INIT_ERROR));
       rb_exc_raise (ex);
     }
+
+  rbclt_stage_manager_init_global_mark ();
 
   return Qnil;
 }
