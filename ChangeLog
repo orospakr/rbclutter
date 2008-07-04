@@ -1,3 +1,9 @@
+2008-07-04  Neil Roberts  <neil@o-hand.com>
+
+	* examples/test-shader.rb: Use sampler2D instead of sampler2DRect
+	now that Clutter has removed support for the ARB_texture_rectangle
+	extension.
+
 2008-06-03  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcltstagemanager.h: 
