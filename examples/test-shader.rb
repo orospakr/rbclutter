@@ -108,7 +108,47 @@ EOF
   color = (color + colorB)/2.0;
 #{FRAGMENT_SHADER_END}
 EOF
-   ]
+   ],
+
+   [ "edge-detect",
+     <<EOF
+float get_avg_rel(sampler2D texB, float dx, float dy)
+{
+  vec4 colorB = texture2D (texB, gl_TexCoord[0].st + vec2(dx, dy));
+  return (colorB.r + colorB.g + colorB.b) / 3.0;
+}
+
+#{FRAGMENT_SHADER_BEGIN}
+  mat3 sobel_h = mat3( 1.0,  2.0,  1.0,
+                       0.0,  0.0,  0.0,
+                      -1.0, -2.0, -1.0);
+  mat3 sobel_v = mat3( 1.0,  0.0, -1.0,
+                       2.0,  0.0, -2.0,
+                       1.0,  0.0, -1.0);
+  mat3 map = mat3( get_avg_rel(tex, -x_step, -y_step),
+                   get_avg_rel(tex, -x_step, 0.0),
+                   get_avg_rel(tex, -x_step, y_step),
+                   get_avg_rel(tex, 0.0, -y_step),
+                   get_avg_rel(tex, 0.0, 0.0),
+                   get_avg_rel(tex, 0.0, y_step),
+                   get_avg_rel(tex, x_step, -y_step),
+                   get_avg_rel(tex, x_step, 0.0),
+                   get_avg_rel(tex, x_step, y_step) );
+  mat3 gh = sobel_h * map;
+  mat3 gv = map * sobel_v;
+  float avgh = (gh[0][0] + gh[0][1] + gh[0][2] +
+                gh[1][0] + gh[1][1] + gh[1][2] +
+                gh[2][0] + gh[2][1] + gh[2][2]) / 18.0 + 0.5;
+  float avgv = (gv[0][0] + gv[0][1] + gv[0][2] +
+                gv[1][0] + gv[1][1] + gv[1][2] +
+                gv[2][0] + gv[2][1] + gv[2][2]) / 18.0 + 0.5;
+  float avg = (avgh + avgv) / 2.0;
+  color.r = avg * color.r;
+  color.g = avg * color.g;
+  color.b = avg * color.b;
+#{FRAGMENT_SHADER_END}
+EOF
+     ]
   ]
 
 $shader_no = 0
