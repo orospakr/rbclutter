@@ -1,3 +1,7 @@
+2008-07-05  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcltactor.c: Update to new layout API
+
 2008-07-04  Neil Roberts  <neil@o-hand.com>
 
 	* examples/test-shader.rb: Added the edge-detect filter from

@@ -96,6 +96,14 @@ rbclt_actor_queue_redraw (VALUE self)
 }
 
 static VALUE
+rbclt_actor_queue_relayout (VALUE self)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  clutter_actor_queue_relayout (actor);
+  return self;
+}
+
+static VALUE
 rbclt_actor_destroy (VALUE self)
 {
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
@@ -104,21 +112,148 @@ rbclt_actor_destroy (VALUE self)
 }
 
 static VALUE
-rbclt_actor_request_coords (VALUE self, VALUE box_arg)
+rbclt_actor_get_preferred_width (int argc, VALUE *argv, VALUE self)
 {
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
-  ClutterActorBox box = *(ClutterActorBox *) RVAL2BOXED (box_arg, CLUTTER_TYPE_ACTOR_BOX);
-  clutter_actor_request_coords (actor, &box);
+  VALUE for_height;
+  ClutterUnit min_width, natural_width;
+  
+  rb_scan_args (argc, argv, "01", &for_height);
+
+  clutter_actor_get_preferred_width (actor,
+				     NIL_P (for_height)
+				     ? -1 : NUM2INT (for_height),
+				     &min_width, &natural_width);
+  return rb_ary_new3 (2,
+		      rb_float_new (CLUTTER_UNITS_TO_FLOAT (min_width)),
+		      rb_float_new (CLUTTER_UNITS_TO_FLOAT (natural_width)));
+}
+
+static VALUE
+rbclt_actor_get_preferred_height (int argc, VALUE *argv, VALUE self)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  VALUE for_width;
+  ClutterUnit min_height, natural_height;
+  
+  rb_scan_args (argc, argv, "01", &for_width);
+
+  clutter_actor_get_preferred_height (actor,
+				      NIL_P (for_width)
+				      ? -1 : NUM2INT (for_width),
+				      &min_height, &natural_height);
+  return rb_ary_new3 (2,
+		      rb_float_new (CLUTTER_UNITS_TO_FLOAT (min_height)),
+		      rb_float_new (CLUTTER_UNITS_TO_FLOAT (natural_height)));
+}
+
+static VALUE
+rbclt_actor_get_preferred_size (VALUE self)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterUnit min_width, min_height, natural_width, natural_height;
+
+  clutter_actor_get_preferred_size (actor, &min_width, &min_height,
+				    &natural_width, &natural_height);
+
+  return rb_ary_new3 (4, rb_float_new (CLUTTER_UNITS_TO_FLOAT (min_width)),
+		      rb_float_new (CLUTTER_UNITS_TO_FLOAT (min_height)),
+		      rb_float_new (CLUTTER_UNITS_TO_FLOAT (natural_width)),
+		      rb_float_new (CLUTTER_UNITS_TO_FLOAT (natural_height)));
+}
+
+static VALUE
+rbclt_actor_allocate (VALUE self, VALUE box_arg, VALUE origin_changed)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterActorBox box
+    = *(ClutterActorBox *) RVAL2BOXED (box_arg, CLUTTER_TYPE_ACTOR_BOX);
+
+  clutter_actor_allocate (actor, &box, RTEST (origin_changed));
+
+  return self;
+}
+
+static VALUE
+rbclt_actor_allocate_preferred_size (VALUE self, VALUE origin_changed)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+
+  clutter_actor_allocate_preferred_size (actor, RTEST (origin_changed));
+
+  return self;
+}
+
+static VALUE
+rbclt_actor_get_allocation_coords (VALUE self)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  gint x_1, y_1, x_2, y_2;
+
+  clutter_actor_get_allocation_coords (actor, &x_1, &y_1, &x_2, &y_2);
+
+  return rb_ary_new3 (4, INT2NUM (x_1), INT2NUM (y_1),
+		      INT2NUM (x_2), INT2NUM (y_2));
+}
+
+static VALUE
+rbclt_actor_get_allocation_box (VALUE self)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterActorBox box;
+
+  clutter_actor_get_allocation_box (actor, &box);
+
   return BOXED2RVAL (&box, CLUTTER_TYPE_ACTOR_BOX);
 }
 
 static VALUE
-rbclt_actor_query_coords (VALUE self)
+rbclt_actor_get_allocation_geometry (VALUE self)
 {
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
-  ClutterActorBox box;
-  clutter_actor_query_coords (actor, &box);
-  return BOXED2RVAL (&box, CLUTTER_TYPE_ACTOR_BOX);
+  ClutterGeometry geometry;
+
+  clutter_actor_get_allocation_geometry (actor, &geometry);
+
+  return BOXED2RVAL (&geometry, CLUTTER_TYPE_GEOMETRY);
+}
+
+static VALUE
+rbclt_actor_get_allocation_vertices (int argc, VALUE *argv, VALUE self)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterActor *ancestor;
+  ClutterVertex verts[4];
+  VALUE ancestor_arg;
+  VALUE values[4];
+  int i;
+
+  rb_scan_args (argc, argv, "01", &ancestor_arg);
+  ancestor = NIL_P (ancestor_arg)
+    ? NULL : CLUTTER_ACTOR (RVAL2GOBJ (ancestor_arg));
+
+  clutter_actor_get_allocation_vertices (actor, ancestor, verts);
+
+  for (i = 0; i < 4; i++)
+    values[i] = BOXED2RVAL (verts + i, CLUTTER_TYPE_VERTEX);
+
+  return rb_ary_new4 (4, values);
+}
+
+static VALUE
+rbclt_actor_get_abs_allocation_vertices (VALUE self)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterVertex verts[4];
+  VALUE values[4];
+  int i;
+
+  clutter_actor_get_abs_allocation_vertices (actor, verts);
+
+  for (i = 0; i < 4; i++)
+    values[i] = BOXED2RVAL (verts + i, CLUTTER_TYPE_VERTEX);
+
+  return rb_ary_new4 (4, values);
 }
 
 static VALUE
@@ -140,20 +275,20 @@ rbclt_actor_set_geometry (VALUE self, VALUE geometry_arg)
 }
 
 static VALUE
-rbclt_actor_get_coords (VALUE self)
-{
-  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
-  gint x1, y1, x2, y2;
-  clutter_actor_get_coords (actor, &x1, &y1, &x2, &y2);
-  return rb_ary_new3 (4, INT2NUM (x1), INT2NUM (y1), INT2NUM (x2), INT2NUM (y2));
-}
-
-static VALUE
 rbclt_actor_set_size (VALUE self, VALUE width, VALUE height)
 {
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
   clutter_actor_set_size (actor, NUM2INT (width), NUM2INT (height));
   return self;
+}
+
+static VALUE
+rbclt_actor_get_transformed_size (VALUE self)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  guint width, height;
+  clutter_actor_get_transformed_size (actor, &width, &height);
+  return rb_ary_new3 (2, INT2NUM (width), INT2NUM (height));
 }
 
 static VALUE
@@ -165,11 +300,11 @@ rbclt_actor_set_position (VALUE self, VALUE x, VALUE y)
 }
 
 static VALUE
-rbclt_actor_abs_position (VALUE self)
+rbclt_actor_get_transformed_position (VALUE self)
 {
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
   gint x, y;
-  clutter_actor_get_abs_position (actor, &x, &y);
+  clutter_actor_get_transformed_position (actor, &x, &y);
   return rb_ary_new3 (2, INT2NUM (x), INT2NUM (y));
 }
 
@@ -204,10 +339,10 @@ rbclt_actor_get_rotation (VALUE self, VALUE axis)
 }
 
 static VALUE
-rbclt_actor_abs_opacity (VALUE self)
+rbclt_actor_get_paint_opacity (VALUE self)
 {
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
-  return INT2NUM (clutter_actor_get_abs_opacity (actor));
+  return INT2NUM (clutter_actor_get_paint_opacity (actor));
 }
 
 static VALUE
@@ -325,15 +460,6 @@ rbclt_actor_scale (VALUE self)
 }
 
 static VALUE
-rbclt_actor_abs_size (VALUE self)
-{
-  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
-  guint width, height;
-  clutter_actor_get_abs_size (actor, &width, &height);
-  return rb_ary_new3 (2, UINT2NUM (width), UINT2NUM (height));
-}
-
-static VALUE
 rbclt_actor_size (VALUE self)
 {
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
@@ -348,34 +474,6 @@ rbclt_actor_move_by (VALUE self, VALUE dx, VALUE dy)
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
   clutter_actor_move_by (actor, NUM2INT (dx), NUM2INT (dy));
   return self;
-}
-
-static VALUE
-rbclt_actor_vertices (VALUE self)
-{
-  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
-  ClutterVertex vertices[4];
-  clutter_actor_get_vertices (actor, vertices);
-  return rb_ary_new3 (4, BOXED2RVAL (vertices, CLUTTER_TYPE_VERTEX),
-		      BOXED2RVAL (vertices + 1, CLUTTER_TYPE_VERTEX),
-		      BOXED2RVAL (vertices + 2, CLUTTER_TYPE_VERTEX),
-		      BOXED2RVAL (vertices + 3, CLUTTER_TYPE_VERTEX));
-}
-
-static VALUE
-rbclt_actor_get_relative_vertices (VALUE self, VALUE ancestor)
-{
-  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
-  ClutterVertex vertices[4];
-
-  clutter_actor_get_relative_vertices (actor,
-				       RVAL2GOBJ (ancestor),
-				       vertices);
-
-  return rb_ary_new3 (4, BOXED2RVAL (vertices, CLUTTER_TYPE_VERTEX),
-		      BOXED2RVAL (vertices + 1, CLUTTER_TYPE_VERTEX),
-		      BOXED2RVAL (vertices + 2, CLUTTER_TYPE_VERTEX),
-		      BOXED2RVAL (vertices + 3, CLUTTER_TYPE_VERTEX));
 }
 
 static VALUE
@@ -506,18 +604,41 @@ rbclt_actor_init ()
   rb_define_method (klass, "paint", rbclt_actor_paint, 0);
   rb_define_method (klass, "pick", rbclt_actor_pick, 1);
   rb_define_method (klass, "queue_redraw", rbclt_actor_queue_redraw, 0);
+  rb_define_method (klass, "queue_relayout", rbclt_actor_queue_relayout, 0);
   rb_define_method (klass, "destroy", rbclt_actor_destroy, 0);
-  rb_define_method (klass, "request_coords", rbclt_actor_request_coords, 1);
-  rb_define_method (klass, "query_coords", rbclt_actor_query_coords, 0);
+  rb_define_method (klass, "get_preferred_width",
+		    rbclt_actor_get_preferred_width, -1);
+  rb_define_alias (klass, "preferred_width", "get_preferred_width");
+  rb_define_method (klass, "get_preferred_height",
+		    rbclt_actor_get_preferred_height, -1);
+  rb_define_alias (klass, "preferred_height", "get_preferred_height");
+  rb_define_method (klass, "preferred_size",
+		    rbclt_actor_get_preferred_size, 0);
+  rb_define_method (klass, "allocate", rbclt_actor_allocate, 2);
+  rb_define_method (klass, "allocate_preferred_size",
+		    rbclt_actor_allocate_preferred_size, 1);
+  rb_define_method (klass, "allocation_coords",
+		    rbclt_actor_get_allocation_coords, 0);
+  rb_define_method (klass, "allocation_box",
+		    rbclt_actor_get_allocation_box, 0);
+  rb_define_method (klass, "allocation_geometry",
+		    rbclt_actor_get_allocation_geometry, 0);
+  rb_define_method (klass, "get_allocation_vertices",
+		    rbclt_actor_get_allocation_vertices, -1);
+  rb_define_alias (klass, "allocation_vertices", "get_allocation_vertices");
+  rb_define_method (klass, "abs_allocation_vertices",
+		    rbclt_actor_get_abs_allocation_vertices, 0);
   rb_define_method (klass, "geometry", rbclt_actor_geometry, 0);
   rb_define_method (klass, "set_geometry", rbclt_actor_set_geometry, 1);
-  rb_define_method (klass, "coords", rbclt_actor_get_coords, 0);
   rb_define_method (klass, "set_size", rbclt_actor_set_size, 2);
   rb_define_method (klass, "set_position", rbclt_actor_set_position, 2);
-  rb_define_method (klass, "abs_position", rbclt_actor_abs_position, 0);
+  rb_define_method (klass, "transformed_size",
+		    rbclt_actor_get_transformed_size, 0);
+  rb_define_method (klass, "transformed_position",
+		    rbclt_actor_get_transformed_position, 0);
   rb_define_method (klass, "set_rotation", rbclt_actor_set_rotation, 5);
   rb_define_method (klass, "get_rotation", rbclt_actor_get_rotation, 1);
-  rb_define_method (klass, "abs_opacity", rbclt_actor_abs_opacity, 0);
+  rb_define_method (klass, "paint_opacity", rbclt_actor_get_paint_opacity, 0);
   rb_define_method (klass, "gid", rbclt_actor_gid, 0);
   rb_define_method (klass, "remove_clip", rbclt_actor_remove_clip, 0);
   rb_define_method (klass, "set_parent", rbclt_actor_set_parent, 1);
@@ -532,12 +653,8 @@ rbclt_actor_init ()
   rb_define_method (klass, "depth", rbclt_actor_depth, 0);
   rb_define_method (klass, "set_scale", rbclt_actor_set_scale, 2);
   rb_define_method (klass, "scale", rbclt_actor_scale, 0);
-  rb_define_method (klass, "abs_size", rbclt_actor_abs_size, 0);
   rb_define_method (klass, "size", rbclt_actor_size, 0);
   rb_define_method (klass, "move_by", rbclt_actor_move_by, 2);
-  rb_define_method (klass, "vertices", rbclt_actor_vertices, 0);
-  rb_define_method (klass, "get_relative_vertices",
-		    rbclt_actor_get_relative_vertices, 1);
   rb_define_method (klass, "apply_transform_to_point",
 		    rbclt_actor_apply_transform_to_point, 1);
   rb_define_method (klass, "apply_relative_transform_to_point",
