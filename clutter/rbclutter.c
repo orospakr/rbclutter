@@ -64,6 +64,7 @@ extern void rbclt_shader_init ();
 extern void rbclt_callback_func_init ();
 extern void rbclt_frame_source_init ();
 extern void rbclt_stage_manager_init ();
+extern void rb_cogl_init ();
 
 guint8
 rbclt_num_to_guint8 (VALUE val)
@@ -172,4 +173,5 @@ Init_clutter ()
   rbclt_callback_func_init ();
   rbclt_frame_source_init ();
   rbclt_stage_manager_init ();
+  rb_cogl_init ();
 }

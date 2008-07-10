@@ -29,6 +29,7 @@
 
 extern VALUE rbclt_c_clutter;
 extern VALUE rbclt_c_clutter_error;
+extern VALUE rbclt_c_cogl;
 
 void rbclt_initialize_unowned (VALUE obj, gpointer gobj);
 guint8 rbclt_num_to_guint8 (VALUE val);

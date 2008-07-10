@@ -1,3 +1,20 @@
+2008-07-10  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcogl.c: Added wrappers for miscellaneous Cogl
+	functions
+
+	* extra/mkcoglconsts.rb: Added a helper script to generate
+	rbcoglconsts.c
+
+	* clutter/rbcoglconsts.c: Added an automatically generated file to
+	define the constants for Cogl
+
+	* clutter/extconf.rb: Added rbcogl.o and rbcoglconsts.o
+
+	* clutter/rbclutter.c (Init_clutter): Added a call to rb_cogl_init
+
+	* clutter/rbclutter.h: Added a declaration for rbclt_c_cogl
+
 2008-07-05  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcltactor.c: Update to new layout API
