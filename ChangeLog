@@ -1,3 +1,7 @@
+2008-07-11  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcogl.c: Fix included headers
+
 2008-07-10  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcogl.c: Added wrappers for miscellaneous Cogl

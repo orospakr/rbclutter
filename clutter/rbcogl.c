@@ -18,8 +18,7 @@
  */
 
 #include <rbgobject.h>
-#include <clutter/clutter-actor.h>
-#include <clutter/clutter-enum-types.h>
+#include <cogl/cogl.h>
 
 #include "rbclutter.h"
 
