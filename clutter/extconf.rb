@@ -1,5 +1,5 @@
 # Ruby bindings for the Clutter 'interactive canvas' library.
-# Copyright (C) 2007  Neil Roberts
+# Copyright (C) 2007-2008  Neil Roberts
 # 
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,7 @@ require 'pkg-config'
 
 PKGConfig.have_package('glib-2.0') or show_fail
 PKGConfig.have_package('gdk-pixbuf-2.0') or show_fail
-PKGConfig.have_package('clutter-0.7') or show_fail
+PKGConfig.have_package('clutter-0.8') or show_fail
 
 find_header("rbgobject.h", *$:) or show_fail
 
