@@ -896,10 +896,6 @@ rb_cogl_consts_init (void)
   rb_define_const (rbclt_c_cogl, "FRAGMENT_PROGRAM_POSITION_MESA",
                    INT2FIX (CGL_FRAGMENT_PROGRAM_POSITION_MESA));
 #endif
-#ifdef GL_FRAGMENT_SHADER
-  rb_define_const (rbclt_c_cogl, "FRAGMENT_SHADER",
-                   INT2FIX (CGL_FRAGMENT_SHADER));
-#endif
 #ifdef GL_FRONT
   rb_define_const (rbclt_c_cogl, "FRONT",
                    INT2FIX (CGL_FRONT));
@@ -1443,10 +1439,6 @@ rb_cogl_consts_init (void)
 #ifdef GL_NUM_COMPRESSED_TEXTURE_FORMATS
   rb_define_const (rbclt_c_cogl, "NUM_COMPRESSED_TEXTURE_FORMATS",
                    INT2FIX (CGL_NUM_COMPRESSED_TEXTURE_FORMATS));
-#endif
-#ifdef GL_OBJECT_COMPILE_STATUS
-  rb_define_const (rbclt_c_cogl, "OBJECT_COMPILE_STATUS",
-                   INT2FIX (CGL_OBJECT_COMPILE_STATUS));
 #endif
 #ifdef GL_OBJECT_LINEAR
   rb_define_const (rbclt_c_cogl, "OBJECT_LINEAR",
@@ -2356,10 +2348,6 @@ rb_cogl_consts_init (void)
   rb_define_const (rbclt_c_cogl, "TEXTURE_RECTANGLE_ARB",
                    INT2FIX (CGL_TEXTURE_RECTANGLE_ARB));
 #endif
-#ifdef GL_TEXTURE_RECTANGLE_ARB
-  rb_define_const (rbclt_c_cogl, "TEXTURE_RECTANGLE_ARB",
-                   INT2FIX (CGL_TEXTURE_RECTANGLE_ARB));
-#endif
 #ifdef GL_TEXTURE_RED_SIZE
   rb_define_const (rbclt_c_cogl, "TEXTURE_RED_SIZE",
                    INT2FIX (CGL_TEXTURE_RED_SIZE));
@@ -2520,14 +2508,6 @@ rb_cogl_consts_init (void)
   rb_define_const (rbclt_c_cogl, "UNSIGNED_SHORT_8_8_MESA",
                    INT2FIX (CGL_UNSIGNED_SHORT_8_8_MESA));
 #endif
-#ifdef GL_UNSIGNED_SHORT_8_8_MESA
-  rb_define_const (rbclt_c_cogl, "UNSIGNED_SHORT_8_8_MESA",
-                   INT2FIX (CGL_UNSIGNED_SHORT_8_8_MESA));
-#endif
-#ifdef GL_UNSIGNED_SHORT_8_8_REV_MESA
-  rb_define_const (rbclt_c_cogl, "UNSIGNED_SHORT_8_8_REV_MESA",
-                   INT2FIX (CGL_UNSIGNED_SHORT_8_8_REV_MESA));
-#endif
 #ifdef GL_UNSIGNED_SHORT_8_8_REV_MESA
   rb_define_const (rbclt_c_cogl, "UNSIGNED_SHORT_8_8_REV_MESA",
                    INT2FIX (CGL_UNSIGNED_SHORT_8_8_REV_MESA));
@@ -2576,10 +2556,6 @@ rb_cogl_consts_init (void)
   rb_define_const (rbclt_c_cogl, "VERTEX_PROGRAM_POSITION_MESA",
                    INT2FIX (CGL_VERTEX_PROGRAM_POSITION_MESA));
 #endif
-#ifdef GL_VERTEX_SHADER
-  rb_define_const (rbclt_c_cogl, "VERTEX_SHADER",
-                   INT2FIX (CGL_VERTEX_SHADER));
-#endif
 #ifdef GL_VIEWPORT
   rb_define_const (rbclt_c_cogl, "VIEWPORT",
                    INT2FIX (CGL_VIEWPORT));
@@ -2591,10 +2567,6 @@ rb_cogl_consts_init (void)
 #ifdef GL_XOR
   rb_define_const (rbclt_c_cogl, "XOR",
                    INT2FIX (CGL_XOR));
-#endif
-#ifdef GL_YCBCR_MESA
-  rb_define_const (rbclt_c_cogl, "YCBCR_MESA",
-                   INT2FIX (CGL_YCBCR_MESA));
 #endif
 #ifdef GL_YCBCR_MESA
   rb_define_const (rbclt_c_cogl, "YCBCR_MESA",

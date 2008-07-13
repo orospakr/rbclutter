@@ -1,3 +1,16 @@
+2008-07-13  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcogltexture.c: 
+	* clutter/extconf.rb: 
+	* clutter/rbclutter.c: Add wrappers for the Cogl texture API.
+
+	* extra/mkcoglconsts.rb: Only include constants that are defined
+	to a GL_* value with the same name to avoid including #ifdef'd out
+	constants.
+
+	* clutter/rbcoglconsts.c: Remove duplicates and add some missing
+	constants.
+
 2008-07-11  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/extconf.rb: Increase the required Clutter version to 0.8

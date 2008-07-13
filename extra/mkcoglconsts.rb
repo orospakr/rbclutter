@@ -111,7 +111,8 @@ defines = []
 
 File.open(ARGV[1]) do |infile|
   infile.each_line do |line|
-    if md = line.match(/\A\s*\#\s*define\s+(CGL_[A-Z90-9_]+)/)
+    if md = line.match(/\A\s*\#\s*define\s+(C(GL_[A-Z90-9_]+))
+                        \s+\2\s*\z/x)
       defines << md[1]
     end
   end
