@@ -112,19 +112,19 @@ defines = []
 File.open(ARGV[1]) do |infile|
   infile.each_line do |line|
     if md = line.match(/\A\s*\#\s*define\s+(C(GL_[A-Z90-9_]+))
-                        \s+\2\s*\z/x)
-      defines << md[1]
+                        \s+(\2(?:_ARB)?)\s*\z/x)
+      defines << [ md[1], md[3] ]
     end
   end
 end
 
-defines.sort!
+defines.sort! { |a, b| a[0] <=> b[0] }
 
 defines.each do |define|
-  short_name = define[4..-1]
-  print("#ifdef GL_#{short_name}\n" \
+  short_name = define[0][4..-1]
+  print("#ifdef #{define[1]}\n" \
         "  rb_define_const (rbclt_c_cogl, \"#{short_name}\",\n" \
-        "                   INT2FIX (#{define}));\n" \
+        "                   INT2FIX (#{define[0]}));\n" \
         "#endif\n")
 end
 

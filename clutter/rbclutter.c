@@ -69,6 +69,8 @@ extern void rbclt_stage_manager_init ();
 extern void rb_cogl_init ();
 extern void rb_cogl_texture_init ();
 extern void rb_cogl_primitives_init ();
+extern void rb_cogl_shader_init ();
+extern void rb_cogl_program_init ();
 
 guint8
 rbclt_num_to_guint8 (VALUE val)
@@ -209,4 +211,6 @@ Init_clutter ()
   rb_cogl_init ();
   rb_cogl_texture_init ();
   rb_cogl_primitives_init ();
+  rb_cogl_shader_init ();
+  rb_cogl_program_init ();
 }

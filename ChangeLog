@@ -1,5 +1,18 @@
 2008-07-14  Neil Roberts  <neil@o-hand.com>
 
+	* clutter/rbcoglshader.h: 
+	* clutter/rbcoglshader.c: 
+	* clutter/rbcoglprogram.c: 
+	* clutter/rbclutter.c: 
+	* clutter/extconf.rb: Add wrappers for the Cogl shader and
+	program API
+
+	* clutter/rbcoglconsts.c: 
+	* extra/mkcoglconsts.rb: Include Cogl constants that are wrappers
+	for GL constants ending in *_ARB.
+
+2008-07-14  Neil Roberts  <neil@o-hand.com>
+
 	* clutter/rbclutter.c (rbclt_num_to_angle): New helper function to
 	* clutter/rbclutter.h: 
 	convert a ruby value to a ClutterAngle

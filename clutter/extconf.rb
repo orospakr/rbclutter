@@ -35,7 +35,8 @@ $objs = %w{ rbclutter.o rbcltactor.o rbcltalpha.o rbcltbehaviour.o rbcltbehaviou
 + %w{ rbcltmedia.o rbcltshader.o rbcltcallbackfunc.o rbcltframesource.o } \
 + %w{ rbcltstagemanager.o }
 
-$objs += %w{ rbcogl.o rbcoglconsts.o rbcogltexture.o rbcoglprimitives.o }
+$objs += %w{ rbcogl.o rbcoglconsts.o rbcogltexture.o rbcoglprimitives.o } \
++ %w{ rbcoglshader.o rbcoglprogram.o }
 
 # Add the boxed types to the object files list
 BOXED_TYPES.each { |bt| $objs << "rbclt#{bt}.o" }

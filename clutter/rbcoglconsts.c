@@ -896,6 +896,10 @@ rb_cogl_consts_init (void)
   rb_define_const (rbclt_c_cogl, "FRAGMENT_PROGRAM_POSITION_MESA",
                    INT2FIX (CGL_FRAGMENT_PROGRAM_POSITION_MESA));
 #endif
+#ifdef GL_FRAGMENT_SHADER_ARB
+  rb_define_const (rbclt_c_cogl, "FRAGMENT_SHADER",
+                   INT2FIX (CGL_FRAGMENT_SHADER));
+#endif
 #ifdef GL_FRONT
   rb_define_const (rbclt_c_cogl, "FRONT",
                    INT2FIX (CGL_FRONT));
@@ -1439,6 +1443,10 @@ rb_cogl_consts_init (void)
 #ifdef GL_NUM_COMPRESSED_TEXTURE_FORMATS
   rb_define_const (rbclt_c_cogl, "NUM_COMPRESSED_TEXTURE_FORMATS",
                    INT2FIX (CGL_NUM_COMPRESSED_TEXTURE_FORMATS));
+#endif
+#ifdef GL_OBJECT_COMPILE_STATUS_ARB
+  rb_define_const (rbclt_c_cogl, "OBJECT_COMPILE_STATUS",
+                   INT2FIX (CGL_OBJECT_COMPILE_STATUS));
 #endif
 #ifdef GL_OBJECT_LINEAR
   rb_define_const (rbclt_c_cogl, "OBJECT_LINEAR",
@@ -2555,6 +2563,10 @@ rb_cogl_consts_init (void)
 #ifdef GL_VERTEX_PROGRAM_POSITION_MESA
   rb_define_const (rbclt_c_cogl, "VERTEX_PROGRAM_POSITION_MESA",
                    INT2FIX (CGL_VERTEX_PROGRAM_POSITION_MESA));
+#endif
+#ifdef GL_VERTEX_SHADER_ARB
+  rb_define_const (rbclt_c_cogl, "VERTEX_SHADER",
+                   INT2FIX (CGL_VERTEX_SHADER));
 #endif
 #ifdef GL_VIEWPORT
   rb_define_const (rbclt_c_cogl, "VIEWPORT",
