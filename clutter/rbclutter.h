@@ -38,5 +38,6 @@ guint8 rbclt_num_to_guint8 (VALUE val);
 guint16 rbclt_num_to_guint16 (VALUE val);
 ClutterFixed rbclt_num_to_fixed (VALUE val);
 ClutterUnit rbclt_num_to_units (VALUE val);
+ClutterAngle rbclt_num_to_angle (VALUE angle);
 
 #endif /* _RBCLUTTER_H */

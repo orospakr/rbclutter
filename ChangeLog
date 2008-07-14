@@ -1,5 +1,15 @@
 2008-07-14  Neil Roberts  <neil@o-hand.com>
 
+	* clutter/rbclutter.c (rbclt_num_to_angle): New helper function to
+	* clutter/rbclutter.h: 
+	convert a ruby value to a ClutterAngle
+
+	* clutter/extconf.rb: 
+	* clutter/rbcoglprimitives.c: Added wrappers for the Cogl
+	primitives API.
+
+2008-07-14  Neil Roberts  <neil@o-hand.com>
+
 	* clutter/rbclutter.h: 
 	* clutter/rbclutter.c: Added wrapper functions for converting from
 	Ruby values to ClutterFixed or ClutterUnit that avoid going

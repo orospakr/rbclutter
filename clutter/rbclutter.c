@@ -68,6 +68,7 @@ extern void rbclt_stage_manager_init ();
 
 extern void rb_cogl_init ();
 extern void rb_cogl_texture_init ();
+extern void rb_cogl_primitives_init ();
 
 guint8
 rbclt_num_to_guint8 (VALUE val)
@@ -121,6 +122,12 @@ rbclt_num_to_units (VALUE val)
     return CLUTTER_UNITS_FROM_INT (FIX2INT (val));
   else
     return CLUTTER_UNITS_FROM_FLOAT (NUM2DBL (val));
+}
+
+ClutterAngle
+rbclt_num_to_angle (VALUE val)
+{
+  return CLUTTER_ANGLE_FROM_DEG (NUM2DBL (val));
 }
 
 void
@@ -201,4 +208,5 @@ Init_clutter ()
 
   rb_cogl_init ();
   rb_cogl_texture_init ();
+  rb_cogl_primitives_init ();
 }
