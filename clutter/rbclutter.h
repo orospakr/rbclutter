@@ -22,6 +22,8 @@
 
 #include <ruby.h>
 #include <glib/gtypes.h>
+#include <clutter/clutter-fixed.h>
+#include <clutter/clutter-units.h>
 
 #define RBCLUTTER_MAJOR_VERSION 0
 #define RBCLUTTER_MINOR_VERSION 4
@@ -34,5 +36,7 @@ extern VALUE rbclt_c_cogl;
 void rbclt_initialize_unowned (VALUE obj, gpointer gobj);
 guint8 rbclt_num_to_guint8 (VALUE val);
 guint16 rbclt_num_to_guint16 (VALUE val);
+ClutterFixed rbclt_num_to_fixed (VALUE val);
+ClutterUnit rbclt_num_to_units (VALUE val);
 
 #endif /* _RBCLUTTER_H */

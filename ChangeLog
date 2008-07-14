@@ -1,3 +1,15 @@
+2008-07-14  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbclutter.h: 
+	* clutter/rbclutter.c: Added wrapper functions for converting from
+	Ruby values to ClutterFixed or ClutterUnit that avoid going
+	through a double of the VALUE is a fixed number.
+
+	* clutter/rbcogltexture.c: 
+	* clutter/rbcogl.c: 
+	* clutter/mkboxedtype.rb: Use the new wrapper for converting to
+	ClutterFixed and ClutterUnit
+
 2008-07-13  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcogltexture.c: 

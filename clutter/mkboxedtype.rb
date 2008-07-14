@@ -26,9 +26,9 @@ def rbval_to_cval(field_type, rbval)
   when "gint"
     "NUM2INT (#{rbval})"
   when "ClutterUnit"
-    "CLUTTER_UNITS_FROM_FLOAT (NUM2DBL (#{rbval}))"
+    "rbclt_num_to_units (#{rbval})"
   when "ClutterFixed"
-    "CLUTTER_FLOAT_TO_FIXED (NUM2DBL (#{rbval}))"
+    "rbclt_num_to_fixed (#{rbval})"
   else
     raise ArgumentError, "Unknown field type #{field_type}\n"
   end

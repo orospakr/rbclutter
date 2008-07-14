@@ -1,5 +1,5 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
- * Copyright (C) 2007-2008  Neil Roberts
+ * Copyright (C) 2008  Neil Roberts
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -69,10 +69,10 @@ static VALUE
 rb_cogl_perspective (VALUE self, VALUE fovy, VALUE aspect,
 		     VALUE z_near, VALUE z_far)
 {
-  cogl_perspective (CLUTTER_FLOAT_TO_FIXED (NUM2DBL (fovy)),
-		    CLUTTER_FLOAT_TO_FIXED (NUM2DBL (aspect)),
-		    CLUTTER_FLOAT_TO_FIXED (NUM2DBL (z_near)),
-		    CLUTTER_FLOAT_TO_FIXED (NUM2DBL (z_far)));
+  cogl_perspective (rbclt_num_to_fixed (fovy),
+		    rbclt_num_to_fixed (aspect),
+		    rbclt_num_to_fixed (z_near),
+		    rbclt_num_to_fixed (z_far));
 
   return Qnil;
 }
@@ -84,10 +84,10 @@ rb_cogl_setup_viewport (VALUE self,
 			VALUE z_near, VALUE z_far)
 {
   cogl_setup_viewport (NUM2UINT (width), NUM2UINT (height),
-		       CLUTTER_FLOAT_TO_FIXED (NUM2DBL (fovy)),
-		       CLUTTER_FLOAT_TO_FIXED (NUM2DBL (aspect)),
-		       CLUTTER_FLOAT_TO_FIXED (NUM2DBL (z_near)),
-		       CLUTTER_FLOAT_TO_FIXED (NUM2DBL (z_far)));
+		       rbclt_num_to_fixed (fovy),
+		       rbclt_num_to_fixed (aspect),
+		       rbclt_num_to_fixed (z_near),
+		       rbclt_num_to_fixed (z_far));
 
   return Qnil;
 }
@@ -95,8 +95,8 @@ rb_cogl_setup_viewport (VALUE self,
 static VALUE
 rb_cogl_scale (VALUE self, VALUE x, VALUE y)
 {
-  cogl_scale (CLUTTER_FLOAT_TO_FIXED (NUM2DBL (x)),
-	      CLUTTER_FLOAT_TO_FIXED (NUM2DBL (y)));
+  cogl_scale (rbclt_num_to_fixed (x),
+	      rbclt_num_to_fixed (y));
 
   return Qnil;
 }
@@ -104,9 +104,9 @@ rb_cogl_scale (VALUE self, VALUE x, VALUE y)
 static VALUE
 rb_cogl_translate (VALUE self, VALUE x, VALUE y, VALUE z)
 {
-  cogl_translatex (CLUTTER_FLOAT_TO_FIXED (NUM2DBL (x)),
-		   CLUTTER_FLOAT_TO_FIXED (NUM2DBL (y)),
-		   CLUTTER_FLOAT_TO_FIXED (NUM2DBL (z)));
+  cogl_translatex (rbclt_num_to_fixed (x),
+		   rbclt_num_to_fixed (y),
+		   rbclt_num_to_fixed (z));
 
   return Qnil;
 }
@@ -114,7 +114,7 @@ rb_cogl_translate (VALUE self, VALUE x, VALUE y, VALUE z)
 static VALUE
 rb_cogl_rotate (VALUE self, VALUE angle, VALUE x, VALUE y, VALUE z)
 {
-  cogl_rotatex (CLUTTER_FLOAT_TO_FIXED (NUM2DBL (angle)),
+  cogl_rotatex (rbclt_num_to_fixed (angle),
 		NUM2INT (x), NUM2INT (y), NUM2INT (z));
 
   return Qnil;
@@ -170,10 +170,10 @@ static VALUE
 rb_cogl_clip_set (VALUE self, VALUE x_offset, VALUE y_offset,
 		  VALUE width, VALUE height)
 {
-  cogl_clip_set (CLUTTER_FLOAT_TO_FIXED (NUM2DBL (x_offset)),
-		 CLUTTER_FLOAT_TO_FIXED (NUM2DBL (y_offset)),
-		 CLUTTER_FLOAT_TO_FIXED (NUM2DBL (width)),
-		 CLUTTER_FLOAT_TO_FIXED (NUM2DBL (height)));
+  cogl_clip_set (rbclt_num_to_fixed (x_offset),
+		 rbclt_num_to_fixed (y_offset),
+		 rbclt_num_to_fixed (width),
+		 rbclt_num_to_fixed (height));
 
   return Qnil;
 }
@@ -198,7 +198,7 @@ static VALUE
 rb_cogl_alpha_func (VALUE self, VALUE func, VALUE ref)
 {
   cogl_alpha_func (NUM2INT (func),
-		   CLUTTER_FLOAT_TO_FIXED (NUM2DBL (ref)));
+		   rbclt_num_to_fixed (ref));
 
   return Qnil;
 }

@@ -1,5 +1,5 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
- * Copyright (C) 2007-2008  Neil Roberts
+ * Copyright (C) 2008  Neil Roberts
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -228,31 +228,31 @@ rb_cogl_texture_rectangle (int argc, VALUE *argv, VALUE self)
   rb_scan_args (argc, argv, "26", &x1in, &y1in, &x2in, &y2in,
 		&tx1, &ty1, &tx2, &ty2);
 
-  x1 = CLUTTER_FLOAT_TO_FIXED (NUM2DBL (x1in));
-  y1 = CLUTTER_FLOAT_TO_FIXED (NUM2DBL (y1in));
+  x1 = rbclt_num_to_fixed (x1in);
+  y1 = rbclt_num_to_fixed (y1in);
 
   if (x2in == Qnil)
     x2 = CLUTTER_INT_TO_FIXED (cogl_texture_get_width (DATA_PTR (self)))
       + x1;
   else
-    x2 = CLUTTER_FLOAT_TO_FIXED (NUM2DBL (x2in));
+    x2 = rbclt_num_to_fixed (x2in);
 
   if (y2in == Qnil)
     y2 = CLUTTER_INT_TO_FIXED (cogl_texture_get_height (DATA_PTR (self)))
       + y1;
   else
-    y2 = CLUTTER_FLOAT_TO_FIXED (NUM2DBL (y2in));
+    y2 = rbclt_num_to_fixed (y2in);
 
   cogl_texture_rectangle (rb_cogl_texture_get_handle (self),
 			  x1, y1, x2, y2,
 			  tx1 == Qnil
-			  ? 0 : CLUTTER_FLOAT_TO_FIXED (NUM2DBL (tx1)),
+			  ? 0 : rbclt_num_to_fixed (tx1),
 			  ty1 == Qnil
-			  ? 0 : CLUTTER_FLOAT_TO_FIXED (NUM2DBL (ty1)),
+			  ? 0 : rbclt_num_to_fixed (ty1),
 			  tx2 == Qnil
-			  ? CFX_ONE : CLUTTER_FLOAT_TO_FIXED (NUM2DBL (tx2)),
+			  ? CFX_ONE : rbclt_num_to_fixed (tx2),
 			  ty2 == Qnil
-			  ? CFX_ONE : CLUTTER_FLOAT_TO_FIXED (NUM2DBL (ty2)));
+			  ? CFX_ONE : rbclt_num_to_fixed (ty2));
   
   return self;
 }
@@ -376,19 +376,19 @@ rb_cogl_texture_do_polygon (PolygonData *data)
 	  use_color = TRUE;
 	case 5:
 	  data->vertices[i].ty
-	    = CLUTTER_FLOAT_TO_FIXED (NUM2DBL (array->ptr[4]));
+	    = rbclt_num_to_fixed (array->ptr[4]);
 	case 4:
 	  data->vertices[i].tx
-	    = CLUTTER_FLOAT_TO_FIXED (NUM2DBL (array->ptr[3]));
+	    = rbclt_num_to_fixed (array->ptr[3]);
 	case 3:
 	  data->vertices[i].z
-	    = CLUTTER_FLOAT_TO_FIXED (NUM2DBL (array->ptr[2]));
+	    = rbclt_num_to_fixed (array->ptr[2]);
 	case 2:
 	  data->vertices[i].y
-	    = CLUTTER_FLOAT_TO_FIXED (NUM2DBL (array->ptr[1]));
+	    = rbclt_num_to_fixed (array->ptr[1]);
 	case 1:
 	  data->vertices[i].x
-	    = CLUTTER_FLOAT_TO_FIXED (NUM2DBL (array->ptr[0]));
+	    = rbclt_num_to_fixed (array->ptr[0]);
 	case 0:
 	  break;
 	}

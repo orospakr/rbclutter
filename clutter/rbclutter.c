@@ -22,6 +22,7 @@
 #include <glib-object.h>
 #include <clutter/clutter-version.h>
 #include <clutter/clutter-enum-types.h>
+#include <clutter/clutter-fixed.h>
 
 #include "rbclutter.h"
 
@@ -98,6 +99,28 @@ rbclt_num_to_guint16 (VALUE val)
     return (guint16) num;
 
   rb_raise (rb_eRangeError, "integer %ld too %s to convert to `guint16'", num, s);
+}
+
+ClutterFixed
+rbclt_num_to_fixed (VALUE val)
+{
+  /* If the number is a fixed num then there's no need to go through a
+     double first */
+  if (FIXNUM_P (val))
+    return CLUTTER_INT_TO_FIXED (FIX2INT (val));
+  else
+    return CLUTTER_FLOAT_TO_FIXED (NUM2DBL (val));
+}
+
+ClutterUnit
+rbclt_num_to_units (VALUE val)
+{
+  /* If the number is a fixed num then there's no need to go through a
+     double first */
+  if (FIXNUM_P (val))
+    return CLUTTER_UNITS_FROM_INT (FIX2INT (val));
+  else
+    return CLUTTER_UNITS_FROM_FLOAT (NUM2DBL (val));
 }
 
 void
