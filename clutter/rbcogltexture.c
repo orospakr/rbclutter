@@ -21,6 +21,7 @@
 #include <cogl/cogl.h>
 
 #include "rbclutter.h"
+#include "rbcogltexture.h"
 
 static VALUE rb_c_cogl_texture_error;
 static VALUE rb_c_cogl_texture;
@@ -142,7 +143,7 @@ rb_cogl_texture_initialize (int argc, VALUE *argvin, VALUE self)
   return Qnil;
 }
 
-static CoglHandle
+CoglHandle
 rb_cogl_texture_get_handle (VALUE obj)
 {
   void *ptr;

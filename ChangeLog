@@ -1,5 +1,15 @@
 2008-07-14  Neil Roberts  <neil@o-hand.com>
 
+	* clutter/rbcogloffscreen.c: 
+	* clutter/extconf.rb: 
+	* clutter/rbclutter.c: Add wrappers for the Cogl FBO API.
+
+	* clutter/rbcogltexture.h: 
+	* clutter/rbcogltexture.c (rb_cogl_texture_get_handle): Made the
+	get handle function public.
+
+2008-07-14  Neil Roberts  <neil@o-hand.com>
+
 	* clutter/rbcoglshader.h: 
 	* clutter/rbcoglshader.c: 
 	* clutter/rbcoglprogram.c: 

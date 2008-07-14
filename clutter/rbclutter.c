@@ -71,6 +71,7 @@ extern void rb_cogl_texture_init ();
 extern void rb_cogl_primitives_init ();
 extern void rb_cogl_shader_init ();
 extern void rb_cogl_program_init ();
+extern void rb_cogl_offscreen_init ();
 
 guint8
 rbclt_num_to_guint8 (VALUE val)
@@ -213,4 +214,5 @@ Init_clutter ()
   rb_cogl_primitives_init ();
   rb_cogl_shader_init ();
   rb_cogl_program_init ();
+  rb_cogl_offscreen_init ();
 }
