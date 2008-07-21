@@ -1,3 +1,8 @@
+2008-07-21  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcltcontainer.c: Added bindings for handling the child
+	meta data properties.
+
 2008-07-14  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcogloffscreen.c: 
