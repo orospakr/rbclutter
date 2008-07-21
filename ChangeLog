@@ -1,5 +1,11 @@
 2008-07-21  Neil Roberts  <neil@o-hand.com>
 
+	* clutter/rbcogltexture.c: Converted to use the boxed value of
+	CLUTTER_TYPE_TEXTURE_HANDLE so that it can be used as a value for
+	the 'cogl_texture' property of Clutter::Texture.
+
+2008-07-21  Neil Roberts  <neil@o-hand.com>
+
 	* clutter/rbcltcontainer.c: Added bindings for handling the child
 	meta data properties.
 

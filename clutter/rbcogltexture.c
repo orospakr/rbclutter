@@ -19,6 +19,7 @@
 
 #include <rbgobject.h>
 #include <cogl/cogl.h>
+#include <clutter/clutter-texture.h>
 
 #include "rbclutter.h"
 #include "rbcogltexture.h"
@@ -35,19 +36,6 @@ struct _PolygonData
   VALUE self;
   CoglTextureVertex *vertices;
 };
-
-static void
-rb_cogl_texture_free (void *ptr)
-{
-  if (ptr)
-    cogl_texture_unref (ptr);
-}
-
-static VALUE
-rb_cogl_texture_allocate (VALUE klass)
-{
-  return Data_Wrap_Struct (klass, NULL, rb_cogl_texture_free, NULL);
-}
 
 static int
 rb_cogl_texture_get_format_bpp (CoglPixelFormat format)
@@ -138,7 +126,9 @@ rb_cogl_texture_initialize (int argc, VALUE *argvin, VALUE self)
   else if (tex == COGL_INVALID_HANDLE)
     rb_raise (rb_c_cogl_texture_error, "Cogl texture creation failed");
 
-  DATA_PTR (self) = tex;
+  G_INITIALIZE (self, tex);
+  
+  cogl_texture_unref (tex);
 
   return Qnil;
 }
@@ -146,14 +136,7 @@ rb_cogl_texture_initialize (int argc, VALUE *argvin, VALUE self)
 CoglHandle
 rb_cogl_texture_get_handle (VALUE obj)
 {
-  void *ptr;
-
-  if (!RTEST (rb_obj_is_kind_of (obj, rb_c_cogl_texture)))
-    rb_raise (rb_eTypeError, "not a Cogl texture");
-
-  Data_Get_Struct (obj, void, ptr);
-
-  return (CoglHandle) ptr;
+  return (CoglHandle) RVAL2BOXED (obj, CLUTTER_TYPE_TEXTURE_HANDLE);
 }
 
 static VALUE
@@ -225,6 +208,7 @@ rb_cogl_texture_rectangle (int argc, VALUE *argv, VALUE self)
 {
   VALUE x1in, y1in, x2in, y2in, tx1, ty1, tx2, ty2;
   ClutterFixed x1, y1, x2, y2;
+  CoglHandle tex = rb_cogl_texture_get_handle (self);
   
   rb_scan_args (argc, argv, "26", &x1in, &y1in, &x2in, &y2in,
 		&tx1, &ty1, &tx2, &ty2);
@@ -233,18 +217,18 @@ rb_cogl_texture_rectangle (int argc, VALUE *argv, VALUE self)
   y1 = rbclt_num_to_fixed (y1in);
 
   if (x2in == Qnil)
-    x2 = CLUTTER_INT_TO_FIXED (cogl_texture_get_width (DATA_PTR (self)))
+    x2 = CLUTTER_INT_TO_FIXED (cogl_texture_get_width (tex))
       + x1;
   else
     x2 = rbclt_num_to_fixed (x2in);
 
   if (y2in == Qnil)
-    y2 = CLUTTER_INT_TO_FIXED (cogl_texture_get_height (DATA_PTR (self)))
+    y2 = CLUTTER_INT_TO_FIXED (cogl_texture_get_height (tex))
       + y1;
   else
     y2 = rbclt_num_to_fixed (y2in);
 
-  cogl_texture_rectangle (rb_cogl_texture_get_handle (self),
+  cogl_texture_rectangle (tex,
 			  x1, y1, x2, y2,
 			  tx1 == Qnil
 			  ? 0 : rbclt_num_to_fixed (tx1),
@@ -428,14 +412,12 @@ rb_cogl_texture_polygon (int argc, VALUE *argv, VALUE self)
 void
 rb_cogl_texture_init ()
 {
-  VALUE klass = rb_define_class_under (rbclt_c_cogl, "Texture",
-				       rb_cObject);
+  VALUE klass = G_DEF_CLASS (CLUTTER_TYPE_TEXTURE_HANDLE, "Texture",
+			     rbclt_c_cogl);
   rb_c_cogl_texture = klass;
 
   rb_c_cogl_texture_error = rb_define_class_under (klass, "Error",
 						   rb_eStandardError);
-
-  rb_define_alloc_func (klass, rb_cogl_texture_allocate);
 
   rb_define_method (klass, "initialize", rb_cogl_texture_initialize, -1);
   rb_define_method (klass, "rectangle", rb_cogl_texture_rectangle, -1);
