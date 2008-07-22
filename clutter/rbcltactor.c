@@ -24,6 +24,58 @@
 #include "rbclutter.h"
 
 static VALUE
+rbclt_actor_subclass_initialize (int argc, VALUE *argv, VALUE self)
+{
+  GType gtype = RVAL2GTYPE (self);
+  ClutterActor *actor;
+
+  if (gtype == CLUTTER_TYPE_ACTOR)
+    rb_raise (rb_eArgError, "Clutter::Actor can not be instantiated directly");
+
+  /* Chain up to let GLib::Object.new create the right instance */
+  rb_call_super (argc, argv);
+
+  /* Claim the floating reference if it hasn't been claimed
+     already. Doing it conditionally hopefully protects against the
+     GObject bindings being fixed one day so that they understand
+     GInitiallyUnowned */
+  actor = RVAL2GOBJ (self);
+  if (g_object_is_floating (actor))
+    g_object_ref_sink (actor);
+
+  return Qnil;
+}
+
+static VALUE
+rbclt_actor_type_register (int argc, VALUE *argv, VALUE self)
+{
+  VALUE result;
+  VALUE mod;
+
+  /* GObject::type_register will define and include a stub module to
+     override the initialize constructor with one that calls
+     gobj_initialize. That function isn't good enough for ClutterActor
+     because it doesn't understand GInitiallyUnowned so it doesn't
+     claim the floating reference. So when the actor is added to a
+     container the container will steal Ruby's reference. To work
+     around this we include another stub module to redefine the
+     initialize method again */
+  
+  /* Let the real type_register function run */
+  result = rb_call_super (argc, argv);
+
+  /* Define a stub module specifically for this new subclass */
+  mod = rb_define_module_under (self, "ClutterGObjectHook__");
+  /* Give it a constructor */
+  rb_define_method (mod, "initialize",
+		    rbclt_actor_subclass_initialize, -1);
+  /* Make the new class include the module */
+  rb_include_module (self, mod);
+
+  return result;
+ }
+
+static VALUE
 rbclt_actor_show (VALUE self)
 {
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
@@ -594,6 +646,9 @@ void
 rbclt_actor_init ()
 {
   VALUE klass = G_DEF_CLASS (CLUTTER_TYPE_ACTOR, "Actor", rbclt_c_clutter);
+
+  rb_define_singleton_method (klass, "type_register",
+			      rbclt_actor_type_register, -1);
 
   rb_define_method (klass, "show", rbclt_actor_show, 0);
   rb_define_method (klass, "show_all", rbclt_actor_show_all, 0);

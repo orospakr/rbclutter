@@ -1,3 +1,9 @@
+2008-07-22  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcltactor.c: Added an override for the 'type_register'
+	class method so that custom subclasses of Clutter::Actor won't
+	break the reference counting.
+
 2008-07-21  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcogltexture.c: Converted to use the boxed value of
