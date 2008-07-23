@@ -23,6 +23,8 @@
 
 #include "rbclutter.h"
 
+VALUE rbclt_c_actor;
+
 static VALUE
 rbclt_actor_subclass_initialize (int argc, VALUE *argv, VALUE self)
 {
@@ -646,6 +648,8 @@ void
 rbclt_actor_init ()
 {
   VALUE klass = G_DEF_CLASS (CLUTTER_TYPE_ACTOR, "Actor", rbclt_c_clutter);
+
+  rbclt_c_actor = klass;
 
   rb_define_singleton_method (klass, "type_register",
 			      rbclt_actor_type_register, -1);

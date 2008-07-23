@@ -1,5 +1,17 @@
 2008-07-23  Neil Roberts  <neil@o-hand.com>
 
+	* clutter/rbclttexture.c: Update to 0.8 so that it doesn't include
+	anything related to pixbufs and removes the properties for
+	accessing the tiles. (Tiles can now be accessed from the Cogl
+	texture)
+
+	* clutter/rbcltactor.h: 
+	* clutter/rbcltactor.c: Make the actor class a public variable.
+
+	* clutter/extconf.rb: gdk-pixbuf is no longer required
+
+2008-07-23  Neil Roberts  <neil@o-hand.com>
+
 	* README: Updated
 
 2008-07-23  Neil Roberts  <neil@o-hand.com>

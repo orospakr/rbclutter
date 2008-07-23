@@ -1,5 +1,5 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
- * Copyright (C) 2007  Neil Roberts
+ * Copyright (C) 2007-2008  Neil Roberts
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,22 +20,40 @@
 #include <rbgobject.h>
 #include <clutter/clutter-texture.h>
 #include <clutter/clutter-enum-types.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "rbclutter.h"
+#include "rbcltactor.h"
+
+static VALUE rbclt_texture_error;
 
 static VALUE
 rbclt_texture_initialize (int argc, VALUE *argv, VALUE self)
 {
   ClutterActor *actor;
-  VALUE pixbuf;
+  VALUE source;
 
-  rb_scan_args (argc, argv, "01", &pixbuf);
+  rb_scan_args (argc, argv, "01", &source);
 
-  if (NIL_P (pixbuf))
+  if (NIL_P (source))
     actor = clutter_texture_new ();
+  else if (rb_obj_is_kind_of (source, rbclt_c_actor))
+    {
+      ClutterActor *source_actor = CLUTTER_ACTOR (RVAL2GOBJ (source));
+
+      actor = clutter_texture_new_from_actor (source_actor);
+
+      if (actor == NULL)
+	  rb_raise (rbclt_texture_error, "failed to create FBO");
+    }
   else
-    actor = clutter_texture_new_from_pixbuf (GDK_PIXBUF (RVAL2GOBJ (pixbuf)));
+    {
+      GError *error = NULL;
+
+      actor = clutter_texture_new_from_file (StringValuePtr (source), &error);
+
+      if (error)
+	RAISE_GERROR (error);
+    }
 
   rbclt_initialize_unowned (self, actor);
 
@@ -43,15 +61,31 @@ rbclt_texture_initialize (int argc, VALUE *argv, VALUE self)
 }
 
 static VALUE
+rbclt_texture_set_from_file (VALUE self, VALUE filename)
+{
+  ClutterTexture *texture = CLUTTER_TEXTURE (RVAL2GOBJ (self));
+  GError *error = NULL;
+
+  clutter_texture_set_from_file (texture, StringValuePtr (filename), &error);
+
+  if (error)
+    RAISE_GERROR (error);
+
+  return self;
+}
+
+static VALUE
 rbclt_texture_set_from_rgb_data (VALUE self, VALUE data, VALUE has_alpha,
-				 VALUE width_arg, VALUE height_arg, VALUE rowstride_arg,
-				 VALUE bpp_arg, VALUE flags)
+				 VALUE width_arg, VALUE height_arg,
+				 VALUE rowstride_arg,
+				 VALUE bpp_arg, VALUE flags_arg)
 {
   ClutterTexture *texture = CLUTTER_TEXTURE (RVAL2GOBJ (self));
   gint width = NUM2INT (width_arg), height = NUM2INT (height_arg);
   gint rowstride = NUM2INT (rowstride_arg), bpp = NUM2INT (bpp_arg);
+  ClutterTextureFlags flags = RVAL2GFLAGS (flags_arg,
+					   CLUTTER_TYPE_TEXTURE_FLAGS);
   GError *error = NULL;
-  gboolean ret;
 
   /* Get the data as a string */
   data = StringValue (data);
@@ -63,26 +97,70 @@ rbclt_texture_set_from_rgb_data (VALUE self, VALUE data, VALUE has_alpha,
       || RSTRING (data)->len < height * rowstride)
     rb_raise (rb_eArgError, "string too small for image data");
 
-  ret = clutter_texture_set_from_rgb_data (texture, (guchar *) RSTRING (data)->ptr,
-					   RTEST (has_alpha), width, height, rowstride,
-					   bpp, RVAL2GFLAGS (flags, CLUTTER_TYPE_TEXTURE_FLAGS),
-					   &error);
+  clutter_texture_set_from_rgb_data (texture,
+				     (guchar *) RSTRING (data)->ptr,
+				     RTEST (has_alpha),
+				     width, height,
+				     rowstride,
+				     bpp, flags,
+				     &error);
 
   if (error)
     RAISE_GERROR (error);
 
-  return ret ? Qtrue : Qfalse;
+  return self;
+}
+
+static VALUE
+rbclt_texture_set_area_from_rgb_data (VALUE self, VALUE data, VALUE has_alpha,
+				      VALUE x_arg, VALUE y_arg,
+				      VALUE width_arg, VALUE height_arg,
+				      VALUE rowstride_arg,
+				      VALUE bpp_arg, VALUE flags_arg)
+{
+  ClutterTexture *texture = CLUTTER_TEXTURE (RVAL2GOBJ (self));
+  gint x = NUM2INT (x_arg), y = NUM2INT (y_arg);
+  gint width = NUM2INT (width_arg), height = NUM2INT (height_arg);
+  gint rowstride = NUM2INT (rowstride_arg), bpp = NUM2INT (bpp_arg);
+  ClutterTextureFlags flags = RVAL2GFLAGS (flags_arg,
+					   CLUTTER_TYPE_TEXTURE_FLAGS);
+  GError *error = NULL;
+
+  /* Get the data as a string */
+  data = StringValue (data);
+  /* Make sure none of the arguments are negative */
+  if (width < 0 || height < 0 || rowstride < 0 || bpp < 1)
+    rb_raise (rb_eArgError, "bad value used for image data parameters");
+  /* Make sure the data is large enough */
+  if (RSTRING (data)->len < width * height * bpp
+      || RSTRING (data)->len < height * rowstride)
+    rb_raise (rb_eArgError, "string too small for image data");
+
+  clutter_texture_set_area_from_rgb_data (texture,
+					  (guchar *) RSTRING (data)->ptr,
+					  RTEST (has_alpha),
+					  x, y,
+					  width, height,
+					  rowstride,
+					  bpp, flags,
+					  &error);
+
+  if (error)
+    RAISE_GERROR (error);
+
+  return self;
 }
 
 static VALUE
 rbclt_texture_set_from_yuv_data (VALUE self, VALUE data,
 				 VALUE width_arg, VALUE height_arg,
-				 VALUE flags)
+				 VALUE flags_arg)
 {
   ClutterTexture *texture = CLUTTER_TEXTURE (RVAL2GOBJ (self));
   gint width = NUM2INT (width_arg), height = NUM2INT (height_arg);
+  ClutterTextureFlags flags = RVAL2GFLAGS (flags_arg,
+					   CLUTTER_TYPE_TEXTURE_FLAGS);
   GError *error = NULL;
-  gboolean ret;
 
   /* Get the data as a string */
   data = StringValue (data);
@@ -93,15 +171,15 @@ rbclt_texture_set_from_yuv_data (VALUE self, VALUE data,
   if (RSTRING (data)->len < width * height * sizeof (gushort))
     rb_raise (rb_eArgError, "string too small for image data");
 
-  ret = clutter_texture_set_from_yuv_data (texture, (guchar *) RSTRING (data)->ptr,
-					   width, height, 
-					   RVAL2GFLAGS (flags, CLUTTER_TYPE_TEXTURE_FLAGS),
-					   &error);
+  clutter_texture_set_from_yuv_data (texture,
+				     (guchar *) RSTRING (data)->ptr,
+				     width, height, flags,
+				     &error);
 
   if (error)
     RAISE_GERROR (error);
 
-  return ret ? Qtrue : Qfalse;
+  return self;
 }
 
 static VALUE
@@ -113,68 +191,32 @@ rbclt_texture_base_size (VALUE self)
   return rb_ary_new3 (2, INT2NUM (width), INT2NUM (height));
 }
 
-static VALUE
-rbclt_texture_bind_tile (VALUE self, VALUE index)
-{
-  ClutterTexture *texture = CLUTTER_TEXTURE (RVAL2GOBJ (self));
-  clutter_texture_bind_tile (texture, NUM2INT (index));
-  return self;
-}
-
-static VALUE
-rbclt_texture_n_tiles (VALUE self)
-{
-  ClutterTexture *texture = CLUTTER_TEXTURE (RVAL2GOBJ (self));
-  gint n_x_tiles, n_y_tiles;
-  clutter_texture_get_n_tiles (texture, &n_x_tiles, &n_y_tiles);
-  return rb_ary_new3 (2, INT2NUM (n_x_tiles), INT2NUM (n_y_tiles));
-}
-
-static VALUE
-rbclt_texture_x_tile_detail (VALUE self, VALUE x_index)
-{
-  ClutterTexture *texture = CLUTTER_TEXTURE (RVAL2GOBJ (self));
-  gint pos, size, waste;
-  clutter_texture_get_x_tile_detail (texture, NUM2INT (x_index), &pos, &size, &waste);
-  return rb_ary_new3 (3, INT2NUM (pos), INT2NUM (size), INT2NUM (waste));
-}
-
-static VALUE
-rbclt_texture_y_tile_detail (VALUE self, VALUE y_index)
-{
-  ClutterTexture *texture = CLUTTER_TEXTURE (RVAL2GOBJ (self));
-  gint pos, size, waste;
-  clutter_texture_get_x_tile_detail (texture, NUM2INT (y_index), &pos, &size, &waste);
-  return rb_ary_new3 (3, INT2NUM (pos), INT2NUM (size), INT2NUM (waste));
-}
-
-static VALUE
-rbclt_texture_has_generated_tiles (VALUE self)
-{
-  ClutterTexture *texture = CLUTTER_TEXTURE (RVAL2GOBJ (self));
-  return clutter_texture_has_generated_tiles (texture) ? Qtrue : Qfalse;
-}
-
 void
 rbclt_texture_init ()
 {
   VALUE klass = G_DEF_CLASS (CLUTTER_TYPE_TEXTURE, "Texture", rbclt_c_clutter);
 
-  G_DEF_ERROR (CLUTTER_TEXTURE_ERROR, "Error", klass, rb_eRuntimeError,
-	       CLUTTER_TYPE_TEXTURE_ERROR);
+  rbclt_texture_error
+    = G_DEF_ERROR (CLUTTER_TEXTURE_ERROR, "Error", klass,
+		   rbclt_c_clutter_error,
+		   CLUTTER_TYPE_TEXTURE_ERROR);
 
   G_DEF_CLASS (CLUTTER_TYPE_TEXTURE_FLAGS, "Flags", klass);
   G_DEF_CONSTANTS (klass, CLUTTER_TYPE_TEXTURE_FLAGS, "CLUTTER_TEXTURE_");
 
+  G_DEF_CLASS (CLUTTER_TYPE_TEXTURE_QUALITY, "Quality", klass);
+  G_DEF_CONSTANTS (klass, CLUTTER_TYPE_TEXTURE_QUALITY,
+		   "CLUTTER_TEXTURE_QUALITY_");
+
   rb_define_method (klass, "initialize", rbclt_texture_initialize, -1);
-  rb_define_method (klass, "set_from_rgb_data", rbclt_texture_set_from_rgb_data, 7);
-  rb_define_method (klass, "set_from_yuv_data", rbclt_texture_set_from_yuv_data, 4);
+  rb_define_method (klass, "set_from_file", rbclt_texture_set_from_file, 1);
+  rb_define_method (klass, "set_from_rgb_data",
+		    rbclt_texture_set_from_rgb_data, 7);
+  rb_define_method (klass, "set_from_yuv_data",
+		    rbclt_texture_set_from_yuv_data, 4);
+  rb_define_method (klass, "set_area_from_rgb_data",
+		    rbclt_texture_set_area_from_rgb_data, 9);
   rb_define_method (klass, "base_size", rbclt_texture_base_size, 0);
-  rb_define_method (klass, "bind_tile", rbclt_texture_bind_tile, 1);
-  rb_define_method (klass, "n_tiles", rbclt_texture_n_tiles, 0);
-  rb_define_method (klass, "x_tile_detail", rbclt_texture_x_tile_detail, 1);
-  rb_define_method (klass, "y_tile_detail", rbclt_texture_y_tile_detail, 1);
-  rb_define_method (klass, "has_generated_tiles?", rbclt_texture_has_generated_tiles, 0);
   
   G_DEF_SETTERS (klass);
 }
