@@ -1,5 +1,9 @@
 2008-07-23  Neil Roberts  <neil@o-hand.com>
 
+	* README: Updated
+
+2008-07-23  Neil Roberts  <neil@o-hand.com>
+
 	* clutter/rbcltcontainer.c: Added a wrapper for
 	Clutter::Container#get_child_meta
 
