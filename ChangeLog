@@ -1,3 +1,14 @@
+2008-07-23  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcltcontainer.c: Added a wrapper for
+	Clutter::Container#get_child_meta
+
+	* clutter/rbcltchildmeta.c: Added a wrapper for Clutter::ChildMeta
+
+	* clutter/extconf.rb: Added rbcltchildmeta.o
+
+	* clutter/rbclutter.c (Init_clutter): Call rbclt_child_meta_init
+
 2008-07-22  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcltactor.c: Added an override for the 'type_register'

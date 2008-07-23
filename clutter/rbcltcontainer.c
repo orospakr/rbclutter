@@ -269,6 +269,15 @@ rbclt_container_get_container_class (VALUE rclass)
 }
 
 static VALUE
+rbclt_container_get_child_meta (VALUE self, VALUE child)
+{
+  ClutterContainer *container = CLUTTER_CONTAINER (RVAL2GOBJ (self));
+
+  return GOBJ2RVAL (clutter_container_get_child_meta (container,
+						      RVAL2GOBJ (child)));
+}
+
+static VALUE
 rbclt_container_find_child_property (VALUE self, VALUE rclass, VALUE prop_name)
 {
   GObjectClass *klass = rbclt_container_get_container_class (rclass);
@@ -344,6 +353,8 @@ rbclt_container_init ()
 		    rbclt_container_child_set, -1);
   rb_define_method (klass, "child_get",
 		    rbclt_container_child_get, -1);
+  rb_define_method (klass, "get_child_meta",
+		    rbclt_container_get_child_meta, 1);
   rb_define_singleton_method (klass, "find_child_property",
 			      rbclt_container_find_child_property, 2);
   rb_define_singleton_method (klass, "list_child_properties",

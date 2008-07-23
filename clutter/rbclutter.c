@@ -36,6 +36,7 @@ extern void rbclt_geometry_init ();
 extern void rbclt_stage_init ();
 extern void rbclt_color_init ();
 extern void rbclt_container_init ();
+extern void rbclt_child_meta_init ();
 extern void rbclt_label_init ();
 extern void rbclt_vertex_init ();
 extern void rbclt_group_init ();
@@ -178,6 +179,7 @@ Init_clutter ()
   rbclt_geometry_init ();
   rbclt_vertex_init ();
   rbclt_container_init ();
+  rbclt_child_meta_init ();
   rbclt_stage_init ();
   rbclt_color_init ();
   rbclt_label_init ();
