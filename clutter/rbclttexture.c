@@ -197,7 +197,7 @@ rbclt_texture_init ()
   VALUE klass = G_DEF_CLASS (CLUTTER_TYPE_TEXTURE, "Texture", rbclt_c_clutter);
 
   rbclt_texture_error
-    = G_DEF_ERROR (CLUTTER_TEXTURE_ERROR, "Error", klass,
+    = G_DEF_ERROR (CLUTTER_TEXTURE_ERROR, "TextureError", rbclt_c_clutter,
 		   rbclt_c_clutter_error,
 		   CLUTTER_TYPE_TEXTURE_ERROR);
 

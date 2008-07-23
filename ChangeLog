@@ -1,5 +1,11 @@
 2008-07-23  Neil Roberts  <neil@o-hand.com>
 
+	* clutter/rbclttexture.c (rbclt_texture_init): Renamed
+	Clutter::Texture::Error to Clutter::TextureError to match the rest
+	of the error classes.
+
+2008-07-23  Neil Roberts  <neil@o-hand.com>
+
 	* clutter/rbclttexture.c: Update to 0.8 so that it doesn't include
 	anything related to pixbufs and removes the properties for
 	accessing the tiles. (Tiles can now be accessed from the Cogl
