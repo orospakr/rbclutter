@@ -1,3 +1,15 @@
+2008-07-25  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcltscript.c: Bindings for ClutterScript
+
+	* examples/test-script.rb: Example program for ClutterScript
+
+	* clutter/extconf.rb: Added rbcltscript.o
+
+	* clutter/rbclutter.h: 
+	* clutter/rbclutter.c (Init_clutter): Call rbclt_script_init and
+	define a wrapper for the missing GConnectFlags from GLib
+
 2008-07-23  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbclttexture.c (rbclt_texture_init): Renamed

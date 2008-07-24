@@ -39,5 +39,6 @@ guint16 rbclt_num_to_guint16 (VALUE val);
 ClutterFixed rbclt_num_to_fixed (VALUE val);
 ClutterUnit rbclt_num_to_units (VALUE val);
 ClutterAngle rbclt_num_to_angle (VALUE angle);
+GType rbclt_connect_flags_get_type (void) G_GNUC_CONST;
 
 #endif /* _RBCLUTTER_H */

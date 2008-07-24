@@ -66,6 +66,7 @@ extern void rbclt_shader_init ();
 extern void rbclt_callback_func_init ();
 extern void rbclt_frame_source_init ();
 extern void rbclt_stage_manager_init ();
+extern void rbclt_script_init ();
 
 extern void rb_cogl_init ();
 extern void rb_cogl_texture_init ();
@@ -144,9 +145,34 @@ rbclt_initialize_unowned (VALUE obj, gpointer gobj)
   G_INITIALIZE (obj, gobj);
 }
 
+/* This is copied from the Clutter-Perl bindings. Now it's in two
+   places so why isn't it in Glib? :) */
+GType
+rbclt_connect_flags_get_type (void)
+{
+  static GType etype = 0;
+
+  if (etype == 0
+      && (etype = g_type_from_name ("GConnectFlags")) == 0)
+    {
+      static const GFlagsValue values[] =
+	{
+	  { G_CONNECT_AFTER, "G_CONNECT_AFTER", "after" },
+	  { G_CONNECT_SWAPPED, "G_CONNECT_SWAPPED", "swapped" },
+	  { 0, NULL, NULL }
+	};
+
+      etype = g_flags_register_static ("GConnectFlags", values);
+    }
+
+  return etype;
+}
+
 void
 Init_clutter ()
 {
+  VALUE mglib;
+
   rb_require ("glib2");
 
   rbclt_c_clutter = rb_define_module ("Clutter");
@@ -172,6 +198,11 @@ Init_clutter ()
   G_DEF_CONSTANTS (rbclt_c_clutter, CLUTTER_TYPE_ROTATE_DIRECTION, "CLUTTER_");
   G_DEF_CLASS (CLUTTER_TYPE_ROTATE_DIRECTION, "RotateAxis", rbclt_c_clutter);
   G_DEF_CONSTANTS (rbclt_c_clutter, CLUTTER_TYPE_ROTATE_AXIS, "CLUTTER_");
+
+  /* this should really be in the Ruby-Gobject bindings */
+  mglib = rb_const_get (rb_cObject, rb_intern ("GLib"));
+  G_DEF_CLASS (rbclt_connect_flags_get_type (), "ConnectFlags", mglib);
+  G_DEF_CONSTANTS (mglib, rbclt_connect_flags_get_type (), "G_");
 
   rbclt_main_init ();
   rbclt_actor_init ();
@@ -210,6 +241,7 @@ Init_clutter ()
   rbclt_callback_func_init ();
   rbclt_frame_source_init ();
   rbclt_stage_manager_init ();
+  rbclt_script_init ();
 
   rb_cogl_init ();
   rb_cogl_texture_init ();
