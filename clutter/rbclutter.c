@@ -67,6 +67,7 @@ extern void rbclt_callback_func_init ();
 extern void rbclt_frame_source_init ();
 extern void rbclt_stage_manager_init ();
 extern void rbclt_script_init ();
+extern void rbclt_score_init ();
 
 extern void rb_cogl_init ();
 extern void rb_cogl_texture_init ();
@@ -242,6 +243,7 @@ Init_clutter ()
   rbclt_frame_source_init ();
   rbclt_stage_manager_init ();
   rbclt_script_init ();
+  rbclt_score_init ();
 
   rb_cogl_init ();
   rb_cogl_texture_init ();
