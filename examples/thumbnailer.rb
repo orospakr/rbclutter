@@ -1,7 +1,7 @@
 #!/usr/bin/ruby
 
 # Ruby bindings for the Clutter 'interactive canvas' library.
-# Copyright (C) 2007  Neil Roberts
+# Copyright (C) 2007-2008  Neil Roberts
 # 
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -58,7 +58,6 @@ class Thumbnailer
         actor.set_position(start_x, start_y)
 
         stage << actor
-        actor.show
         
         timeline = Clutter::Timeline.new(30, 30)
         alpha = Clutter::Alpha.new(timeline, Clutter::Alpha::SINE_INC)
@@ -110,14 +109,18 @@ class Thumbnailer
   private
   def load_screen
     while @next_load_actor < @actors.size and @next_load < @filenames.size
-      pixbuf = Gdk::Pixbuf.new(@filenames[@next_load])
       # Pre-scale the image using GDK pixbuf so that it doesn't have
       # to be scaled every frame by clutter
-      scale = THUMBNAIL_SIZE / [ pixbuf.width, pixbuf.height ].max.to_f
-      pixbuf = pixbuf.scale(pixbuf.width * scale, pixbuf.height * scale)
+      pixbuf = Gdk::Pixbuf.new(@filenames[@next_load],
+                               THUMBNAIL_SIZE, THUMBNAIL_SIZE)
       @next_load += 1
 
-      @actors[@next_load_actor].pixbuf = pixbuf
+      @actors[@next_load_actor].set_from_rgb_data(pixbuf.pixels,
+                                                  pixbuf.has_alpha?,
+                                                  pixbuf.width,
+                                                  pixbuf.height,
+                                                  pixbuf.rowstride,
+                                                  pixbuf.has_alpha? ? 4 : 3, 0)
       
       @next_load_actor += 1
     end

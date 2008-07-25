@@ -1,5 +1,11 @@
 2008-07-25  Neil Roberts  <neil@o-hand.com>
 
+	* examples/thumbnailer.rb: Update to 0.8 API. Specify the size of
+	the pixbuf while loading instead of scaling afterwards so that SVG
+	images will look nice.
+
+2008-07-25  Neil Roberts  <neil@o-hand.com>
+
 	* clutter/rbcltscript.c: Bindings for ClutterScript
 
 	* examples/test-script.rb: Example program for ClutterScript
