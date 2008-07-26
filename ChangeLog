@@ -1,3 +1,10 @@
+2008-07-26  Neil Roberts  <neil@o-hand.com>
+
+	* extra/mkmethod.el (mkmethod): Include lines that have been split
+	into two when searching for the last rb_define_method call. If the
+	new rb_define_method line is longer than 80 characters then split
+	it into two. Include extra newlines in the method definition.
+
 2008-07-25  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcltscore.c: Bindings for ClutterScore

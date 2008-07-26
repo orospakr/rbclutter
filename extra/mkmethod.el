@@ -34,23 +34,29 @@ parameters and then returns SELF."
   (let ((class-name (match-string 1)) save-point end-init)
     (setq end-init (match-beginning 0))
     (goto-char (point-max))
-    (unless (re-search-backward (concat "^  rb_define_method (klass, \"[^\"\n]*\", rbclt_"
+    (unless (re-search-backward (concat "^  rb_define_method "
+					"(klass, \"[^\"\n]*\",[[:space:]\n]+"
+					"rbclt_"
 					(regexp-quote class-name)
 					"_[a-zA-Z0-9_]+, -?[0-9]+);") nil t)
       (error "Previous method definition not found"))
     (goto-char (match-end 0))
-    (insert "\n  rb_define_method (klass, \""
-	    method-name
-	    "\", rbclt_" class-name "_" method-name ", 0);")
+    (insert "\n")
+    (let ((parta (concat "  rb_define_method (klass, \"" method-name "\","))
+	  (partb (concat "rbclt_" class-name "_" method-name ", 0);")))
+      ;; Split the line into two if it won't fit in 80 characters
+      (if (<= (+ (length parta) (length partb) 1) 80)
+	  (insert parta " " partb)
+	(insert parta "\n" (make-string 20 ? ) partb)))
     (goto-char end-init)
     (insert "static VALUE\n"
 	    "rbclt_" class-name "_" method-name " (VALUE self)\n"
 	    "{\n"
 	    "  Clutter" (mkmethod-capitalize-class-name class-name) " *"
 	    class-name " = CLUTTER_" (upcase class-name)
-	    " (RVAL2GOBJ (self));\n")
+	    " (RVAL2GOBJ (self));\n\n")
     (setq save-point (point))
-    (insert "  clutter_" class-name "_" method-name " (" class-name ");\n"
+    (insert "  clutter_" class-name "_" method-name " (" class-name ");\n\n"
 	    "  return self;\n"
 	    "}\n"
 	    "\n")
