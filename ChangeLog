@@ -1,3 +1,13 @@
+2008-07-27  Neil Roberts  <neil@o-hand.com>
+
+	* extra/fetchkeysyms.el: 
+	* clutter/rbcltkeysyms.c: Move the automatic keysym generation
+	code to a separate file. Generate the syms as two arrays, one as a
+	single string containing the names separated by NULs, the other an
+	array of VALUEs. The constants are defined in a loop instead of
+	having a separate call for each constant. This should reduce the
+	size of the binary and the number of symbols in the library.
+
 2008-07-26  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbclttimeline.c: Update to include the marker functions.
