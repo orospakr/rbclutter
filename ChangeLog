@@ -1,5 +1,11 @@
 2008-07-27  Neil Roberts  <neil@o-hand.com>
 
+	* clutter/rbclutter.c (Init_clutter): Only define
+	GLib::ConnectFlags if it's not already there. This fixes a warning
+	with later versions of the GLib bindings.
+
+2008-07-27  Neil Roberts  <neil@o-hand.com>
+
 	* extra/fetchkeysyms.el: 
 	* clutter/rbcltkeysyms.c: Move the automatic keysym generation
 	code to a separate file. Generate the syms as two arrays, one as a

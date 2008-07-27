@@ -200,10 +200,11 @@ Init_clutter ()
   G_DEF_CLASS (CLUTTER_TYPE_ROTATE_DIRECTION, "RotateAxis", rbclt_c_clutter);
   G_DEF_CONSTANTS (rbclt_c_clutter, CLUTTER_TYPE_ROTATE_AXIS, "CLUTTER_");
 
-  /* this should really be in the Ruby-Gobject bindings */
   mglib = rb_const_get (rb_cObject, rb_intern ("GLib"));
-  G_DEF_CLASS (rbclt_connect_flags_get_type (), "ConnectFlags", mglib);
-  G_DEF_CONSTANTS (mglib, rbclt_connect_flags_get_type (), "G_");
+  /* This is only defined in later versions of the Ruby-glib
+     bindings */
+  if (!rb_const_defined (mglib, rb_intern ("ConnectFlags")))
+    G_DEF_CLASS (rbclt_connect_flags_get_type (), "ConnectFlags", mglib);
 
   rbclt_main_init ();
   rbclt_actor_init ();
