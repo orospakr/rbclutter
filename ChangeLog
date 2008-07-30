@@ -1,3 +1,14 @@
+2008-07-30  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcltmodel.c: Bindings for ClutterModel
+
+	* clutter/rbcltlistmodel.c: Bindings for ClutterListModel
+
+	* clutter/extconf.rb: Added rbcltlistmodel.o and rbcltmodel.o
+
+	* clutter/rbclutter.c: Call rbclt_model_init and
+	rbclt_list_model_init.
+
 2008-07-27  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbclutter.c (Init_clutter): Only define

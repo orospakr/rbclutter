@@ -15,6 +15,7 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA  02110-1301  USA
+
 require 'mkmf'
 require 'pkg-config'
 
@@ -32,7 +33,8 @@ $objs = %w{ rbclutter.o rbcltactor.o rbcltalpha.o rbcltbehaviour.o rbcltbehaviou
 + %w{ rbcltbehaviouropacity.o rbcltbehaviourrotate.o rbcltalphafunc.o rbclteffect.o } \
 + %w{ rbcltentry.o rbcltrectangle.o rbcltclonetexture.o rbcltfeature.o rbcltbackend.o } \
 + %w{ rbcltmedia.o rbcltshader.o rbcltcallbackfunc.o rbcltframesource.o } \
-+ %w{ rbcltstagemanager.o rbcltchildmeta.o rbcltscript.o rbcltscore.o }
++ %w{ rbcltstagemanager.o rbcltchildmeta.o rbcltscript.o rbcltscore.o } \
++ %w{ rbcltlistmodel.o rbcltmodel.o }
 
 $objs += %w{ rbcogl.o rbcoglconsts.o rbcogltexture.o rbcoglprimitives.o } \
 + %w{ rbcoglshader.o rbcoglprogram.o rbcogloffscreen.o }
