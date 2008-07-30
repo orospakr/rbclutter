@@ -1,5 +1,11 @@
 2008-07-30  Neil Roberts  <neil@o-hand.com>
 
+	* clutter/rbcltmain.c: Update to 0.8 API
+
+	* README: Add a note about clutter_threads_enter/leave.
+
+2008-07-30  Neil Roberts  <neil@o-hand.com>
+
 	* clutter/rbcltmodel.c: Bindings for ClutterModel
 
 	* clutter/rbcltlistmodel.c: Bindings for ClutterListModel

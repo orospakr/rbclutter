@@ -45,6 +45,16 @@ There's a few issues to be aware of with this release:
    GType and create custom signals, but you can not implement the
    ClutterContainer interface.
 
+ - There are bindings for clutter_threads_enter and
+   clutter_threads_leave but you shouldn't need to call these
+   functions if you are just using regular Ruby threads. Ruby does not
+   use native threads so there is no need to lock Clutter. If you do
+   try to grab the Clutter lock in two separate Ruby threads then the
+   process will block forever because Ruby will not be given a chance
+   to switch threads while waiting for clutter_threads_enter to
+   complete. It can however be used in combination with another
+   library that may create native threads.
+
  - The effect functions can't take a callback block for when the
    effect is complete, even though the C API has a parameter for
    it. I'm hoping Clutter will eventually get a GDestroyNotify
