@@ -1,5 +1,5 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
- * Copyright (C) 2007  Neil Roberts
+ * Copyright (C) 2007-2008  Neil Roberts
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,6 +21,18 @@
 #include <clutter/clutter-stage.h>
 
 #include "rbclutter.h"
+
+static VALUE
+rbclt_stage_initialize (VALUE self)
+{
+  ClutterActor *stage;
+
+  stage = clutter_stage_new ();
+
+  rbclt_initialize_unowned (self, stage);
+
+  return Qnil;
+}
 
 static VALUE
 rbclt_stage_get_default ()
@@ -69,56 +81,20 @@ static VALUE
 rbclt_stage_get_actor_at_pos (VALUE self, VALUE x, VALUE y)
 {
   ClutterStage *stage = CLUTTER_STAGE (RVAL2GOBJ (self));
-  return GOBJ2RVAL (clutter_stage_get_actor_at_pos (stage, NUM2INT (x), NUM2INT (y)));
+  return GOBJ2RVAL (clutter_stage_get_actor_at_pos (stage, NUM2INT (x),
+						    NUM2INT (y)));
 }
 
 static VALUE
-rbclt_stage_snapshot (int argc, VALUE *argv, VALUE self)
+rbclt_stage_event (VALUE self, VALUE event_arg)
 {
   ClutterStage *stage = CLUTTER_STAGE (RVAL2GOBJ (self));
-  VALUE x_arg, y_arg, width_arg, height_arg;
-  gint x, y, width, height;
+  ClutterEvent *event = (ClutterEvent *) RVAL2BOXED (event_arg,
+						     CLUTTER_TYPE_EVENT);
 
-  rb_scan_args (argc, argv, "04", &x_arg, &y_arg, &width_arg, &height_arg);
+  clutter_stage_event (stage, event);
 
-  x = x_arg == Qnil ? 0 : NUM2INT (x_arg);
-  y = y_arg == Qnil ? 0 : NUM2INT (y_arg);
-  width = width_arg == Qnil ? clutter_actor_get_width (CLUTTER_ACTOR (stage)) - x : NUM2INT (width_arg);
-  height = height_arg == Qnil ? clutter_actor_get_height (CLUTTER_ACTOR (stage)) - y : NUM2INT (height_arg);
-
-  return GOBJ2RVAL (clutter_stage_snapshot (stage, x, y, width, height));
-}
-
-static VALUE
-rbclt_stage_event (VALUE self, VALUE event)
-{
-  ClutterStage *stage = CLUTTER_STAGE (RVAL2GOBJ (self));
-  clutter_stage_event (stage, (ClutterEvent *) RVAL2BOXED (event, CLUTTER_TYPE_EVENT));
   return self;
-}
-
-static VALUE
-rbclt_stage_set_user_resizable (VALUE self, VALUE val)
-{
-  ClutterStage *stage = CLUTTER_STAGE (RVAL2GOBJ (self));
-  clutter_stage_set_user_resizable (stage, RTEST (val) ? TRUE : FALSE);
-  return self;
-}
-
-static VALUE
-rbclt_stage_get_user_resizable (VALUE self)
-{
-  ClutterStage *stage = CLUTTER_STAGE (RVAL2GOBJ (self));
-  return clutter_stage_get_user_resizable (stage) ? Qtrue : Qfalse;
-}
-
-static VALUE
-rbclt_stage_get_perspective (VALUE self)
-{
-  ClutterStage *stage = CLUTTER_STAGE (RVAL2GOBJ (self));
-  ClutterPerspective perspective;
-  clutter_stage_get_perspectivex (stage, &perspective);
-  return BOXED2RVAL (&perspective, CLUTTER_TYPE_PERSPECTIVE);
 }
 
 static VALUE
@@ -127,7 +103,11 @@ rbclt_stage_set_perspective (int argc, VALUE *argv, VALUE self)
   ClutterStage *stage = CLUTTER_STAGE (RVAL2GOBJ (self));
 
   if (argc == 1)
-    clutter_stage_set_perspectivex (stage, RVAL2BOXED (argv[0], CLUTTER_TYPE_PERSPECTIVE));
+    {
+      ClutterPerspective *persp
+	= (ClutterPerspective *) RVAL2BOXED (argv[0], CLUTTER_TYPE_PERSPECTIVE);
+      clutter_stage_set_perspectivex (stage, persp);
+    }
   else if (argc == 4)
     clutter_stage_set_perspective (stage, NUM2DBL (argv[0]), NUM2DBL (argv[1]),
 				   NUM2DBL (argv[2]), NUM2DBL (argv[3]));
@@ -138,11 +118,119 @@ rbclt_stage_set_perspective (int argc, VALUE *argv, VALUE self)
 }
 
 static VALUE
-rbclt_stage_perspective_equals (VALUE self, VALUE value)
+rbclt_stage_read_pixels (VALUE self, VALUE x, VALUE y,
+			 VALUE width_arg, VALUE height_arg)
 {
   ClutterStage *stage = CLUTTER_STAGE (RVAL2GOBJ (self));
-  clutter_stage_set_perspectivex (stage, RVAL2BOXED (value, CLUTTER_TYPE_PERSPECTIVE));
-  return value;
+  guchar *pixels;
+  VALUE ret;
+  gint width, height;
+
+  width = NUM2INT (width_arg);
+  height = NUM2INT (height_arg);
+
+  pixels = clutter_stage_read_pixels (stage, NUM2INT (x), NUM2INT (y),
+				      width, height);
+
+  if (pixels == NULL)
+    ret = Qnil;
+  else
+    {
+      ret = rb_str_new ((char *) pixels, width * 4 * height);
+
+      g_free (pixels);
+    }
+
+  return ret;
+}
+
+static VALUE
+rbclt_stage_get_fog (VALUE self)
+{
+  ClutterStage *stage = CLUTTER_STAGE (RVAL2GOBJ (self));
+  ClutterFog fog;
+
+  clutter_stage_get_fogx (stage, &fog);
+
+  return BOXED2RVAL (&fog, CLUTTER_TYPE_FOG);
+}
+
+static VALUE
+rbclt_stage_set_fog (int argc, VALUE *argv, VALUE self)
+{
+  ClutterStage *stage = CLUTTER_STAGE (RVAL2GOBJ (self));
+
+  if (argc == 1)
+    {
+      ClutterFog *fog = (ClutterFog *) RVAL2BOXED (argv[0], CLUTTER_TYPE_FOG);
+      clutter_stage_set_fogx (stage, fog);
+    }
+  else
+    {
+      VALUE density, z_near, z_far;
+
+      rb_scan_args (argc, argv, "03", &density, &z_near, &z_far);
+
+      clutter_stage_set_fog (stage, NUM2DBL (density),
+			     NUM2DBL (z_near), NUM2DBL (z_far));
+    }
+
+  return self;
+}
+
+static VALUE
+rbclt_stage_fog_equals (VALUE self, VALUE fog_arg)
+{
+  ClutterStage *stage = CLUTTER_STAGE (RVAL2GOBJ (self));
+  ClutterFog *fog = (ClutterFog *) RVAL2BOXED (fog_arg, CLUTTER_TYPE_FOG);
+
+  clutter_stage_set_fogx (stage, fog);
+
+  return fog_arg;
+}
+
+static VALUE
+rbclt_stage_get_resolution (VALUE self)
+{
+  ClutterStage *stage = CLUTTER_STAGE (RVAL2GOBJ (self));
+
+  return rb_float_new (clutter_stage_get_resolution (stage));
+}
+
+static VALUE
+rbclt_stage_set_key_focus (VALUE self, VALUE actor)
+{
+  ClutterStage *stage = CLUTTER_STAGE (RVAL2GOBJ (self));
+
+  clutter_stage_set_key_focus (stage, RVAL2GOBJ (actor));
+
+  return self;
+}
+
+static VALUE
+rbclt_stage_get_key_focus (VALUE self)
+{
+  ClutterStage *stage = CLUTTER_STAGE (RVAL2GOBJ (self));
+
+  return GOBJ2RVAL (clutter_stage_get_key_focus (stage));
+}
+
+static VALUE
+rbclt_stage_ensure_current (VALUE self)
+{
+  ClutterStage *stage = CLUTTER_STAGE (RVAL2GOBJ (self));
+
+  clutter_stage_ensure_current (stage);
+
+  return self;
+}
+
+static VALUE
+rbclt_stage_is_default (VALUE self)
+{
+  ClutterStage *stage = CLUTTER_STAGE (RVAL2GOBJ (self));
+
+  return clutter_stage_is_default (stage) ? Qtrue : Qfalse;
 }
 
 void
@@ -152,18 +240,23 @@ rbclt_stage_init ()
 
   rb_define_singleton_method (klass, "get_default", rbclt_stage_get_default, 0);
 
+  rb_define_method (klass, "initialize", rbclt_stage_initialize, 0);
   rb_define_method (klass, "fullscreen", rbclt_stage_fullscreen, 0);
   rb_define_method (klass, "unfullscreen", rbclt_stage_unfullscreen, 0);
   rb_define_method (klass, "show_cursor", rbclt_stage_show_cursor, 0);
   rb_define_method (klass, "hide_cursor", rbclt_stage_hide_cursor, 0);
   rb_define_method (klass, "get_actor_at_pos", rbclt_stage_get_actor_at_pos, 2);
-  rb_define_method (klass, "snapshot", rbclt_stage_snapshot, -1);
   rb_define_method (klass, "event", rbclt_stage_event, 1);
-  rb_define_method (klass, "set_user_resizable", rbclt_stage_set_user_resizable, 0);
-  rb_define_method (klass, "user_resizable?", rbclt_stage_get_user_resizable, 0);
-  rb_define_method (klass, "perspective", rbclt_stage_get_perspective, 0);
   rb_define_method (klass, "set_perspective", rbclt_stage_set_perspective, -1);
-  rb_define_method (klass, "perspective=", rbclt_stage_perspective_equals, 1);
+  rb_define_method (klass, "read_pixels", rbclt_stage_read_pixels, 4);
+  rb_define_method (klass, "fog", rbclt_stage_get_fog, 0);
+  rb_define_method (klass, "set_fog", rbclt_stage_set_fog, -1);
+  rb_define_method (klass, "fog=", rbclt_stage_fog_equals, 1);
+  rb_define_method (klass, "resolution", rbclt_stage_get_resolution, 0);
+  rb_define_method (klass, "set_key_focus", rbclt_stage_set_key_focus, 1);
+  rb_define_method (klass, "key_focus", rbclt_stage_get_key_focus, 0);
+  rb_define_method (klass, "ensure_current", rbclt_stage_ensure_current, 0);
+  rb_define_method (klass, "default?", rbclt_stage_is_default, 0);
 
   G_DEF_SETTERS (klass);
 }

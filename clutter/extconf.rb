@@ -24,7 +24,7 @@ PKGConfig.have_package('clutter-0.8') or show_fail
 
 find_header("rbgobject.h", *$:) or show_fail
 
-BOXED_TYPES = %w{ color geometry knot vertex actorbox perspective }
+BOXED_TYPES = %w{ color geometry knot vertex actorbox perspective fog }
 
 $objs = %w{ rbclutter.o rbcltactor.o rbcltalpha.o rbcltbehaviour.o rbcltbehaviourpath.o } \
 + %w{ rbcltcontainer.o rbcltgroup.o rbcltlabel.o rbcltmain.o rbcltstage.o rbclttexture.o } \

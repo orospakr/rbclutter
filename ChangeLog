@@ -1,3 +1,13 @@
+2008-08-01  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbcltstage.c: Update to 0.8
+
+	* clutter/rbcltfog.c.in: Wrapper for ClutterFog
+
+	* clutter/rbclutter.c (Init_clutter): Call rbclt_fog_init
+
+	* clutter/extconf.rb: Add the fog boxed type
+
 2008-07-30  Neil Roberts  <neil@o-hand.com>
 
 	* clutter/rbcltmain.c: Update to 0.8 API
