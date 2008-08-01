@@ -1,5 +1,29 @@
 2008-08-01  Neil Roberts  <neil@o-hand.com>
 
+	* clutter/rbclutter.h: 
+	* clutter/rbclutter.c: 
+	* clutter/rbcltmain.c: Move the rbclt_init function into
+	rbclutter.c and make it take a function pointer for the init
+	function to call so that it can be used by clutter-gst as well.
+
+	* clutter-gst/rbcluttergst.c: 
+	* clutter-gst/rbcltgstvideotexture.c: 
+	* clutter-cairo/rbcluttercairo.c: Use the initialize_unowned and
+	call_init functions from the clutter bindings instead of defining
+	them again.
+
+	* clutter-gst/extconf.rb: 
+	* clutter-cairo/extconf.rb: Install the .rb wrapper and depend on
+	clutter so we can call functions in that library
+
+	* clutter-gst/clutter_gst.rb: 
+	* clutter-cairo/clutter_cairo.rb: Wrappers to force loading
+	clutter.so before the main module
+
+	* .gitignore: Add clutter-gst files
+
+2008-08-01  Neil Roberts  <neil@o-hand.com>
+
 	* clutter-gst/rbcltgstaudio.c: Add a 'playbin' method
 
 	* clutter-gst/extconf.rb: Require clutter-0.8 and clutter-gst-0.8

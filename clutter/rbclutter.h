@@ -1,5 +1,5 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
- * Copyright (C) 2007  Neil Roberts
+ * Copyright (C) 2007-2008  Neil Roberts
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,9 +24,10 @@
 #include <glib/gtypes.h>
 #include <clutter/clutter-fixed.h>
 #include <clutter/clutter-units.h>
+#include <clutter/clutter-main.h>
 
 #define RBCLUTTER_MAJOR_VERSION 0
-#define RBCLUTTER_MINOR_VERSION 4
+#define RBCLUTTER_MINOR_VERSION 8
 #define RBCLUTTER_MICRO_VERSION 0
 
 extern VALUE rbclt_c_clutter;
@@ -40,5 +41,9 @@ ClutterFixed rbclt_num_to_fixed (VALUE val);
 ClutterUnit rbclt_num_to_units (VALUE val);
 ClutterAngle rbclt_num_to_angle (VALUE angle);
 GType rbclt_connect_flags_get_type (void) G_GNUC_CONST;
+
+typedef ClutterInitError (* RBCLTInitFunc) (int *argc, char ***argv);
+
+VALUE rbclt_call_init_func (int argc, VALUE *argv, RBCLTInitFunc func);
 
 #endif /* _RBCLUTTER_H */

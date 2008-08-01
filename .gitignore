@@ -15,5 +15,8 @@
 /clutter-cairo/clutter_cairo.so
 /clutter-cairo/Makefile
 /clutter-cairo/mkmf.log
+/clutter-gst/clutter_gst.so
+/clutter-gst/Makefile
+/clutter-gst/mkmf.log
 /Makefile
 

@@ -25,9 +25,11 @@
 #include <clutter/clutter-fixed.h>
 
 #include "rbclutter.h"
+#include "rbcltstagemanager.h"
 
 VALUE rbclt_c_clutter = Qnil;
 VALUE rbclt_c_clutter_error = Qnil;
+static VALUE rbclt_c_clutter_init_error = Qnil;
 
 extern void rbclt_main_init ();
 extern void rbclt_actor_init ();
@@ -78,6 +80,64 @@ extern void rb_cogl_primitives_init ();
 extern void rb_cogl_shader_init ();
 extern void rb_cogl_program_init ();
 extern void rb_cogl_offscreen_init ();
+
+VALUE
+rbclt_call_init_func (int argc, VALUE *argv, RBCLTInitFunc func)
+{
+  VALUE init_args, prg_name;
+  char **args_copy;
+  int init_argc, i;
+  ClutterInitError eval;
+
+  rb_scan_args (argc, argv, "01", &init_args);
+
+  /* Default to using ARGV if the argument list wasn't given */
+  if (init_args == Qnil)
+    init_args = rb_argv;
+
+  Check_Type (init_args, T_ARRAY);
+  init_argc = RARRAY (init_args)->len;
+
+  /* Convert all of the arguments to strings */
+  for (i = 0; i < init_argc; i++)
+    rb_ary_store (init_args, i, StringValue (RARRAY (init_args)->ptr[i]));
+
+  /* Make a copy of the array and prepend $0 */
+  prg_name = rb_gv_get ("0");
+  prg_name = StringValue (prg_name);
+  args_copy = ALLOC_N (char *, init_argc + 1);
+  args_copy[0] = RSTRING (prg_name)->ptr;
+  for (i = 0; i < init_argc; i++)
+    args_copy[i + 1] = RSTRING (RARRAY (init_args)->ptr[i])->ptr;
+
+  /* Initialize clutter */
+  init_argc++;
+  eval = (* func) (&init_argc, &args_copy);
+  
+  /* If it worked then copy the altered arguments back */
+  if (eval == CLUTTER_INIT_SUCCESS)
+    {
+      rb_ary_clear (init_args);
+
+      for (i = 1; i < init_argc; i++)
+	rb_ary_push (init_args, rb_str_new2 (args_copy[i]));
+    }
+
+  free (args_copy);
+
+  /* If it didn't work then throw an exception */
+  if (eval != CLUTTER_INIT_SUCCESS)
+    {
+      VALUE ex = rb_exc_new2 (rbclt_c_clutter_init_error,
+			      "Failed to initalise Clutter");
+      rb_iv_set (ex, "@errnum", GENUM2RVAL (eval, CLUTTER_TYPE_INIT_ERROR));
+      rb_exc_raise (ex);
+    }
+
+  rbclt_stage_manager_init_global_mark ();
+
+  return Qnil;
+}
 
 guint8
 rbclt_num_to_guint8 (VALUE val)
@@ -216,6 +276,14 @@ Init_clutter ()
      bindings */
   if (!rb_const_defined (mglib, rb_intern ("ConnectFlags")))
     G_DEF_CLASS (rbclt_connect_flags_get_type (), "ConnectFlags", mglib);
+
+  rbclt_c_clutter_init_error = rb_define_class_under (rbclt_c_clutter,
+						      "InitError",
+						      rbclt_c_clutter_error);
+  rb_define_attr (rbclt_c_clutter_init_error, "errnum", Qtrue, Qfalse);
+  G_DEF_CLASS (CLUTTER_TYPE_INIT_ERROR, "Code", rbclt_c_clutter_init_error);
+  G_DEF_CONSTANTS (rbclt_c_clutter_init_error, CLUTTER_TYPE_INIT_ERROR,
+		   "CLUTTER_INIT_");
 
   rbclt_main_init ();
   rbclt_actor_init ();

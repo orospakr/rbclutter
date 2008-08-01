@@ -23,27 +23,16 @@
 #include <cairo.h>
 #include <glib-object.h>
 #include <clutter-cairo/clutter-cairo.h>
-
-static VALUE rbcltc_c_clutter = Qnil;
+#include <rbclutter.h>
 
 static VALUE rbcltc_cairo_context_finish (VALUE self);
-
-static void
-rbcltc_initialize_unowned (VALUE obj, gpointer gobj)
-{
-  /* If the object is a subclass of GInitiallyUnowned then grab the
-     floating reference */
-  if (G_IS_INITIALLY_UNOWNED (gobj))
-    g_object_ref_sink (gobj);
-  G_INITIALIZE (obj, gobj);
-}
 
 static VALUE
 rbcltc_cairo_initialize (VALUE self, VALUE width, VALUE height)
 {
   ClutterActor *actor = clutter_cairo_new (NUM2UINT (width), NUM2UINT (height));
 
-  rbcltc_initialize_unowned (self, actor);
+  rbclt_initialize_unowned (self, actor);
 
   return Qnil;
 }
@@ -141,9 +130,7 @@ Init_clutter_cairo ()
   rb_require ("cairo");
   rb_require ("clutter");
 
-  rbcltc_c_clutter = rb_define_module ("Clutter");
-
-  klass = G_DEF_CLASS (CLUTTER_TYPE_CAIRO, "Cairo", rbcltc_c_clutter);
+  klass = G_DEF_CLASS (CLUTTER_TYPE_CAIRO, "Cairo", rbclt_c_clutter);
   rb_define_method (klass, "initialize", rbcltc_cairo_initialize, 2);
   rb_define_method (klass, "create", rbcltc_cairo_create, -1);
   rb_define_method (klass, "create_region", rbcltc_cairo_create_region, 4);

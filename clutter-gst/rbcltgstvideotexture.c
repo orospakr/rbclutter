@@ -19,6 +19,7 @@
 
 #include <rbgobject.h>
 #include <clutter-gst/clutter-gst-video-texture.h>
+#include <rbclutter.h>
 
 #include "rbcluttergst.h"
 
@@ -26,7 +27,7 @@ static VALUE
 rbcltgst_video_texture_initialize (VALUE self)
 {
   ClutterActor *actor = clutter_gst_video_texture_new ();
-  rbcltgst_initialize_unowned (self, actor);
+  rbclt_initialize_unowned (self, actor);
   return Qnil;
 }
 

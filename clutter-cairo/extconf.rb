@@ -16,7 +16,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA  02110-1301  USA
 require 'mkmf'
+require 'mkmf-gnome2'
 require 'pkg-config'
+
+TOPDIR = File.expand_path(File.dirname(__FILE__) + '/..')
 
 PKGConfig.have_package('glib-2.0') or show_fail
 PKGConfig.have_package('clutter-0.8') or show_fail
@@ -26,6 +29,10 @@ PKGConfig.have_package('cairo') or show_fail
 find_header("rb_cairo.h", *$:) or show_fail
 find_header("rbgobject.h", *$:) or show_fail
 
+add_depend_package("clutter", "clutter", TOPDIR)
+
 $objs = %w{ rbcluttercairo.o }
+
+$INSTALLFILES = [ [ "clutter_cairo.rb", "$(RUBYLIBDIR)" ] ]
 
 create_makefile("clutter_cairo")
