@@ -1,5 +1,10 @@
 2008-08-01  Neil Roberts  <neil@o-hand.com>
 
+	* clutter/rbclttimeline.c (rbclt_timeline_init): Define the
+	Clutter::Timeline::Direction class
+
+2008-08-01  Neil Roberts  <neil@o-hand.com>
+
 	* clutter/rbcltstage.c: Update to 0.8
 
 	* clutter/rbcltfog.c.in: Wrapper for ClutterFog

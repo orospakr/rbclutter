@@ -19,6 +19,7 @@
 
 #include <rbgobject.h>
 #include <clutter/clutter-timeline.h>
+#include <clutter/clutter-enum-types.h>
 
 #include "rbclutter.h"
 
@@ -216,5 +217,8 @@ rbclt_timeline_init ()
   rb_define_method (klass, "advance_to_marker",
                     rbclt_timeline_advance_to_marker, 1);
   
+  G_DEF_CONSTANTS (klass, CLUTTER_TYPE_TIMELINE_DIRECTION, "CLUTTER_TIMELINE_");
+  G_DEF_CLASS (CLUTTER_TYPE_TIMELINE_DIRECTION, "Direction", klass);
+
   G_DEF_SETTERS (klass);
 }
