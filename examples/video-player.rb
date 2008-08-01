@@ -41,14 +41,18 @@ def show_controls(app, vis)
   if vis and !app.controls_showing
     app.controls_showing = true
     app.controls_tl.start
-    app.controls_timeout = GLib::Timeout.add(5 * 1000) { controls_timeout_cb(app) }
+    app.controls_timeout = GLib::Timeout.add(5 * 1000) do
+      controls_timeout_cb(app)
+    end
     return
   end
 
   if vis and app.controls_showing
     if app.controls_timeout
       GLib::Source.remove(app.controls_timeout)
-      app.controls_timeout = GLib::Timeout.add(5 * 1000) { controls_timeout_cb(app) }
+      app.controls_timeout = GLib::Timeout.add(5 * 1000) do
+        controls_timeout_cb(app)
+      end
     end
     return
   end
@@ -81,13 +85,13 @@ def input_cb(stage, event, app)
   when Clutter::Event::BUTTON_PRESS
     if app.controls_showing
       actor = Clutter::Stage.get_default.get_actor_at_pos(event.x, event.y)
-      print("got actor #{actor.actor_id} at #{event.x}x#{event.y}\n")
+      print("got actor #{actor.gid} at #{event.x}x#{event.y}\n")
 
       case actor
       when app.control_pause, app.control_play
         toggle_pause_state(app)
       when app.control_seek1, app.control_seek2, app.control_seekbar
-        (x, y) = app.control_seekbar.abs_position
+        (x, y) = app.control_seekbar.transformed_position
         dist = event.x - x
         dist = 0 if dist < 0
         dist = SEEK_W if dist > SEEK_W
@@ -148,7 +152,7 @@ end
 Gst::init
 
 stage = Clutter::Stage.get_default
-stage.fullscreen = true
+# stage.fullscreen = true
 stage.color = Clutter::Color.new(0, 0, 0, 0)
 
 app = VideoApp.new
@@ -167,9 +171,9 @@ app.vtexture.filename = ARGV[0]
 # Create the control UI
 app.control = Clutter::Group.new
 
-app.control_bg = Clutter::Texture.new(Gdk::Pixbuf.new("vid-panel.png"))
-app.control_play = Clutter::Texture.new(Gdk::Pixbuf.new("media-actions-start.png"))
-app.control_pause = Clutter::Texture.new(Gdk::Pixbuf.new("media-actions-pause.png"))
+app.control_bg = Clutter::Texture.new("vid-panel.png")
+app.control_play = Clutter::Texture.new("media-actions-start.png")
+app.control_pause = Clutter::Texture.new("media-actions-pause.png")
 
 app.control_seek1 = Clutter::Rectangle.new(control_color1)
 app.control_seek2 = Clutter::Rectangle.new(control_color2)
@@ -216,11 +220,16 @@ print("stop\n");
 
 # hook up a time line for fading controls
 app.controls_tl = Clutter::Timeline.new(10, 30)
-app.controls_tl.signal_connect("new-frame") { |tl, frame_num| control_tl_cb(tl, frame_num, app) }
-app.controls_tl.signal_connect("completed") { |tl| control_tl_complete_cb(tl, app) }
-
+app.controls_tl.signal_connect("new-frame") do |tl, frame_num|
+  control_tl_cb(tl, frame_num, app)
+end
+app.controls_tl.signal_connect("completed") do |tl|
+  control_tl_complete_cb(tl, app)
+end
 app.effect1_tl = Clutter::Timeline.new(30, 90)
-app.effect1_tl.signal_connect("new-frame") { |tl, frame_num| effect1_tl_cb(frame_num, app) }
+app.effect1_tl.signal_connect("new-frame") do |tl, frame_num|
+  effect1_tl_cb(frame_num, app)
+end
 
 # Hook up other events
 stage.signal_connect("event") { |actor, event| input_cb(actor, event, app) }

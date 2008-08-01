@@ -19,12 +19,13 @@ require 'mkmf'
 require 'pkg-config'
 
 PKGConfig.have_package('glib-2.0') or show_fail
-PKGConfig.have_package('clutter-0.4') or show_fail
-PKGConfig.have_package('clutter-gst-0.4') or show_fail
+PKGConfig.have_package('clutter-0.8') or show_fail
+PKGConfig.have_package('clutter-gst-0.8') or show_fail
 PKGConfig.have_package('gstreamer-0.10') or show_fail
 
 find_header("rbgobject.h", *$:) or show_fail
 
-$objs = %w{ rbcluttergst.o rbcltgstvideosink.o rbcltgstvideotexture.o rbcltgstaudio.o }
+$objs = %w{ rbcluttergst.o rbcltgstvideosink.o rbcltgstvideotexture.o } \
++ %w{ rbcltgstaudio.o }
 
 create_makefile("clutter_gst")

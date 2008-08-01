@@ -1,5 +1,5 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
- * Copyright (C) 2007  Neil Roberts
+ * Copyright (C) 2007-2008  Neil Roberts
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,10 +30,20 @@ rbcltgst_audio_initialize (VALUE self)
   return Qnil;
 }
 
+static VALUE
+rbcltgst_audo_get_playbin (VALUE self)
+{
+  ClutterGstAudio *audio = RVAL2GOBJ (self);
+  GstElement *elem = clutter_gst_audio_get_playbin (audio);
+  return GOBJ2RVAL (elem);
+}
+
 void
 rbcltgst_audio_init ()
 {
-  VALUE klass = G_DEF_CLASS (CLUTTER_GST_TYPE_AUDIO, "Audio", rbcltgst_c_clutter_gst);
+  VALUE klass = G_DEF_CLASS (CLUTTER_GST_TYPE_AUDIO, "Audio",
+			     rbcltgst_c_clutter_gst);
 
   rb_define_method (klass, "initialize", rbcltgst_audio_initialize, 0);
+  rb_define_method (klass, "playbin", rbcltgst_audo_get_playbin, 0);
 }
