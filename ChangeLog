@@ -1,5 +1,16 @@
 2008-08-01  Neil Roberts  <neil@o-hand.com>
 
+	* clutter-cairo/rbcluttercairo.c: Update to 0.8
+
+	* clutter-cairo/extconf.rb: Require version 0.8 of clutter and
+	clutter-cairo.
+
+	* examples/cairo-texture.rb: Update to 0.8 API
+
+	* .gitignore: Add clutter-cairo files and rbcltfog.c
+
+2008-08-01  Neil Roberts  <neil@o-hand.com>
+
 	* clutter/rbclutter.c: Tidy up indentation.
 	(Init_clutter): Define the Clutter::RequestMode class.
 

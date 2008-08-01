@@ -36,9 +36,8 @@ end
 # other actor
 center_x = cairo_tex.width / 2
 center_y = cairo_tex.height / 2
-cairo_tex.rotate_y(45.0, center_x, center_y)
+cairo_tex.set_rotation(Clutter::Y_AXIS, 45.0, center_x, center_y, 0)
 stage << cairo_tex
-cairo_tex.show
     
 # Clutter::Cairo is also a Clutter::Texture, so we can save memory
 # when dealing with multiple copies by simply cloning it and
@@ -46,9 +45,8 @@ cairo_tex.show
 clone_tex = Clutter::CloneTexture.new(cairo_tex)
 clone_tex.set_position((stage.width - 200) / 2,
                        (stage.height - 200) / 2)
-clone_tex.rotate_y(-45.0, center_x, center_y)
+clone_tex.set_rotation(Clutter::Y_AXIS, -45.0, center_x, center_y, 0)
 stage << clone_tex
-clone_tex.show
 
 stage.show
 

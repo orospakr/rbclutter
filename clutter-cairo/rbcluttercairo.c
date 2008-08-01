@@ -1,5 +1,5 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
- * Copyright (C) 2007  Neil Roberts
+ * Copyright (C) 2007-2008  Neil Roberts
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -49,20 +49,35 @@ rbcltc_cairo_initialize (VALUE self, VALUE width, VALUE height)
 }
 
 static VALUE
-rbcltc_cairo_set_source_color (VALUE self, VALUE cairo, VALUE color)
+rbcltc_cairo_set_source_color (VALUE self, VALUE cairo, VALUE color_arg)
 {
-  clutter_cairo_set_source_color (RVAL2CRCONTEXT (cairo),
-				  (ClutterColor *) RVAL2BOXED (color, CLUTTER_TYPE_COLOR));
+  ClutterColor *color = RVAL2BOXED (color_arg, CLUTTER_TYPE_COLOR);
+
+  clutter_cairo_set_source_color (RVAL2CRCONTEXT (cairo), color);
 
   return cairo;
 }
 
 static VALUE
-rbcltc_cairo_create (VALUE self)
+rbcltc_cairo_create (int argc, VALUE *argv, VALUE self)
 {
   ClutterCairo *cairo = CLUTTER_CAIRO (RVAL2GOBJ (self));
-  cairo_t *cr = clutter_cairo_create (cairo);
-  VALUE ret = CRCONTEXT2RVAL (cr);
+  cairo_t *cr;
+  VALUE ret;
+
+  if (argc == 0)
+    cr = clutter_cairo_create (cairo);
+  else if (argc == 4)
+    cr = clutter_cairo_create_region (cairo, NUM2INT (argv[0]),
+				      NUM2INT (argv[1]),
+				      NUM2UINT (argv[2]),
+				      NUM2UINT (argv[3]));
+  else
+    rb_raise (rb_eArgError,
+	      "wrong number of arguments (%i for 0 or 4)", argc);
+	      
+
+  ret = CRCONTEXT2RVAL (cr);
   /* The context returned by clutter_cairo_create has a reference
      owned by us, but CRCONTEXT2RVAL creates another reference held by
      Ruby, so we should drop the original reference to let Ruby handle
@@ -99,6 +114,25 @@ rbcltc_cairo_context_finish (VALUE self)
   return self;
 }
 
+static VALUE
+rbcltc_cairo_create_region (VALUE self, VALUE x, VALUE y,
+			    VALUE width, VALUE height)
+{
+  VALUE argv[4] = { x, y, width, height };
+
+  return rbcltc_cairo_create (4, argv, self);
+}
+
+static VALUE
+rbcltc_cairo_surface_resize (VALUE self, VALUE width, VALUE height)
+{
+  ClutterCairo *cairo = CLUTTER_CAIRO (RVAL2GOBJ (self));
+
+  clutter_cairo_surface_resize (cairo, NUM2UINT (width), NUM2UINT (height));
+
+  return self;
+}
+
 void
 Init_clutter_cairo ()
 {
@@ -111,8 +145,11 @@ Init_clutter_cairo ()
 
   klass = G_DEF_CLASS (CLUTTER_TYPE_CAIRO, "Cairo", rbcltc_c_clutter);
   rb_define_method (klass, "initialize", rbcltc_cairo_initialize, 2);
-  rb_define_method (klass, "create", rbcltc_cairo_create, 0);
-  rb_define_singleton_method (klass, "set_source_color", rbcltc_cairo_set_source_color, 2);
+  rb_define_method (klass, "create", rbcltc_cairo_create, -1);
+  rb_define_method (klass, "create_region", rbcltc_cairo_create_region, 4);
+  rb_define_method (klass, "surface_resize", rbcltc_cairo_surface_resize, 2);
+  rb_define_singleton_method (klass, "set_source_color",
+			      rbcltc_cairo_set_source_color, 2);
 
   /* The Ruby bindings of Cairo have no 'destroy' method. Instead this
      is called when the object gets reaped by the garbage
@@ -122,7 +159,8 @@ Init_clutter_cairo ()
      cairo context in the ruby object with a new stub context so that
      the original context can be destroyed without ruining the ruby
      object */
-  rb_define_method (rb_const_get (rb_const_get (rb_cObject, rb_intern ("Cairo")),
+  rb_define_method (rb_const_get (rb_const_get (rb_cObject,
+						rb_intern ("Cairo")),
 				  rb_intern ("Context")),
 		    "finish", rbcltc_cairo_context_finish, 0);
 }

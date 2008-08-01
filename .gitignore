@@ -11,5 +11,9 @@
 /clutter/rbcltknot.c
 /clutter/rbcltperspective.c
 /clutter/rbcltvertex.c
+/clutter/rbcltfog.c
+/clutter-cairo/clutter_cairo.so
+/clutter-cairo/Makefile
+/clutter-cairo/mkmf.log
 /Makefile
 

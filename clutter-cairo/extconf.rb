@@ -19,8 +19,8 @@ require 'mkmf'
 require 'pkg-config'
 
 PKGConfig.have_package('glib-2.0') or show_fail
-PKGConfig.have_package('clutter-0.4') or show_fail
-PKGConfig.have_package('clutter-cairo-0.4') or show_fail
+PKGConfig.have_package('clutter-0.8') or show_fail
+PKGConfig.have_package('clutter-cairo-0.8') or show_fail
 PKGConfig.have_package('cairo') or show_fail
 
 find_header("rb_cairo.h", *$:) or show_fail
