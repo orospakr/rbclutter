@@ -1,5 +1,5 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
- * Copyright (C) 2007  Neil Roberts
+ * Copyright (C) 2007-2008  Neil Roberts
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -92,7 +92,8 @@ rbclt_num_to_guint8 (VALUE val)
   else
     return (guint8) num;
 
-  rb_raise (rb_eRangeError, "integer %ld too %s to convert to `guint8'", num, s);
+  rb_raise (rb_eRangeError, "integer %ld too %s to convert to `guint8'",
+	    num, s);
 }
 
 guint16
@@ -108,7 +109,8 @@ rbclt_num_to_guint16 (VALUE val)
   else
     return (guint16) num;
 
-  rb_raise (rb_eRangeError, "integer %ld too %s to convert to `guint16'", num, s);
+  rb_raise (rb_eRangeError, "integer %ld too %s to convert to `guint16'",
+	    num, s);
 }
 
 ClutterFixed
@@ -198,10 +200,16 @@ Init_clutter ()
   
   G_DEF_CLASS (CLUTTER_TYPE_GRAVITY, "Gravity", rbclt_c_clutter);
   G_DEF_CONSTANTS (rbclt_c_clutter, CLUTTER_TYPE_GRAVITY, "CLUTTER_");
-  G_DEF_CLASS (CLUTTER_TYPE_ROTATE_DIRECTION, "RotateDirection", rbclt_c_clutter);
+
+  G_DEF_CLASS (CLUTTER_TYPE_ROTATE_DIRECTION, "RotateDirection",
+	       rbclt_c_clutter);
   G_DEF_CONSTANTS (rbclt_c_clutter, CLUTTER_TYPE_ROTATE_DIRECTION, "CLUTTER_");
+
   G_DEF_CLASS (CLUTTER_TYPE_ROTATE_DIRECTION, "RotateAxis", rbclt_c_clutter);
   G_DEF_CONSTANTS (rbclt_c_clutter, CLUTTER_TYPE_ROTATE_AXIS, "CLUTTER_");
+
+  G_DEF_CLASS (CLUTTER_TYPE_REQUEST_MODE, "RequestMode", rbclt_c_clutter);
+  G_DEF_CONSTANTS (rbclt_c_clutter, CLUTTER_TYPE_REQUEST_MODE, "CLUTTER_");
 
   mglib = rb_const_get (rb_cObject, rb_intern ("GLib"));
   /* This is only defined in later versions of the Ruby-glib

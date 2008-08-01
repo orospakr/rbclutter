@@ -1,5 +1,10 @@
 2008-08-01  Neil Roberts  <neil@o-hand.com>
 
+	* clutter/rbclutter.c: Tidy up indentation.
+	(Init_clutter): Define the Clutter::RequestMode class.
+
+2008-08-01  Neil Roberts  <neil@o-hand.com>
+
 	* clutter/rbclttimeline.c (rbclt_timeline_init): Define the
 	Clutter::Timeline::Direction class
 
