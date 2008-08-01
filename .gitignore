@@ -18,5 +18,8 @@
 /clutter-gst/clutter_gst.so
 /clutter-gst/Makefile
 /clutter-gst/mkmf.log
+/clutter-gtk/clutter_gtk.so
+/clutter-gtk/Makefile
+/clutter-gtk/mkmf.log
 /Makefile
 

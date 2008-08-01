@@ -1,5 +1,5 @@
 # Ruby bindings for the Clutter 'interactive canvas' library.
-# Copyright (C) 2007  Neil Roberts
+# Copyright (C) 2007-2008  Neil Roberts
 # 
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,16 +16,23 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA  02110-1301  USA
 require 'mkmf'
+require 'mkmf-gnome2'
 require 'pkg-config'
 
+TOPDIR = File.expand_path(File.dirname(__FILE__) + '/..')
+
 PKGConfig.have_package('glib-2.0') or show_fail
-PKGConfig.have_package('clutter-0.4') or show_fail
-PKGConfig.have_package('clutter-gtk-0.4') or show_fail
+PKGConfig.have_package('clutter-0.8') or show_fail
+PKGConfig.have_package('clutter-gtk-0.8') or show_fail
 PKGConfig.have_package('gtk+-2.0') or show_fail
 
 find_header("rbgobject.h", *$:) or show_fail
 find_header("rbgtk.h", *$:) or show_fail
 
-$objs = %w{ rbcluttergtk.o }
+add_depend_package("clutter", "clutter", TOPDIR)
+
+$objs = %w{ rbcluttergtkembed.o rbcluttergtk.o }
+
+$INSTALLFILES = [ [ "clutter_gtk.rb", "$(RUBYLIBDIR)" ] ]
 
 create_makefile("clutter_gtk")

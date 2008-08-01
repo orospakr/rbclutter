@@ -1,5 +1,15 @@
 2008-08-01  Neil Roberts  <neil@o-hand.com>
 
+	* examples/clutter-gtk-events.rb: 
+	* clutter-gtk/rbcluttergtkembed.c: 
+	* clutter-gtk/rbcluttergtk.c: 
+	* clutter-gtk/extconf.rb: 
+	* clutter-gtk/clutter_gtk.rb: Upgrade to 0.8 API
+
+	* .gitignore: Add clutter-gtk files
+
+2008-08-01  Neil Roberts  <neil@o-hand.com>
+
 	* clutter/rbclutter.h: 
 	* clutter/rbclutter.c: 
 	* clutter/rbcltmain.c: Move the rbclt_init function into
