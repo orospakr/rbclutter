@@ -1,5 +1,10 @@
 2008-08-02  Neil Roberts  <neil@o-hand.com>
 
+	* examples/bubbles.rb: Ported the 'bubbles' example from the
+	Python bindings
+
+2008-08-02  Neil Roberts  <neil@o-hand.com>
+
 	* clutter/rbclttimeline.c: Add missing wrappers for get_delta
 
 2008-08-01  Neil Roberts  <neil@o-hand.com>
