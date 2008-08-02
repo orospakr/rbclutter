@@ -187,6 +187,25 @@ rbclt_timeline_advance_to_marker (VALUE self, VALUE marker_name)
   return self;
 }
 
+static VALUE
+rbclt_timeline_get_delta (VALUE self)
+{
+  ClutterTimeline *timeline = CLUTTER_TIMELINE (RVAL2GOBJ (self));
+
+  return UINT2NUM (clutter_timeline_get_delta (timeline, NULL));
+}
+
+static VALUE
+rbclt_timeline_get_delta_msecs (VALUE self)
+{
+  ClutterTimeline *timeline = CLUTTER_TIMELINE (RVAL2GOBJ (self));
+  guint msecs;
+
+  clutter_timeline_get_delta (timeline, &msecs);
+
+  return UINT2NUM (msecs);
+}
+
 void
 rbclt_timeline_init ()
 {
@@ -216,6 +235,9 @@ rbclt_timeline_init ()
   rb_define_method (klass, "has_marker?", rbclt_timeline_has_marker, 1);
   rb_define_method (klass, "advance_to_marker",
                     rbclt_timeline_advance_to_marker, 1);
+  rb_define_method (klass, "delta", rbclt_timeline_get_delta, 0);
+  rb_define_method (klass, "delta_msecs",
+                    rbclt_timeline_get_delta_msecs, 0);
   
   G_DEF_CONSTANTS (klass, CLUTTER_TYPE_TIMELINE_DIRECTION, "CLUTTER_TIMELINE_");
   G_DEF_CLASS (CLUTTER_TYPE_TIMELINE_DIRECTION, "Direction", klass);

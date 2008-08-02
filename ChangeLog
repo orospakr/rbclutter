@@ -1,3 +1,7 @@
+2008-08-02  Neil Roberts  <neil@o-hand.com>
+
+	* clutter/rbclttimeline.c: Add missing wrappers for get_delta
+
 2008-08-01  Neil Roberts  <neil@o-hand.com>
 
 	* examples/clutter-gtk-events.rb: 
