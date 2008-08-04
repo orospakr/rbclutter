@@ -76,14 +76,14 @@ class Thumbnailer
       Clutter::Stage.get_default.remove(actor)
       @removed_count += 1
       if @removed_count >= @actors.size
-        @removing = false
+        @removing = nil
         @behaviours[0].alpha.timeline.rewind.start
       end
     else
       if index = @actors.index(actor)
         if index >= @next_load_actor - 1
           # Start removing the thumbnails
-          @removing = true
+          @removing = @behaviours
           @removed_count = 0
           @behaviours.each do |b| 
             b.alpha.set_func(Clutter::Alpha::SINE_DEC)

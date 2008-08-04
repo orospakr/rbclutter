@@ -1,3 +1,9 @@
+2008-08-04  Neil Roberts  <neil@o-hand.com>
+
+	* examples/thumbnailer.rb (Thumbnailer::on_completed): While
+	removing the thumbnails, keep the old behaviours in an array so
+	that they won't be garbage collected while animating.
+
 2008-08-02  Neil Roberts  <neil@o-hand.com>
 
 	* examples/bubbles.rb: Ported the 'bubbles' example from the
