@@ -1,3 +1,8 @@
+2008-08-05  Neil Roberts  <neil@o-hand.com>
+
+	* examples/thumbnailer.rb: Store the main application in a
+	variable so that it will be safe from the garbage collector
+
 2008-08-04  Neil Roberts  <neil@o-hand.com>
 
 	* examples/thumbnailer.rb (Thumbnailer::on_completed): While

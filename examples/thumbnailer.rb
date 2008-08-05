@@ -146,7 +146,9 @@ stage.signal_connect("key_press_event") do |stage, event|
   end
 end
 
-Thumbnailer.new(ARGV)
+# The main app instance needs to be stored in a variable to keep it
+# alive
+thumbnailer = Thumbnailer.new(ARGV)
 
 stage.show
 
