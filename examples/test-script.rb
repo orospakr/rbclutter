@@ -27,7 +27,7 @@ Clutter::init
 class SmileyFace < Clutter::Actor
   type_register
 
-  def on_paint
+  def signal_do_paint
     # Scale so that the coordinates 0 -> 100 extend to cover the size of
     # the actor
     Cogl::push_matrix
@@ -138,10 +138,6 @@ EOS
 script = Clutter::Script.new
 script.add_search_path(File.dirname($0))
 script.load_from_data(SCRIPT)
-
-# If a Ruby actor is created using ClutterScript then its constructor
-# won't be called so we have to bind the signals here :(
-script["face"].signal_connect('paint') { |actor| actor.on_paint }
 
 # There's two says to use Clutter::Script#connect_signals. The most
 # common is to create an object with a method for each handler. The

@@ -1,3 +1,9 @@
+2008-08-08  Neil Roberts  <neil@o-hand.com>
+
+	* examples/test-script.rb (SmileyFace::signal_do_paint): Override
+	the class closure for the paint signal instead of having to
+	connect to the signal elsewhere
+
 2008-08-05  Neil Roberts  <neil@o-hand.com>
 
 	* examples/thumbnailer.rb: Store the main application in a
