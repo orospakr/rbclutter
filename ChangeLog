@@ -1,3 +1,11 @@
+2008-08-18  Neil Roberts  <neil@o-hand.com>
+
+	* clutter-cairo/rbcluttercairo.c: Since version 1.7.0 of the cairo
+	bindings, there is a binding for cairo_destroy so it is no longer
+	necessary to define the 'finish' method. The clutter-cairo
+	bindings now detect the destroy method at run time and define
+	finish as an alias for it if it's available.
+
 2008-08-08  Neil Roberts  <neil@o-hand.com>
 
 	* examples/test-script.rb (SmileyFace::signal_do_paint): Override

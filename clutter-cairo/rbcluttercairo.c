@@ -25,6 +25,8 @@
 #include <clutter-cairo/clutter-cairo.h>
 #include <rbclutter.h>
 
+static ID id_finish;
+
 static VALUE rbcltc_cairo_context_finish (VALUE self);
 
 static VALUE
@@ -35,6 +37,12 @@ rbcltc_cairo_initialize (VALUE self, VALUE width, VALUE height)
   rbclt_initialize_unowned (self, actor);
 
   return Qnil;
+}
+
+static VALUE
+rbcltc_cairo_invoke_finish (VALUE self)
+{
+  return rb_funcall (self, id_finish, 0);
 }
 
 static VALUE
@@ -76,7 +84,7 @@ rbcltc_cairo_create (int argc, VALUE *argv, VALUE self)
   /* If a block is given then evaluate that block with the context and
      call finish when it is over */
   if (rb_block_given_p ())
-    return rb_ensure (rb_yield, ret, rbcltc_cairo_context_finish, ret);
+    return rb_ensure (rb_yield, ret, rbcltc_cairo_invoke_finish, ret);
   else
     return ret;
 }
@@ -98,7 +106,8 @@ rbcltc_cairo_context_finish (VALUE self)
   DATA_PTR (self) = new_cr;
 
   /* Destroy the old context so that Clutter will update the texture */
-  cairo_destroy (old_cr);
+  if (old_cr)
+    cairo_destroy (old_cr);
   
   return self;
 }
@@ -126,6 +135,7 @@ void
 Init_clutter_cairo ()
 {
   VALUE klass;
+  VALUE cairo_class, context_class;
 
   rb_require ("cairo");
   rb_require ("clutter");
@@ -138,16 +148,24 @@ Init_clutter_cairo ()
   rb_define_singleton_method (klass, "set_source_color",
 			      rbcltc_cairo_set_source_color, 2);
 
-  /* The Ruby bindings of Cairo have no 'destroy' method. Instead this
-     is called when the object gets reaped by the garbage
-     collecter. However in clutter-cairo, the cairo context needs to
-     be explicitly destroyed before clutter will update the
-     texture. This method works around the problem by replacing the
-     cairo context in the ruby object with a new stub context so that
-     the original context can be destroyed without ruining the ruby
-     object */
-  rb_define_method (rb_const_get (rb_const_get (rb_cObject,
-						rb_intern ("Cairo")),
-				  rb_intern ("Context")),
-		    "finish", rbcltc_cairo_context_finish, 0);
+  /* Before version 0.7.0, the Ruby bindings of cairo had no 'destroy'
+     method. Instead this was called when the object gets reaped by
+     the garbage collecter. However in clutter-cairo, the cairo
+     context needs to be explicitly destroyed before clutter will
+     update the texture. If the 'destroy' method is not available, we
+     define a new method which works around the problem by replacing
+     the cairo context in the ruby object with a new stub context so
+     that the original context can be destroyed without ruining the
+     ruby object. Otherwise we just define 'finish' as an alias for
+     destroy to maintain backward compatibility */
+
+  cairo_class = rb_const_get (rb_cObject, rb_intern ("Cairo"));
+  context_class = rb_const_get (cairo_class, rb_intern ("Context"));
+
+  if (rb_method_boundp (context_class, rb_intern ("destroy"), TRUE))
+    rb_define_alias (context_class, "finish", "destroy");
+  else
+    rb_define_method (context_class, "finish", rbcltc_cairo_context_finish, 0);
+
+  id_finish = rb_intern ("finish");
 }
