@@ -1,16 +1,16 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
  * Copyright (C) 2007  Neil Roberts
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
@@ -52,7 +52,7 @@ Init_clutter_gst ()
 {
   rb_require ("glib2");
   rb_require ("clutter");
-  rb_require ("gst0.10");
+  rb_require ("gst");
 
   /* The base class init of some of the clutter-gst classes call some
      gst functions so unfortunatly defining the Ruby wrappers will
@@ -66,9 +66,9 @@ Init_clutter_gst ()
      actual library binary, but there isn't a way to get that with
      Clutter yet. */
   rb_define_const (rbcltgst_c_clutter_gst, "BUILD_VERSION",
-		   rb_ary_new3 (3, INT2FIX (CLUTTER_GST_MAJOR_VERSION),
-				INT2FIX (CLUTTER_GST_MINOR_VERSION),
-				INT2FIX (CLUTTER_GST_MICRO_VERSION)));
+                   rb_ary_new3 (3, INT2FIX (CLUTTER_GST_MAJOR_VERSION),
+                                INT2FIX (CLUTTER_GST_MINOR_VERSION),
+                                INT2FIX (CLUTTER_GST_MICRO_VERSION)));
 
   rbcltgst_video_sink_init ();
   rbcltgst_video_texture_init ();
