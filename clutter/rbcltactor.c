@@ -1,16 +1,16 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
  * Copyright (C) 2007-2008  Neil Roberts
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
@@ -62,7 +62,7 @@ rbclt_actor_type_register (int argc, VALUE *argv, VALUE self)
      container the container will steal Ruby's reference. To work
      around this we include another stub module to redefine the
      initialize method again */
-  
+
   /* Let the real type_register function run */
   result = rb_call_super (argc, argv);
 
@@ -70,7 +70,7 @@ rbclt_actor_type_register (int argc, VALUE *argv, VALUE self)
   mod = rb_define_module_under (self, "ClutterGObjectHook__");
   /* Give it a constructor */
   rb_define_method (mod, "initialize",
-		    rbclt_actor_subclass_initialize, -1);
+                    rbclt_actor_subclass_initialize, -1);
   /* Make the new class include the module */
   rb_include_module (self, mod);
 
@@ -171,16 +171,16 @@ rbclt_actor_get_preferred_width (int argc, VALUE *argv, VALUE self)
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
   VALUE for_height;
   ClutterUnit min_width, natural_width;
-  
+
   rb_scan_args (argc, argv, "01", &for_height);
 
   clutter_actor_get_preferred_width (actor,
-				     NIL_P (for_height)
-				     ? -1 : NUM2INT (for_height),
-				     &min_width, &natural_width);
+                                     NIL_P (for_height)
+                                     ? -1 : NUM2INT (for_height),
+                                     &min_width, &natural_width);
   return rb_ary_new3 (2,
-		      rb_float_new (CLUTTER_UNITS_TO_FLOAT (min_width)),
-		      rb_float_new (CLUTTER_UNITS_TO_FLOAT (natural_width)));
+                      rb_float_new (CLUTTER_UNITS_TO_FLOAT (min_width)),
+                      rb_float_new (CLUTTER_UNITS_TO_FLOAT (natural_width)));
 }
 
 static VALUE
@@ -189,16 +189,16 @@ rbclt_actor_get_preferred_height (int argc, VALUE *argv, VALUE self)
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
   VALUE for_width;
   ClutterUnit min_height, natural_height;
-  
+
   rb_scan_args (argc, argv, "01", &for_width);
 
   clutter_actor_get_preferred_height (actor,
-				      NIL_P (for_width)
-				      ? -1 : NUM2INT (for_width),
-				      &min_height, &natural_height);
+                                      NIL_P (for_width)
+                                      ? -1 : NUM2INT (for_width),
+                                      &min_height, &natural_height);
   return rb_ary_new3 (2,
-		      rb_float_new (CLUTTER_UNITS_TO_FLOAT (min_height)),
-		      rb_float_new (CLUTTER_UNITS_TO_FLOAT (natural_height)));
+                      rb_float_new (CLUTTER_UNITS_TO_FLOAT (min_height)),
+                      rb_float_new (CLUTTER_UNITS_TO_FLOAT (natural_height)));
 }
 
 static VALUE
@@ -208,12 +208,12 @@ rbclt_actor_get_preferred_size (VALUE self)
   ClutterUnit min_width, min_height, natural_width, natural_height;
 
   clutter_actor_get_preferred_size (actor, &min_width, &min_height,
-				    &natural_width, &natural_height);
+                                    &natural_width, &natural_height);
 
   return rb_ary_new3 (4, rb_float_new (CLUTTER_UNITS_TO_FLOAT (min_width)),
-		      rb_float_new (CLUTTER_UNITS_TO_FLOAT (min_height)),
-		      rb_float_new (CLUTTER_UNITS_TO_FLOAT (natural_width)),
-		      rb_float_new (CLUTTER_UNITS_TO_FLOAT (natural_height)));
+                      rb_float_new (CLUTTER_UNITS_TO_FLOAT (min_height)),
+                      rb_float_new (CLUTTER_UNITS_TO_FLOAT (natural_width)),
+                      rb_float_new (CLUTTER_UNITS_TO_FLOAT (natural_height)));
 }
 
 static VALUE
@@ -247,7 +247,7 @@ rbclt_actor_get_allocation_coords (VALUE self)
   clutter_actor_get_allocation_coords (actor, &x_1, &y_1, &x_2, &y_2);
 
   return rb_ary_new3 (4, INT2NUM (x_1), INT2NUM (y_1),
-		      INT2NUM (x_2), INT2NUM (y_2));
+                      INT2NUM (x_2), INT2NUM (y_2));
 }
 
 static VALUE
@@ -364,15 +364,15 @@ rbclt_actor_get_transformed_position (VALUE self)
 
 static VALUE
 rbclt_actor_set_rotation (VALUE self, VALUE axis, VALUE angle,
-			  VALUE x, VALUE y, VALUE z)
+                          VALUE x, VALUE y, VALUE z)
 {
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
   clutter_actor_set_rotation (actor,
-			      RVAL2GENUM (axis, CLUTTER_TYPE_ROTATE_AXIS),
-			      NUM2DBL (angle),
-			      NUM2INT (x),
-			      NUM2INT (y),
-			      NUM2INT (z));
+                              RVAL2GENUM (axis, CLUTTER_TYPE_ROTATE_AXIS),
+                              NUM2DBL (angle),
+                              NUM2INT (x),
+                              NUM2INT (y),
+                              NUM2INT (z));
   return self;
 }
 
@@ -384,12 +384,12 @@ rbclt_actor_get_rotation (VALUE self, VALUE axis)
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
 
   angle = clutter_actor_get_rotation (actor,
-				      RVAL2GENUM (axis,
-						  CLUTTER_TYPE_ROTATE_AXIS),
-				      &x, &y, &z);
-  
+                                      RVAL2GENUM (axis,
+                                                  CLUTTER_TYPE_ROTATE_AXIS),
+                                      &x, &y, &z);
+
   return rb_ary_new3 (4, rb_float_new (angle),
-		      INT2NUM (x), INT2NUM (y), INT2NUM (z));
+                      INT2NUM (x), INT2NUM (y), INT2NUM (z));
 }
 
 static VALUE
@@ -412,6 +412,21 @@ rbclt_actor_remove_clip (VALUE self)
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
   clutter_actor_remove_clip (actor);
   return self;
+}
+
+static VALUE
+rbclt_actor_set_clip (VALUE self,
+                      VALUE xoff,
+                      VALUE yoff,
+                      VALUE width,
+                      VALUE height)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ(self));
+  clutter_actor_set_clip (actor,
+                          NUM2INT (xoff),
+                          NUM2INT (yoff),
+                          NUM2INT (width),
+                          NUM2INT (height));
 }
 
 static VALUE
@@ -535,7 +550,7 @@ rbclt_actor_apply_transform_to_point (VALUE self, VALUE point_arg)
 {
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
   ClutterVertex point = *(ClutterVertex *) RVAL2BOXED (point_arg,
-						       CLUTTER_TYPE_VERTEX);
+                                                       CLUTTER_TYPE_VERTEX);
   ClutterVertex vertex;
   clutter_actor_apply_transform_to_point (actor, &point, &vertex);
   return BOXED2RVAL (&vertex, CLUTTER_TYPE_VERTEX);
@@ -543,18 +558,18 @@ rbclt_actor_apply_transform_to_point (VALUE self, VALUE point_arg)
 
 static VALUE
 rbclt_actor_apply_relative_transform_to_point (VALUE self,
-					       VALUE ancestor,
-					       VALUE point_arg)
+                                               VALUE ancestor,
+                                               VALUE point_arg)
 {
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
   ClutterVertex point = *(ClutterVertex *) RVAL2BOXED (point_arg,
-						       CLUTTER_TYPE_VERTEX);
+                                                       CLUTTER_TYPE_VERTEX);
   ClutterVertex vertex;
 
   clutter_actor_apply_relative_transform_to_point (actor,
-						   RVAL2GOBJ (ancestor),
-						   &point, &vertex);
-						   
+                                                   RVAL2GOBJ (ancestor),
+                                                   &point, &vertex);
+
   return BOXED2RVAL (&vertex, CLUTTER_TYPE_VERTEX);
 }
 
@@ -585,7 +600,7 @@ rbclt_actor_set_shader_param (VALUE self, VALUE param, VALUE value)
 {
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
   clutter_actor_set_shader_param (actor, StringValuePtr (param),
-				  NUM2DBL (value));
+                                  NUM2DBL (value));
   return self;
 }
 
@@ -652,7 +667,7 @@ rbclt_actor_init ()
   rbclt_c_actor = klass;
 
   rb_define_singleton_method (klass, "type_register",
-			      rbclt_actor_type_register, -1);
+                              rbclt_actor_type_register, -1);
 
   rb_define_method (klass, "show", rbclt_actor_show, 0);
   rb_define_method (klass, "show_all", rbclt_actor_show_all, 0);
@@ -666,40 +681,41 @@ rbclt_actor_init ()
   rb_define_method (klass, "queue_relayout", rbclt_actor_queue_relayout, 0);
   rb_define_method (klass, "destroy", rbclt_actor_destroy, 0);
   rb_define_method (klass, "get_preferred_width",
-		    rbclt_actor_get_preferred_width, -1);
+                    rbclt_actor_get_preferred_width, -1);
   rb_define_alias (klass, "preferred_width", "get_preferred_width");
   rb_define_method (klass, "get_preferred_height",
-		    rbclt_actor_get_preferred_height, -1);
+                    rbclt_actor_get_preferred_height, -1);
   rb_define_alias (klass, "preferred_height", "get_preferred_height");
   rb_define_method (klass, "preferred_size",
-		    rbclt_actor_get_preferred_size, 0);
+                    rbclt_actor_get_preferred_size, 0);
   rb_define_method (klass, "allocate", rbclt_actor_allocate, 2);
   rb_define_method (klass, "allocate_preferred_size",
-		    rbclt_actor_allocate_preferred_size, 1);
+                    rbclt_actor_allocate_preferred_size, 1);
   rb_define_method (klass, "allocation_coords",
-		    rbclt_actor_get_allocation_coords, 0);
+                    rbclt_actor_get_allocation_coords, 0);
   rb_define_method (klass, "allocation_box",
-		    rbclt_actor_get_allocation_box, 0);
+                    rbclt_actor_get_allocation_box, 0);
   rb_define_method (klass, "allocation_geometry",
-		    rbclt_actor_get_allocation_geometry, 0);
+                    rbclt_actor_get_allocation_geometry, 0);
   rb_define_method (klass, "get_allocation_vertices",
-		    rbclt_actor_get_allocation_vertices, -1);
+                    rbclt_actor_get_allocation_vertices, -1);
   rb_define_alias (klass, "allocation_vertices", "get_allocation_vertices");
   rb_define_method (klass, "abs_allocation_vertices",
-		    rbclt_actor_get_abs_allocation_vertices, 0);
+                    rbclt_actor_get_abs_allocation_vertices, 0);
   rb_define_method (klass, "geometry", rbclt_actor_geometry, 0);
   rb_define_method (klass, "set_geometry", rbclt_actor_set_geometry, 1);
   rb_define_method (klass, "set_size", rbclt_actor_set_size, 2);
   rb_define_method (klass, "set_position", rbclt_actor_set_position, 2);
   rb_define_method (klass, "transformed_size",
-		    rbclt_actor_get_transformed_size, 0);
+                    rbclt_actor_get_transformed_size, 0);
   rb_define_method (klass, "transformed_position",
-		    rbclt_actor_get_transformed_position, 0);
+                    rbclt_actor_get_transformed_position, 0);
   rb_define_method (klass, "set_rotation", rbclt_actor_set_rotation, 5);
   rb_define_method (klass, "get_rotation", rbclt_actor_get_rotation, 1);
   rb_define_method (klass, "paint_opacity", rbclt_actor_get_paint_opacity, 0);
   rb_define_method (klass, "gid", rbclt_actor_gid, 0);
   rb_define_method (klass, "remove_clip", rbclt_actor_remove_clip, 0);
+  rb_define_method (klass, "set_clip", rbclt_actor_set_clip, 4);
   rb_define_method (klass, "set_parent", rbclt_actor_set_parent, 1);
   rb_define_method (klass, "parent", rbclt_actor_parent, 0);
   rb_define_method (klass, "reparent", rbclt_actor_reparent, 1);
@@ -715,22 +731,22 @@ rbclt_actor_init ()
   rb_define_method (klass, "size", rbclt_actor_size, 0);
   rb_define_method (klass, "move_by", rbclt_actor_move_by, 2);
   rb_define_method (klass, "apply_transform_to_point",
-		    rbclt_actor_apply_transform_to_point, 1);
+                    rbclt_actor_apply_transform_to_point, 1);
   rb_define_method (klass, "apply_relative_transform_to_point",
-		    rbclt_actor_apply_relative_transform_to_point, 2);
+                    rbclt_actor_apply_relative_transform_to_point, 2);
   rb_define_method (klass, "should_pick_paint",
-		    rbclt_actor_should_pick_paint, 0);
+                    rbclt_actor_should_pick_paint, 0);
   rb_define_alias (klass, "pick_paint?", "should_pick_paint");
   rb_define_method (klass, "set_shader", rbclt_actor_set_shader, 1);
   rb_define_method (klass, "shader", rbclt_actor_shader, 0);
   rb_define_method (klass, "set_shader_param", rbclt_actor_set_shader_param, 2);
   rb_define_method (klass, "set_anchor_point", rbclt_actor_set_anchor_point, 2);
   rb_define_method (klass, "move_anchor_point",
-		    rbclt_actor_move_anchor_point, 2);
+                    rbclt_actor_move_anchor_point, 2);
   rb_define_method (klass, "set_anchor_point_from_gravity",
-		    rbclt_actor_set_anchor_point_from_gravity, 1);
+                    rbclt_actor_set_anchor_point_from_gravity, 1);
   rb_define_method (klass, "move_anchor_point_from_gravity",
-		    rbclt_actor_move_anchor_point_from_gravity, 1);
+                    rbclt_actor_move_anchor_point_from_gravity, 1);
   rb_define_method (klass, "rotated?", rbclt_actor_is_rotated, 0);
   rb_define_method (klass, "scaled?", rbclt_actor_is_scaled, 0);
   rb_define_method (klass, "stage", rbclt_actor_stage, 0);
