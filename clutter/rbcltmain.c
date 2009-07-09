@@ -1,34 +1,33 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
  * Copyright (C) 2007-2008  Neil Roberts
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301  USA
  */
 
-#include <clutter/clutter-main.h>
-#include <clutter/clutter-enum-types.h>
+#include <clutter/clutter.h>
 #include <rbgobject.h>
 
 #include "rbclutter.h"
 #include "rbcltcallbackfunc.h"
 
 typedef guint (* ThreadSourceFunc) (gint priority,
-				    guint interval,
-				    GSourceFunc func,
-				    gpointer data,
-				    GDestroyNotify notify);
+                                    guint interval,
+                                    GSourceFunc func,
+                                    gpointer data,
+                                    GDestroyNotify notify);
 
 static VALUE
 rbclt_init (int argc, VALUE *argv)
@@ -244,12 +243,12 @@ static gboolean
 rbclt_threads_callback (gpointer data)
 {
   return RTEST (rbclt_callback_func_invoke ((RBCLTCallbackFunc *) data,
-					    0, NULL));
+                                            0, NULL));
 }
 
 static VALUE
 rbclt_threads_do_add_timeout (int argc, VALUE *argv,
-			      ThreadSourceFunc source_func)
+                              ThreadSourceFunc source_func)
 {
   VALUE priority_arg, interval_arg, func;
   gint priority;
@@ -257,7 +256,7 @@ rbclt_threads_do_add_timeout (int argc, VALUE *argv,
   RBCLTCallbackFunc *func_wrapper;
 
   rb_scan_args (argc, argv, "11&", &interval_arg, &priority_arg, &func);
-  
+
   priority = NIL_P (priority_arg) ? G_PRIORITY_DEFAULT : NUM2INT (priority_arg);
   interval = NUM2UINT (interval_arg);
   func_wrapper = rbclt_callback_func_new (func);
@@ -273,14 +272,14 @@ static VALUE
 rbclt_threads_add_timeout (int argc, VALUE *argv, VALUE self)
 {
   return rbclt_threads_do_add_timeout (argc, argv,
-				       clutter_threads_add_timeout_full);
+                                       clutter_threads_add_timeout_full);
 }
 
 static VALUE
 rbclt_threads_add_frame_source (int argc, VALUE *argv, VALUE self)
 {
   return rbclt_threads_do_add_timeout (argc, argv,
-				       clutter_threads_add_frame_source_full);
+                                       clutter_threads_add_frame_source_full);
 }
 
 void
@@ -291,53 +290,51 @@ rbclt_main_init ()
   rb_define_module_function (rbclt_c_clutter, "init", rbclt_init, -1);
 
   rb_define_const (rbclt_c_clutter, "PRIORITY_REDRAW",
-		   INT2NUM (CLUTTER_PRIORITY_REDRAW));
-  rb_define_const (rbclt_c_clutter, "PRIORITY_TIMELINE",
-		   INT2NUM (CLUTTER_PRIORITY_TIMELINE));
+                   INT2NUM (CLUTTER_PRIORITY_REDRAW));
 
   rb_define_module_function (rbclt_c_clutter, "debug_enabled?",
-			     rbclt_get_debug_enabled, 0);
+                             rbclt_get_debug_enabled, 0);
   rb_define_module_function (rbclt_c_clutter, "show_fps?",
-			     rbclt_get_show_fps, 0);
+                             rbclt_get_show_fps, 0);
   rb_define_module_function (rbclt_c_clutter, "timestamp",
-			     rbclt_get_timestamp, 0);
+                             rbclt_get_timestamp, 0);
   rb_define_module_function (rbclt_c_clutter, "main", rbclt_main, 0);
   rb_define_module_function (rbclt_c_clutter, "main_quit", rbclt_main_quit, 0);
   rb_define_module_function (rbclt_c_clutter, "main_level",
-			     rbclt_main_level, 0);
+                             rbclt_main_level, 0);
   rb_define_module_function (rbclt_c_clutter, "redraw", rbclt_redraw, 1);
   rb_define_module_function (rbclt_c_clutter, "do_event",
-			     rbclt_do_event, 1);
+                             rbclt_do_event, 1);
   rb_define_module_function (rbclt_c_clutter, "set_motion_events_enabled",
-			     rbclt_set_motion_events_enabled, 1);
+                             rbclt_set_motion_events_enabled, 1);
   rb_define_module_function (rbclt_c_clutter, "motion_events_enabled?",
-			     rbclt_get_motion_events_enabled, 0);
+                             rbclt_get_motion_events_enabled, 0);
   rb_define_module_function (rbclt_c_clutter, "set_motion_events_frequency",
-			     rbclt_set_motion_events_frequency, 1);
+                             rbclt_set_motion_events_frequency, 1);
   rb_define_module_function (rbclt_c_clutter, "motion_events_frequency",
-			     rbclt_get_motion_events_frequency, 0);
+                             rbclt_get_motion_events_frequency, 0);
   rb_define_module_function (rbclt_c_clutter, "set_default_frame_rate",
-			     rbclt_set_default_frame_rate, 1);
+                             rbclt_set_default_frame_rate, 1);
   rb_define_module_function (rbclt_c_clutter, "default_frame_rate",
-			     rbclt_get_default_frame_rate, 0);
+                             rbclt_get_default_frame_rate, 0);
   rb_define_module_function (rbclt_c_clutter, "grab_pointer",
-			     rbclt_grab_pointer, 1);
+                             rbclt_grab_pointer, 1);
   rb_define_module_function (rbclt_c_clutter, "ungrab_pointer",
-			     rbclt_ungrab_pointer, 0);
+                             rbclt_ungrab_pointer, 0);
   rb_define_module_function (rbclt_c_clutter, "pointer_grab",
-			     rbclt_get_pointer_grab, 0);
+                             rbclt_get_pointer_grab, 0);
   rb_define_module_function (rbclt_c_clutter, "grab_keyboard",
-			     rbclt_grab_keyboard, 1);
+                             rbclt_grab_keyboard, 1);
   rb_define_module_function (rbclt_c_clutter, "ungrab_keyboard",
-			     rbclt_ungrab_keyboard, 0);
+                             rbclt_ungrab_keyboard, 0);
   rb_define_module_function (rbclt_c_clutter, "keyboard_grab",
-			     rbclt_get_keyboard_grab, 0);
+                             rbclt_get_keyboard_grab, 0);
   rb_define_module_function (rbclt_c_clutter, "clear_glyph_cache",
-			     rbclt_clear_glyph_cache, 0);
+                             rbclt_clear_glyph_cache, 0);
   rb_define_module_function (rbclt_c_clutter, "set_use_mipmapped_text",
-			     rbclt_set_use_mipmapped_text, 1);
+                             rbclt_set_use_mipmapped_text, 1);
   rb_define_module_function (rbclt_c_clutter, "use_mipmapped_text?",
-			     rbclt_get_use_mipmapped_text, 0);
+                             rbclt_get_use_mipmapped_text, 0);
 
   klass = rb_define_module_under (rbclt_c_clutter, "Threads");
 
@@ -345,9 +342,9 @@ rbclt_main_init ()
   rb_define_module_function (klass, "enter", rbclt_threads_enter, 0);
   rb_define_module_function (klass, "leave", rbclt_threads_leave, 0);
   rb_define_module_function (klass, "synchronize",
-			     rbclt_threads_synchronize, 0);
+                             rbclt_threads_synchronize, 0);
   rb_define_module_function (klass, "add_timeout",
-			     rbclt_threads_add_timeout, -1);
+                             rbclt_threads_add_timeout, -1);
   rb_define_module_function (klass, "add_frame_source",
-			     rbclt_threads_add_frame_source, -1);
+                             rbclt_threads_add_frame_source, -1);
 }

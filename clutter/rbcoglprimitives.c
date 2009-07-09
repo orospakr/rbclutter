@@ -1,16 +1,16 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
  * Copyright (C) 2008  Neil Roberts
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
@@ -41,7 +41,7 @@ rb_cogl_color (int argc, VALUE *argv, VALUE self)
       && RTEST (rb_obj_is_kind_of (argv[0], GTYPE2CLASS (CLUTTER_TYPE_COLOR))))
     {
       const ClutterColor *color
-	= (const ClutterColor *) RVAL2BOXED (argv[0], CLUTTER_TYPE_COLOR);
+        = (const ClutterColor *) RVAL2BOXED (argv[0], CLUTTER_TYPE_COLOR);
 
       cogl_color (color);
     }
@@ -70,12 +70,12 @@ rb_cogl_rectangle (VALUE self, VALUE x, VALUE y, VALUE width, VALUE height)
      version */
   if (FIXNUM_P (x) && FIXNUM_P (y) && FIXNUM_P (width) && FIXNUM_P (height))
     cogl_rectangle (FIX2LONG (x), FIX2LONG (y),
-		    FIX2ULONG (width), FIX2ULONG (height));
+                    FIX2ULONG (width), FIX2ULONG (height));
   else
     cogl_rectanglex (rbclt_num_to_fixed (x),
-		     rbclt_num_to_fixed (y),
-		     rbclt_num_to_fixed (width),
-		     rbclt_num_to_fixed (height));
+                     rbclt_num_to_fixed (y),
+                     rbclt_num_to_fixed (width),
+                     rbclt_num_to_fixed (height));
 
   return Qnil;
 }
@@ -100,7 +100,7 @@ static VALUE
 rb_cogl_path_move_to (VALUE self, VALUE x, VALUE y)
 {
   cogl_path_move_to (rbclt_num_to_fixed (x),
-		     rbclt_num_to_fixed (y));
+                     rbclt_num_to_fixed (y));
 
   return Qnil;
 }
@@ -109,7 +109,7 @@ static VALUE
 rb_cogl_path_rel_move_to (VALUE self, VALUE x, VALUE y)
 {
   cogl_path_rel_move_to (rbclt_num_to_fixed (x),
-			 rbclt_num_to_fixed (y));
+                         rbclt_num_to_fixed (y));
 
   return Qnil;
 }
@@ -118,7 +118,7 @@ static VALUE
 rb_cogl_path_line_to (VALUE self, VALUE x, VALUE y)
 {
   cogl_path_line_to (rbclt_num_to_fixed (x),
-		     rbclt_num_to_fixed (y));
+                     rbclt_num_to_fixed (y));
 
   return Qnil;
 }
@@ -127,12 +127,13 @@ static VALUE
 rb_cogl_path_rel_line_to (VALUE self, VALUE x, VALUE y)
 {
   cogl_path_rel_line_to (rbclt_num_to_fixed (x),
-			 rbclt_num_to_fixed (y));
+                         rbclt_num_to_fixed (y));
 
   return Qnil;
 }
 
-static VALUE
+// FIXME: Needs to use CoglFixed instead of ClutterAngle
+/* static VALUE
 rb_cogl_path_arc (VALUE self,
                   VALUE center_x,
                   VALUE center_y,
@@ -150,6 +151,7 @@ rb_cogl_path_arc (VALUE self,
 
   return Qnil;
 }
+*/
 
 static VALUE
 rb_cogl_path_curve_to (VALUE self,
@@ -242,24 +244,25 @@ rb_cogl_path_ellipse (VALUE self,
   return Qnil;
 }
 
-static VALUE
-rb_cogl_path_round_rectangle (VALUE self,
-                              VALUE x,
-                              VALUE y,
-                              VALUE width,
-                              VALUE height,
-                              VALUE radius,
-                              VALUE arc_step)
-{
-  cogl_path_round_rectangle (rbclt_num_to_fixed (x),
-                             rbclt_num_to_fixed (y),
-                             rbclt_num_to_fixed (width),
-                             rbclt_num_to_fixed (height),
-                             rbclt_num_to_fixed (radius),
-                             rbclt_num_to_angle (arc_step));
+// FIXME: Needs to use CoglFixed rather than ClutterAngle.
+/* static VALUE */
+/* rb_cogl_path_round_rectangle (VALUE self, */
+/*                               VALUE x, */
+/*                               VALUE y, */
+/*                               VALUE width, */
+/*                               VALUE height, */
+/*                               VALUE radius, */
+/*                               VALUE arc_step) */
+/* { */
+/*   cogl_path_round_rectangle (rbclt_num_to_fixed (x), */
+/*                              rbclt_num_to_fixed (y), */
+/*                              rbclt_num_to_fixed (width), */
+/*                              rbclt_num_to_fixed (height), */
+/*                              rbclt_num_to_fixed (radius), */
+/*                              rbclt_num_to_angle (arc_step)); */
 
-  return Qnil;
-}
+/*   return Qnil; */
+/* } */
 
 static VALUE
 rb_cogl_do_poly_func (VALUE data_value)
@@ -292,7 +295,7 @@ rb_cogl_poly_func (PolyData *data)
   data->points = ALLOC_N (ClutterFixed, data->argc);
 
   return rb_ensure (rb_cogl_do_poly_func, (VALUE) data,
-		    rb_cogl_free_poly_data, (VALUE) data);
+                    rb_cogl_free_poly_data, (VALUE) data);
 }
 
 static VALUE
@@ -326,7 +329,7 @@ rb_cogl_primitives_init ()
   rb_define_singleton_method (rbclt_c_cogl, "rectangle", rb_cogl_rectangle, 4);
   rb_define_singleton_method (rbclt_c_cogl, "path_fill", rb_cogl_path_fill, 0);
   rb_define_singleton_method (rbclt_c_cogl, "path_stroke",
-			      rb_cogl_path_stroke, 0);
+                              rb_cogl_path_stroke, 0);
   rb_define_singleton_method (rbclt_c_cogl, "path_move_to",
                               rb_cogl_path_move_to, 2);
   rb_define_singleton_method (rbclt_c_cogl, "path_rel_move_to",
@@ -352,7 +355,7 @@ rb_cogl_primitives_init ()
   rb_define_singleton_method (rbclt_c_cogl, "path_round_rectangle",
                               rb_cogl_path_round_rectangle, 6);
   rb_define_singleton_method (rbclt_c_cogl, "path_polyline",
-			      rb_cogl_path_polyline, -1);
+                              rb_cogl_path_polyline, -1);
   rb_define_singleton_method (rbclt_c_cogl, "path_polygon",
-			      rb_cogl_path_polygon, -1);
+                              rb_cogl_path_polygon, -1);
 }

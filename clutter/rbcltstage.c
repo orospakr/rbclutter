@@ -1,16 +1,16 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
  * Copyright (C) 2007-2008  Neil Roberts
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
@@ -18,7 +18,7 @@
  */
 
 #include <rbgobject.h>
-#include <clutter/clutter-stage.h>
+#include <clutter/clutter.h>
 
 #include "rbclutter.h"
 
@@ -78,11 +78,13 @@ rbclt_stage_hide_cursor (VALUE self)
 }
 
 static VALUE
-rbclt_stage_get_actor_at_pos (VALUE self, VALUE x, VALUE y)
+rbclt_stage_get_actor_at_pos (VALUE self, VALUE pick_mode, VALUE x, VALUE y)
 {
   ClutterStage *stage = CLUTTER_STAGE (RVAL2GOBJ (self));
-  return GOBJ2RVAL (clutter_stage_get_actor_at_pos (stage, NUM2INT (x),
-						    NUM2INT (y)));
+  return GOBJ2RVAL (clutter_stage_get_actor_at_pos (stage,
+                                                    RVAL2GENUM (pick_mode, CLUTTER_TYPE_PICK_MODE),
+                                                    NUM2INT (x),
+                                                    NUM2INT (y)));
 }
 
 static VALUE
@@ -90,7 +92,7 @@ rbclt_stage_event (VALUE self, VALUE event_arg)
 {
   ClutterStage *stage = CLUTTER_STAGE (RVAL2GOBJ (self));
   ClutterEvent *event = (ClutterEvent *) RVAL2BOXED (event_arg,
-						     CLUTTER_TYPE_EVENT);
+                                                     CLUTTER_TYPE_EVENT);
 
   clutter_stage_event (stage, event);
 
@@ -105,12 +107,19 @@ rbclt_stage_set_perspective (int argc, VALUE *argv, VALUE self)
   if (argc == 1)
     {
       ClutterPerspective *persp
-	= (ClutterPerspective *) RVAL2BOXED (argv[0], CLUTTER_TYPE_PERSPECTIVE);
-      clutter_stage_set_perspectivex (stage, persp);
+        = (ClutterPerspective *) RVAL2BOXED (argv[0], CLUTTER_TYPE_PERSPECTIVE);
+      clutter_stage_set_perspective (stage, persp);
     }
-  else if (argc == 4)
-    clutter_stage_set_perspective (stage, NUM2DBL (argv[0]), NUM2DBL (argv[1]),
-				   NUM2DBL (argv[2]), NUM2DBL (argv[3]));
+  else if (argc == 4) {
+    ClutterPerspective *persp = (ClutterPerspective*) g_malloc(sizeof(ClutterPerspective));
+    persp->fovy = NUM2FLOAT (argv[0]);
+    persp->aspect = NUM2FLOAT (argv[1]);
+    persp->z_near = NUM2FLOAT (argv[2]);
+    persp->z_far =  NUM2DBL (argv[3]);
+    clutter_stage_set_perspective (stage, persp);
+    /* FIXME: g_free(persp); # I can't do this!  It has to be a leak.  Really, support for
+       inline perspective values should just go away. */
+  }
   else
     rb_raise (rb_eArgError, "wrong number of arguments (%d for 1 or 4)", argc);
 
@@ -119,7 +128,7 @@ rbclt_stage_set_perspective (int argc, VALUE *argv, VALUE self)
 
 static VALUE
 rbclt_stage_read_pixels (VALUE self, VALUE x, VALUE y,
-			 VALUE width_arg, VALUE height_arg)
+                         VALUE width_arg, VALUE height_arg)
 {
   ClutterStage *stage = CLUTTER_STAGE (RVAL2GOBJ (self));
   guchar *pixels;
@@ -130,7 +139,7 @@ rbclt_stage_read_pixels (VALUE self, VALUE x, VALUE y,
   height = NUM2INT (height_arg);
 
   pixels = clutter_stage_read_pixels (stage, NUM2INT (x), NUM2INT (y),
-				      width, height);
+                                      width, height);
 
   if (pixels == NULL)
     ret = Qnil;
@@ -168,11 +177,15 @@ rbclt_stage_set_fog (int argc, VALUE *argv, VALUE self)
   else
     {
       VALUE density, z_near, z_far;
+      ClutterFog *fog = (ClutterFog*) g_malloc(sizeof(ClutterFog));
 
       rb_scan_args (argc, argv, "03", &density, &z_near, &z_far);
 
-      clutter_stage_set_fog (stage, NUM2DBL (density),
-			     NUM2DBL (z_near), NUM2DBL (z_far));
+      fog->z_near = NUM2FLOAT (z_near);
+      fog->z_far = NUM2FLOAT (z_far);
+
+      clutter_stage_set_fog (stage, fog);
+      /* FIXME: g_free(fog); # argh, once again can't do this. another leak...? */
     }
 
   return self;

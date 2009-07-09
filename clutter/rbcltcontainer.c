@@ -1,16 +1,16 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
  * Copyright (C) 2007-2008  Neil Roberts
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
@@ -18,7 +18,7 @@
  */
 
 #include <rbgobject.h>
-#include <clutter/clutter-container.h>
+#include <clutter/clutter.h>
 
 #include "rbclutter.h"
 
@@ -41,7 +41,7 @@ static void
 rbclt_container_mark (void *p)
 {
   clutter_container_foreach (CLUTTER_CONTAINER (p),
-			     rbclt_container_mark_callback, NULL);
+                             rbclt_container_mark_callback, NULL);
 }
 
 static VALUE
@@ -54,7 +54,7 @@ rbclt_container_add (int argc, VALUE *argv, VALUE self)
     {
       gpointer actor = RVAL2GOBJ (argv[i]);
       if (!CLUTTER_IS_ACTOR (actor))
-	rb_raise (rb_eArgError, "Actor required");
+        rb_raise (rb_eArgError, "Actor required");
       clutter_container_add_actor (container, CLUTTER_ACTOR (actor));
     }
 
@@ -71,7 +71,7 @@ rbclt_container_remove (int argc, VALUE *argv, VALUE self)
     {
       gpointer actor = RVAL2GOBJ (argv[i]);
       if (!CLUTTER_IS_ACTOR (actor))
-	rb_raise (rb_eArgError, "Actor required");
+        rb_raise (rb_eArgError, "Actor required");
       clutter_container_remove_actor (container, CLUTTER_ACTOR (actor));
     }
 
@@ -91,7 +91,7 @@ rbclt_container_children (VALUE self)
   VALUE ary = rb_ary_new ();
 
   clutter_container_foreach (container, rbclt_container_children_callback,
-			     (gpointer) ary);
+                             (gpointer) ary);
 
   return ary;
 }
@@ -119,7 +119,7 @@ rbclt_container_find_child_by_name (VALUE self, VALUE name)
   ClutterActor *child;
 
   child = clutter_container_find_child_by_name (container,
-						StringValuePtr (name));
+                                                StringValuePtr (name));
 
   if (child == NULL)
     return Qnil;
@@ -136,8 +136,8 @@ rbclt_container_raise_child (int argc, VALUE *argv, VALUE self)
   rb_scan_args (argc, argv, "11", &actor, &sibling);
 
   clutter_container_raise_child (container,
-				 RVAL2GOBJ (actor),
-				 RVAL2GOBJ (sibling));
+                                 RVAL2GOBJ (actor),
+                                 RVAL2GOBJ (sibling));
 
   return self;
 }
@@ -151,8 +151,8 @@ rbclt_container_lower_child (int argc, VALUE *argv, VALUE self)
   rb_scan_args (argc, argv, "11", &actor, &sibling);
 
   clutter_container_lower_child (container,
-				 RVAL2GOBJ (actor),
-				 RVAL2GOBJ (sibling));
+                                 RVAL2GOBJ (actor),
+                                 RVAL2GOBJ (sibling));
 
   return self;
 }
@@ -176,7 +176,7 @@ rbclt_container_child_set (int argc, VALUE *argv, VALUE self)
     rb_raise (rb_eArgError, "wrong number of arguments (%d for %d)", argc, 2);
   else if ((argc & 1) == 0)
     rb_raise (rb_eArgError, "wrong number of arguments "
-	      "(prop-value pairs needed)");
+              "(prop-value pairs needed)");
 
   if (!CLUTTER_IS_ACTOR (actor = (ClutterActor *) RVAL2GOBJ (argv[0])))
     rb_raise (rb_eArgError, "actor required");
@@ -186,14 +186,14 @@ rbclt_container_child_set (int argc, VALUE *argv, VALUE self)
       GValue value;
       const char *prop = StringValuePtr (argv[i]);
       GObjectClass *klass
-	= G_OBJECT_CLASS (g_type_class_ref (G_TYPE_FROM_INSTANCE (container)));
+        = G_OBJECT_CLASS (g_type_class_ref (G_TYPE_FROM_INSTANCE (container)));
       GParamSpec *pspec
-	= clutter_container_class_find_child_property (klass, prop);
+        = clutter_container_class_find_child_property (klass, prop);
 
       g_type_class_unref (klass);
 
       if (pspec == NULL)
-	rb_raise (rb_eArgError, "child property not found \"%s\"", prop);
+        rb_raise (rb_eArgError, "child property not found \"%s\"", prop);
 
       memset (&value, 0, sizeof (VALUE));
       g_value_init (&value, pspec->value_type);
@@ -224,14 +224,14 @@ rbclt_container_child_get (int argc, VALUE *argv, VALUE self)
       GValue value;
       const char *prop = StringValuePtr (argv[i]);
       GObjectClass *klass
-	= G_OBJECT_CLASS (g_type_class_ref (G_TYPE_FROM_INSTANCE (container)));
+        = G_OBJECT_CLASS (g_type_class_ref (G_TYPE_FROM_INSTANCE (container)));
       GParamSpec *pspec
-	= clutter_container_class_find_child_property (klass, prop);
+        = clutter_container_class_find_child_property (klass, prop);
 
       g_type_class_unref (klass);
 
       if (pspec == NULL)
-	rb_raise (rb_eArgError, "child property not found \"%s\"", prop);
+        rb_raise (rb_eArgError, "child property not found \"%s\"", prop);
 
       memset (&value, 0, sizeof (VALUE));
       g_value_init (&value, pspec->value_type);
@@ -257,9 +257,9 @@ rbclt_container_get_container_class (VALUE rclass)
       gpointer cptr = g_type_class_ref (cinfo->gtype);
 
       if (g_type_interface_peek (cptr, CLUTTER_TYPE_CONTAINER))
-	ret = cptr;
+        ret = cptr;
       else
-	g_type_class_unref (cptr);
+        g_type_class_unref (cptr);
     }
 
   if (ret == NULL)
@@ -274,7 +274,7 @@ rbclt_container_get_child_meta (VALUE self, VALUE child)
   ClutterContainer *container = CLUTTER_CONTAINER (RVAL2GOBJ (self));
 
   return GOBJ2RVAL (clutter_container_get_child_meta (container,
-						      RVAL2GOBJ (child)));
+                                                      RVAL2GOBJ (child)));
 }
 
 static VALUE
@@ -284,7 +284,7 @@ rbclt_container_find_child_property (VALUE self, VALUE rclass, VALUE prop_name)
 
   GParamSpec *param =
     clutter_container_class_find_child_property (klass,
-						 StringValuePtr (prop_name));
+                                                 StringValuePtr (prop_name));
 
   g_type_class_unref (klass);
 
@@ -300,7 +300,7 @@ rbclt_container_do_list_child_properties (VALUE data_arg)
 
   for (i = 0; i < data->n_properties; i++)
     rb_ary_push (ret, GOBJ2RVAL (data->properties[i]));
-  
+
   return ret;
 }
 
@@ -320,7 +320,7 @@ rbclt_container_list_child_properties (VALUE self, VALUE rclass)
 
   data.properties
     = clutter_container_class_list_child_properties (klass,
-						     &data.n_properties);
+                                                     &data.n_properties);
 
   g_type_class_unref (klass);
 
@@ -328,15 +328,15 @@ rbclt_container_list_child_properties (VALUE self, VALUE rclass)
     rb_raise (rb_eArgError, "expected class including Clutter::Container");
 
   return rb_ensure (rbclt_container_do_list_child_properties, (VALUE) &data,
-		    rbclt_container_free_list_child_properties_data,
-		    (VALUE) &data);
+                    rbclt_container_free_list_child_properties_data,
+                    (VALUE) &data);
 }
 
 void
 rbclt_container_init ()
 {
   VALUE klass = G_DEF_INTERFACE2 (CLUTTER_TYPE_CONTAINER, "Container",
-				  rbclt_c_clutter, rbclt_container_mark, NULL);
+                                  rbclt_c_clutter, rbclt_container_mark, NULL);
 
   rb_define_method (klass, "add", rbclt_container_add, -1);
   rb_define_alias (klass, "<<", "add");
@@ -344,19 +344,19 @@ rbclt_container_init ()
   rb_define_method (klass, "children", rbclt_container_children, 0);
   rb_define_method (klass, "each", rbclt_container_each, 0);
   rb_define_method (klass, "find_child_by_name",
-		    rbclt_container_find_child_by_name, 1);
+                    rbclt_container_find_child_by_name, 1);
   rb_define_method (klass, "raise_child", rbclt_container_raise_child, -1);
   rb_define_method (klass, "lower_child", rbclt_container_lower_child, -1);
   rb_define_method (klass, "sort_depth_order",
-		    rbclt_container_sort_depth_order, 0);
+                    rbclt_container_sort_depth_order, 0);
   rb_define_method (klass, "child_set",
-		    rbclt_container_child_set, -1);
+                    rbclt_container_child_set, -1);
   rb_define_method (klass, "child_get",
-		    rbclt_container_child_get, -1);
+                    rbclt_container_child_get, -1);
   rb_define_method (klass, "get_child_meta",
-		    rbclt_container_get_child_meta, 1);
+                    rbclt_container_get_child_meta, 1);
   rb_define_singleton_method (klass, "find_child_property",
-			      rbclt_container_find_child_property, 2);
+                              rbclt_container_find_child_property, 2);
   rb_define_singleton_method (klass, "list_child_properties",
-			      rbclt_container_list_child_properties, 1);
+                              rbclt_container_list_child_properties, 1);
 }

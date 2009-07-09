@@ -1,16 +1,16 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
  * Copyright (C) 2007  Neil Roberts
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
@@ -18,7 +18,7 @@
  */
 
 #include <rbgobject.h>
-#include <clutter/clutter-alpha.h>
+#include <clutter/clutter.h>
 
 #include "rbclutter.h"
 #include "rbcltalphafunc.h"
@@ -64,8 +64,6 @@ void
 rbclt_alpha_init ()
 {
   VALUE klass = G_DEF_CLASS (CLUTTER_TYPE_ALPHA, "Alpha", rbclt_c_clutter);
-
-  rb_define_const (klass, "MAX_ALPHA", INT2NUM (CLUTTER_ALPHA_MAX_ALPHA));
 
   rb_define_method (klass, "initialize", rbclt_alpha_initialize, -1);
   rb_define_method (klass, "set_func", rbclt_alpha_set_func, -1);

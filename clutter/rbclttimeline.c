@@ -1,16 +1,16 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
  * Copyright (C) 2007-2008  Neil Roberts
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
@@ -18,21 +18,16 @@
  */
 
 #include <rbgobject.h>
-#include <clutter/clutter-timeline.h>
-#include <clutter/clutter-enum-types.h>
+#include <clutter/clutter.h>
 
 #include "rbclutter.h"
 
 static VALUE
-rbclt_timeline_initialize (int argc, VALUE *argv, VALUE self)
+rbclt_timeline_initialize (VALUE self, VALUE m_secs)
 {
   ClutterTimeline *tl;
-  VALUE n_frame, fps;
 
-  if (rb_scan_args (argc, argv, "11", &n_frame, &fps) == 2)
-    tl = clutter_timeline_new (NUM2UINT (n_frame), NUM2UINT (fps));
-  else
-    tl = clutter_timeline_new_for_duration (NUM2UINT (n_frame));
+  tl = clutter_timeline_new (NUM2UINT (m_secs));
 
   G_INITIALIZE (self, tl);
 
@@ -110,24 +105,24 @@ rbclt_timeline_is_playing (VALUE self)
 
 static VALUE
 rbclt_timeline_add_marker_at_frame (VALUE self, VALUE marker_name,
-				    VALUE frame_num)
+                                    VALUE frame_num)
 {
   ClutterTimeline *timeline = CLUTTER_TIMELINE (RVAL2GOBJ (self));
 
   clutter_timeline_add_marker_at_frame (timeline, StringValuePtr (marker_name),
-					NUM2UINT (frame_num));
+                                        NUM2UINT (frame_num));
 
   return self;
 }
 
 static VALUE
 rbclt_timeline_add_marker_at_time (VALUE self, VALUE marker_name,
-				   VALUE msecs)
+                                   VALUE msecs)
 {
   ClutterTimeline *timeline = CLUTTER_TIMELINE (RVAL2GOBJ (self));
 
   clutter_timeline_add_marker_at_time (timeline, StringValuePtr (marker_name),
-				       NUM2UINT (msecs));
+                                       NUM2UINT (msecs));
 
   return self;
 }
@@ -154,9 +149,9 @@ rbclt_timeline_list_markers (int argc, VALUE *argv, VALUE self)
   rb_scan_args (argc, argv, "01", &frame_num);
 
   markers = clutter_timeline_list_markers (timeline,
-					   NIL_P (frame_num)
-					   ? -1 : NUM2INT (frame_num),
-					   &n_markers);
+                                           NIL_P (frame_num)
+                                           ? -1 : NUM2INT (frame_num),
+                                           &n_markers);
 
   ret = rb_ary_new2 (n_markers);
   for (i = 0; i < n_markers; i++)
@@ -192,25 +187,14 @@ rbclt_timeline_get_delta (VALUE self)
 {
   ClutterTimeline *timeline = CLUTTER_TIMELINE (RVAL2GOBJ (self));
 
-  return UINT2NUM (clutter_timeline_get_delta (timeline, NULL));
-}
-
-static VALUE
-rbclt_timeline_get_delta_msecs (VALUE self)
-{
-  ClutterTimeline *timeline = CLUTTER_TIMELINE (RVAL2GOBJ (self));
-  guint msecs;
-
-  clutter_timeline_get_delta (timeline, &msecs);
-
-  return UINT2NUM (msecs);
+  return UINT2NUM (clutter_timeline_get_delta (timeline));
 }
 
 void
 rbclt_timeline_init ()
 {
   VALUE klass = G_DEF_CLASS (CLUTTER_TYPE_TIMELINE, "Timeline",
-			     rbclt_c_clutter);
+                             rbclt_c_clutter);
 
   rb_define_method (klass, "initialize", rbclt_timeline_initialize, -1);
   rb_define_method (klass, "dup", rbclt_timeline_dup, 0);
@@ -226,9 +210,9 @@ rbclt_timeline_init ()
   rb_define_method (klass, "current_frame", rbclt_timeline_current_frame, 0);
   rb_define_method (klass, "playing?", rbclt_timeline_is_playing, 0);
   rb_define_method (klass, "add_marker_at_frame",
-		    rbclt_timeline_add_marker_at_frame, 2);
+                    rbclt_timeline_add_marker_at_frame, 2);
   rb_define_method (klass, "add_marker_at_time",
-		    rbclt_timeline_add_marker_at_time, 2);
+                    rbclt_timeline_add_marker_at_time, 2);
   rb_define_method (klass, "remove_marker", rbclt_timeline_remove_marker, 1);
   rb_define_method (klass, "list_markers", rbclt_timeline_list_markers, -1);
   rb_define_alias (klass, "markers", "list_markers");
@@ -236,9 +220,7 @@ rbclt_timeline_init ()
   rb_define_method (klass, "advance_to_marker",
                     rbclt_timeline_advance_to_marker, 1);
   rb_define_method (klass, "delta", rbclt_timeline_get_delta, 0);
-  rb_define_method (klass, "delta_msecs",
-                    rbclt_timeline_get_delta_msecs, 0);
-  
+
   G_DEF_CONSTANTS (klass, CLUTTER_TYPE_TIMELINE_DIRECTION, "CLUTTER_TIMELINE_");
   G_DEF_CLASS (CLUTTER_TYPE_TIMELINE_DIRECTION, "Direction", klass);
 
