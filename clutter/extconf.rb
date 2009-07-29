@@ -30,14 +30,16 @@ $objs = %w{ rbclutter.o rbcltactor.o rbcltalpha.o rbcltbehaviour.o rbcltbehaviou
 + %w{ rbcltcontainer.o rbcltgroup.o rbclttext.o rbcltmain.o rbcltstage.o rbclttexture.o } \
 + %w{ rbclttimeline.o rbcltevent.o rbcltkeysyms.o rbcltbehaviourscale.o } \
 + %w{ rbcltbehaviourdepth.o rbcltbehaviourellipse.o } \
-+ %w{ rbcltbehaviouropacity.o rbcltbehaviourrotate.o rbcltalphafunc.o rbclteffect.o } \
-+ %w{ rbcltentry.o rbcltrectangle.o rbcltclonetexture.o rbcltfeature.o rbcltbackend.o } \
++ %w{ rbcltbehaviouropacity.o rbcltbehaviourrotate.o rbcltalphafunc.o } \
++ %w{ rbcltrectangle.o rbcltfeature.o rbcltbackend.o } \
 + %w{ rbcltmedia.o rbcltshader.o rbcltcallbackfunc.o rbcltframesource.o } \
 + %w{ rbcltstagemanager.o rbcltchildmeta.o rbcltscript.o rbcltscore.o } \
 + %w{ rbcltlistmodel.o rbcltmodel.o }
 
-$objs += %w{ rbcogl.o rbcoglconsts.o rbcogltexture.o rbcoglprimitives.o } \
-+ %w{ rbcoglshader.o rbcoglprogram.o rbcogloffscreen.o }
+# Disabled building the COGL components for now. - andrew@orospakr.ca
+
+# $objs += %w{ rbcogl.o rbcogltexture.o rbcoglprimitives.o } \
+# + %w{ rbcoglshader.o rbcoglprogram.o rbcogloffscreen.o }
 
 # Add the boxed types to the object files list
 BOXED_TYPES.each { |bt| $objs << "rbclt#{bt}.o" }

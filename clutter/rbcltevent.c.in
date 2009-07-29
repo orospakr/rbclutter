@@ -1,16 +1,16 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
  * Copyright (C) 2007-2008  Neil Roberts
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
@@ -20,8 +20,7 @@
 #include <glib.h>
 #include <ruby.h>
 #include <rbgobject.h>
-#include <clutter/clutter-event.h>
-#include <clutter/clutter-enum-types.h>
+#include <clutter/clutter.h>
 
 #include "rbclutter.h"
 
@@ -118,20 +117,20 @@ rbclt_event_init ()
   VALUE klass;
 
   rbclt_event_class = G_DEF_CLASS (CLUTTER_TYPE_EVENT, "Event",
-				   rbclt_c_clutter);
+                                   rbclt_c_clutter);
 
   /* CLASS_DEFS */
 
   /* ENUMS */
 
   rb_define_method (rbclt_event_class, "event_type",
-		    rbclt_event_get_event_type, 0);
+                    rbclt_event_get_event_type, 0);
   rb_define_method (rbclt_event_class, "put", rbclt_event_put, 0);
 
   rbgobj_register_g2r_func (CLUTTER_TYPE_EVENT, rbclt_event_g2r);
 
   rb_define_singleton_method (rbclt_event_class, "pending?",
-			      rbclt_event_pending, 0);
+                              rbclt_event_pending, 0);
   rb_define_singleton_method (rbclt_event_class, "get", rbclt_event_get, 0);
   rb_define_singleton_method (rbclt_event_class, "peek", rbclt_event_peek, 0);
 
@@ -143,8 +142,8 @@ rbclt_event_init ()
   rb_define_method (rbclt_key_event_class, "symbol", rbclt_key_event_symbol, 0);
   rb_define_method (rbclt_key_event_class, "code", rbclt_key_event_code, 0);
   rb_define_method (rbclt_key_event_class, "unicode",
-		    rbclt_key_event_unicode, 0);
+                    rbclt_key_event_unicode, 0);
 
   rb_define_singleton_method (rbclt_c_clutter, "keysym_to_unicode",
-			      rbclt_event_keysym_to_unicode, 1);
+                              rbclt_event_keysym_to_unicode, 1);
 }

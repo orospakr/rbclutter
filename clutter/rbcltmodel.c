@@ -1,16 +1,16 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
  * Copyright (C) 2008  Neil Roberts
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
@@ -18,7 +18,7 @@
  */
 
 #include <rbgobject.h>
-#include <clutter/clutter-model.h>
+#include <clutter/clutter.h>
 
 #include "rbclutter.h"
 #include "rbcltcallbackfunc.h"
@@ -104,7 +104,7 @@ rbclt_model_set_types (int argc, VALUE *argv, VALUE self)
 
   if (argc < 1)
     rb_raise (rb_eArgError, "wrong number of arguments "
-	      "(at least one required)");
+              "(at least one required)");
 
   data.argc = argc;
   data.argv = argv;
@@ -113,7 +113,7 @@ rbclt_model_set_types (int argc, VALUE *argv, VALUE self)
   data.names = NULL;
 
   return rb_ensure (rbclt_model_do_set_types, (VALUE) &data,
-		    rbclt_model_free_set_columns_data, (VALUE) &data);
+                    rbclt_model_free_set_columns_data, (VALUE) &data);
 }
 
 static VALUE
@@ -138,7 +138,7 @@ rbclt_model_set_names (int argc, VALUE *argv, VALUE self)
 
   if (argc < 1)
     rb_raise (rb_eArgError, "wrong number of arguments "
-	      "(at least one required)");
+              "(at least one required)");
 
   data.argc = argc;
   data.argv = argv;
@@ -147,7 +147,7 @@ rbclt_model_set_names (int argc, VALUE *argv, VALUE self)
   data.names = ALLOC_N (const gchar *, argc);
 
   return rb_ensure (rbclt_model_do_set_names, (VALUE) &data,
-		    rbclt_model_free_set_columns_data, (VALUE) &data);
+                    rbclt_model_free_set_columns_data, (VALUE) &data);
 }
 
 static VALUE
@@ -183,22 +183,22 @@ rbclt_model_do_action (VALUE arg)
     {
     case RBCLT_MODEL_APPEND:
       clutter_model_appendv (model, data->argc / 2, data->colnums,
-			     data->gvalues);
+                             data->gvalues);
       break;
 
     case RBCLT_MODEL_PREPEND:
       clutter_model_prependv (model, data->argc / 2, data->colnums,
-			      data->gvalues);
+                              data->gvalues);
       break;
 
     case RBCLT_MODEL_INSERT:
       clutter_model_insertv (model, data->row, data->argc / 2, data->colnums,
-			     data->gvalues);
+                             data->gvalues);
       break;
 
     case RBCLT_MODEL_INSERT_VALUE:
       clutter_model_insert_value (model, data->row, data->colnums[0],
-				  data->gvalues);
+                                  data->gvalues);
       break;
     }
 
@@ -214,11 +214,11 @@ rbclt_model_action (int argc, VALUE *argv, VALUE self, Action action)
   if (action == RBCLT_MODEL_INSERT)
     {
       if (argc < 2)
-	rb_raise (rb_eArgError, "wrong number of arguments "
-		  "(at least three required)");
+        rb_raise (rb_eArgError, "wrong number of arguments "
+                  "(at least three required)");
       else if ((argc & 1) == 0)
-	rb_raise (rb_eArgError, "wrong number of arguments "
-		  "(paired arguments required)");
+        rb_raise (rb_eArgError, "wrong number of arguments "
+                  "(paired arguments required)");
 
       data.row = NUM2UINT (argv[0]);
       data.argc = argc - 1;
@@ -236,11 +236,11 @@ rbclt_model_action (int argc, VALUE *argv, VALUE self, Action action)
   else
     {
       if (argc < 1)
-	rb_raise (rb_eArgError, "wrong number of arguments "
-		  "(at least two required)");
+        rb_raise (rb_eArgError, "wrong number of arguments "
+                  "(at least two required)");
       else if ((argc & 1))
-	rb_raise (rb_eArgError, "wrong number of arguments "
-		  "(paired arguments required)");
+        rb_raise (rb_eArgError, "wrong number of arguments "
+                  "(paired arguments required)");
 
       data.argc = argc;
       data.argv = argv;
@@ -253,7 +253,7 @@ rbclt_model_action (int argc, VALUE *argv, VALUE self, Action action)
   data.gvalues_inited = 0;
 
   return rb_ensure (rbclt_model_do_action, (VALUE) &data,
-		    rbclt_model_free_action_data, (VALUE) &data);
+                    rbclt_model_free_action_data, (VALUE) &data);
 }
 
 static VALUE
@@ -361,9 +361,9 @@ rbclt_model_set_sorting_column (VALUE self, VALUE column)
 
 static gint
 rbclt_model_call_sort_func (ClutterModel *model,
-			    const GValue *a,
-			    const GValue *b,
-			    gpointer user_data)
+                            const GValue *a,
+                            const GValue *b,
+                            gpointer user_data)
 {
   VALUE argv[3];
 
@@ -372,7 +372,7 @@ rbclt_model_call_sort_func (ClutterModel *model,
   argv[2] = GVAL2RVAL (b);
 
   return NUM2INT (rbclt_callback_func_invoke ((RBCLTCallbackFunc *) user_data,
-					      3, argv));
+                                              3, argv));
 }
 
 static VALUE
@@ -385,10 +385,10 @@ rbclt_model_set_sort (VALUE self, VALUE column_arg)
   if (rb_block_given_p ())
     {
       func = rbclt_callback_func_new (rb_block_proc ());
-      
+
       clutter_model_set_sort (model, column,
-			      rbclt_model_call_sort_func, func,
-			      (GDestroyNotify) rbclt_callback_func_destroy);
+                              rbclt_model_call_sort_func, func,
+                              (GDestroyNotify) rbclt_callback_func_destroy);
     }
   else
     clutter_model_set_sort (model, column, NULL, NULL, NULL);
@@ -398,8 +398,8 @@ rbclt_model_set_sort (VALUE self, VALUE column_arg)
 
 static gboolean
 rbclt_model_call_filter_func (ClutterModel *model,
-			      ClutterModelIter *iter,
-			      gpointer user_data)
+                              ClutterModelIter *iter,
+                              gpointer user_data)
 {
   VALUE argv[2];
 
@@ -407,7 +407,7 @@ rbclt_model_call_filter_func (ClutterModel *model,
   argv[1] = GOBJ2RVAL (iter);
 
   return RTEST (rbclt_callback_func_invoke ((RBCLTCallbackFunc *) user_data,
-					    2, argv)) ? TRUE : FALSE;
+                                            2, argv)) ? TRUE : FALSE;
 }
 
 static VALUE
@@ -421,7 +421,7 @@ rbclt_model_set_filter (VALUE self)
       func = rbclt_callback_func_new (rb_block_proc ());
 
       clutter_model_set_filter (model, rbclt_model_call_filter_func, func,
-				(GDestroyNotify) rbclt_callback_func_destroy);
+                                (GDestroyNotify) rbclt_callback_func_destroy);
     }
   else
     clutter_model_set_filter (model, NULL, NULL, NULL);
@@ -433,7 +433,7 @@ static VALUE
 rbclt_model_filter_row (VALUE self, VALUE row)
 {
   return clutter_model_filter_row (CLUTTER_MODEL (RVAL2GOBJ (self)),
-				   NUM2UINT (row))
+                                   NUM2UINT (row))
     ? Qtrue : Qfalse;
 }
 
@@ -441,7 +441,7 @@ static VALUE
 rbclt_model_filter_iter (VALUE self, VALUE iter)
 {
   return clutter_model_filter_iter (CLUTTER_MODEL (RVAL2GOBJ (self)),
-				    CLUTTER_MODEL_ITER (RVAL2GOBJ (iter)))
+                                    CLUTTER_MODEL_ITER (RVAL2GOBJ (iter)))
     ? Qtrue : Qfalse;
 }
 
@@ -486,7 +486,7 @@ rbclt_model_iter_get (int argc, VALUE *argv, VALUE self)
       g_value_unset (&data.value);
 
       if (state == 0)
-	ret = data.rvalue;
+        ret = data.rvalue;
     }
   else
     {
@@ -495,19 +495,19 @@ rbclt_model_iter_get (int argc, VALUE *argv, VALUE self)
       ret = rb_ary_new ();
 
       for (i = 0; i < argc; i++)
-	{
-	  data.column = NUM2UINT (argv[i]);
+        {
+          data.column = NUM2UINT (argv[i]);
 
-	  memset (&data.value, 0, sizeof (data.value));
+          memset (&data.value, 0, sizeof (data.value));
 
-	  rb_protect (rbclt_model_iter_do_get, (VALUE) &data, &state);
-	  g_value_unset (&data.value);
+          rb_protect (rbclt_model_iter_do_get, (VALUE) &data, &state);
+          g_value_unset (&data.value);
 
-	  if (state)
-	    break;
+          if (state)
+            break;
 
-	  rb_ary_push (ret, data.rvalue);
-	}
+          rb_ary_push (ret, data.rvalue);
+        }
     }
 
   if (state)
@@ -537,7 +537,7 @@ rbclt_model_iter_set (int argc, VALUE *argv, VALUE self)
 
   if ((argc & 1))
     rb_raise (rb_eArgError, "wrong number of arguments "
-	      "(paired arguments required)");
+              "(paired arguments required)");
 
   data.iter = CLUTTER_MODEL_ITER (RVAL2GOBJ (self));
   model = clutter_model_iter_get_model (data.iter);
@@ -550,7 +550,7 @@ rbclt_model_iter_set (int argc, VALUE *argv, VALUE self)
       memset (&data.value, 0, sizeof (data.value));
 
       g_value_init (&data.value, clutter_model_get_column_type (model,
-								data.column));
+                                                                data.column));
       rb_protect (rbclt_model_iter_do_set, (VALUE) &data, &state);
       g_value_unset (&data.value);
     }
@@ -641,11 +641,11 @@ rbclt_model_each (VALUE self)
   if (!NIL_P (iter))
     {
       while (!RTEST (rbclt_model_iter_is_last (iter)))
-	{
-	  if (RTEST (rbclt_model_filter_iter (self, iter)))
-	    rb_yield (iter);
-	  rbclt_model_iter_next_bang (iter);
-	}
+        {
+          if (RTEST (rbclt_model_filter_iter (self, iter)))
+            rb_yield (iter);
+          rbclt_model_iter_next_bang (iter);
+        }
     }
 
   return self;
@@ -665,8 +665,8 @@ void
 rbclt_model_init ()
 {
   VALUE klass = G_DEF_INTERFACE (CLUTTER_TYPE_MODEL, "Model",
-				 rbclt_c_clutter);
-  
+                                 rbclt_c_clutter);
+
   rb_define_method (klass, "set_types", rbclt_model_set_types, -1);
   rb_define_method (klass, "set_names", rbclt_model_set_names, -1);
   rb_define_method (klass, "append", rbclt_model_append, -1);
@@ -683,9 +683,9 @@ rbclt_model_init ()
   rb_define_method (klass, "get_iter_at_row", rbclt_model_get_iter_at_row, 1);
   rb_define_method (klass, "each", rbclt_model_each, 0);
   rb_define_method (klass, "sorting_column",
-		    rbclt_model_get_sorting_column, 0);
+                    rbclt_model_get_sorting_column, 0);
   rb_define_method (klass, "set_sorting_column",
-		    rbclt_model_set_sorting_column, 1);
+                    rbclt_model_set_sorting_column, 1);
   rb_define_method (klass, "set_sort", rbclt_model_set_sort, 1);
   rb_define_method (klass, "set_filter", rbclt_model_set_filter, 0);
   rb_define_method (klass, "resort", rbclt_model_resort, 0);
@@ -695,7 +695,7 @@ rbclt_model_init ()
   G_DEF_SETTERS (klass);
 
   klass = G_DEF_INTERFACE (CLUTTER_TYPE_MODEL_ITER, "ModelIter",
-			   rbclt_c_clutter);
+                           rbclt_c_clutter);
   rb_define_method (klass, "get", rbclt_model_iter_get, -1);
   rb_define_alias (klass, "[]", "get");
   rb_define_method (klass, "set", rbclt_model_iter_set, -1);

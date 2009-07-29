@@ -1,23 +1,23 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
  * Copyright (C) 2007  Neil Roberts
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301  USA
  */
 
-#include <clutter/clutter-color.h>
+#include <clutter/clutter.h>
 
 /* MAKE_BOXED(ClutterColor INIT:0xff red:guint8 green:guint8 blue:guint8 alpha:guint8) */
 
@@ -67,7 +67,7 @@ rbclt_color_subtract (VALUE self, VALUE other)
   clutter_color_subtract ((ClutterColor *) RVAL2BOXED (self, CLUTTER_TYPE_COLOR),
                           (ClutterColor *) RVAL2BOXED (other, CLUTTER_TYPE_COLOR),
                           &result);
-  
+
   return BOXED2RVAL (&result, CLUTTER_TYPE_COLOR);
 }
 
@@ -85,10 +85,10 @@ rbclt_color_from_hls (VALUE self, VALUE hue, VALUE luminance, VALUE saturation)
 static VALUE
 rbclt_color_to_hls (VALUE self)
 {
-  guint8 hue, luminance, saturation;
+  gfloat hue, luminance, saturation;
   clutter_color_to_hls ((ClutterColor *) RVAL2BOXED (self, CLUTTER_TYPE_COLOR),
                         &hue, &luminance, &saturation);
-  return rb_ary_new3 (3, INT2FIX (hue), INT2FIX (luminance), INT2FIX (saturation));
+  return rb_ary_new3 (3, rb_float_new (hue), rb_float_new (luminance), rb_float_new (saturation));
 }
 
 static VALUE
@@ -111,7 +111,7 @@ rbclt_color_shade (VALUE self, VALUE shade)
   ClutterColor *src = (ClutterColor *) RVAL2BOXED (self, CLUTTER_TYPE_COLOR);
   ClutterColor dest;
   dest.alpha = src->alpha;
-  clutter_color_shade (src, &dest, NUM2DBL (shade));
+  clutter_color_shade (src, NUM2DBL (shade), &dest);
   return BOXED2RVAL (&dest, CLUTTER_TYPE_COLOR);
 }
 
@@ -121,7 +121,7 @@ rbclt_color_shade_bang (VALUE self, VALUE shade)
   ClutterColor *src = (ClutterColor *) RVAL2BOXED (self, CLUTTER_TYPE_COLOR);
   ClutterColor dest;
   dest.alpha = src->alpha;
-  clutter_color_shade (src, &dest, NUM2DBL (shade));
+  clutter_color_shade (src, NUM2DBL (shade), &dest);
   *src = dest;
   return self;
 }

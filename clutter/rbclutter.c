@@ -331,10 +331,10 @@ Init_clutter ()
   rbclt_list_model_init ();
   rbclt_fog_init ();
 
-  rb_cogl_init ();
-  rb_cogl_texture_init ();
-  rb_cogl_primitives_init ();
-  rb_cogl_shader_init ();
-  rb_cogl_program_init ();
-  rb_cogl_offscreen_init ();
+  /* rb_cogl_init (); */
+  /* rb_cogl_texture_init (); */
+  /* rb_cogl_primitives_init (); */
+  /* rb_cogl_shader_init (); */
+  /* rb_cogl_program_init (); */
+  /* rb_cogl_offscreen_init (); */
 }

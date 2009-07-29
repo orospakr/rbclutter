@@ -27,18 +27,18 @@
 static struct { const char *name; ClutterAlphaFunc func; }
   rbclt_alpha_func_map[] =
     {
-      { "RAMP_INC", clutter_ramp_inc_func },
-      { "RAMP_DEC", clutter_ramp_dec_func },
-      { "RAMP", clutter_ramp_func },
-      { "SINE", clutter_sine_func },
-      { "SINE_INC", clutter_sine_inc_func },
-      { "SINE_DEC", clutter_sine_dec_func },
-      { "SINE_HALF", clutter_sine_half_func },
-      { "SQUARE", clutter_square_func },
-      { "SMOOTHSTEP_INC", clutter_smoothstep_inc_func },
-      { "SMOOTHSTEP_DEC", clutter_smoothstep_dec_func },
-      { "EXP_INC", clutter_exp_inc_func },
-      { "EXP_DEC", clutter_exp_dec_func }
+      /* { "RAMP_INC", clutter_ramp_inc_func }, */
+      /* { "RAMP_DEC", clutter_ramp_dec_func }, */
+      /* { "RAMP", clutter_ramp_func }, */
+      /* { "SINE", clutter_sine_func }, */
+      /* { "SINE_INC", clutter_sine_inc_func }, */
+      /* { "SINE_DEC", clutter_sine_dec_func }, */
+      /* { "SINE_HALF", clutter_sine_half_func }, */
+      /* { "SQUARE", clutter_square_func }, */
+      /* { "SMOOTHSTEP_INC", clutter_smoothstep_inc_func }, */
+      /* { "SMOOTHSTEP_DEC", clutter_smoothstep_dec_func }, */
+      /* { "EXP_INC", clutter_exp_inc_func }, */
+      /* { "EXP_DEC", clutter_exp_dec_func } */
     };
 
 #define RBCLT_ALPHA_FUNC_MAP_COUNT (sizeof (rbclt_alpha_func_map)       \

@@ -1,16 +1,16 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
  * Copyright (C) 2008  Neil Roberts
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
@@ -18,7 +18,7 @@
  */
 
 #include <rbgobject.h>
-#include <clutter/clutter-score.h>
+#include <clutter/clutter.h>
 
 #include "rbclutter.h"
 
@@ -65,8 +65,8 @@ rbclt_score_append (int argc, VALUE *argv, VALUE self)
     id = clutter_score_append (score, RVAL2GOBJ (arg1), RVAL2GOBJ (arg2));
   else
     id = clutter_score_append_at_marker (score, RVAL2GOBJ (arg1),
-					 StringValuePtr (arg2),
-					 RVAL2GOBJ (arg3));
+                                         StringValuePtr (arg2),
+                                         RVAL2GOBJ (arg3));
 
   return UINT2NUM (id);
 }
@@ -182,7 +182,7 @@ void
 rbclt_score_init ()
 {
   VALUE klass = G_DEF_CLASS2 (CLUTTER_TYPE_SCORE, "Score", rbclt_c_clutter,
-			      rbclt_score_mark, NULL);
+                              rbclt_score_mark, NULL);
 
   rb_define_method (klass, "initialize", rbclt_score_initialize, 0);
   rb_define_method (klass, "each", rbclt_score_each, 0);

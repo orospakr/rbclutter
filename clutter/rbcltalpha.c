@@ -68,5 +68,7 @@ rbclt_alpha_init ()
   rb_define_method (klass, "initialize", rbclt_alpha_initialize, -1);
   rb_define_method (klass, "set_func", rbclt_alpha_set_func, -1);
 
+  G_DEF_CONSTANTS(klass, CLUTTER_TYPE_ANIMATION_MODE, "CLUTTER_");
+
   rbclt_alpha_func_init (klass);
 }
