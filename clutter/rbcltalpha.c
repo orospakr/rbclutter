@@ -44,18 +44,18 @@ rbclt_alpha_set_func (int argc, VALUE *argv, VALUE self)
 static VALUE
 rbclt_alpha_initialize (int argc, VALUE *argv, VALUE self)
 {
-  VALUE timeline, func;
+  VALUE timeline, mode;
   ClutterAlpha *alpha;
 
-  rb_scan_args (argc, argv, "02", &timeline, &func);
+  rb_scan_args (argc, argv, "02", &timeline, &mode);
 
   alpha = clutter_alpha_new ();
   rbclt_initialize_unowned (self, alpha);
 
   if (timeline != Qnil)
     clutter_alpha_set_timeline (alpha, RVAL2GOBJ (timeline));
-  if (func != Qnil)
-    rbclt_alpha_set_func (1, &func, self);
+  if (mode != Qnil)
+    clutter_alpha_set_mode(alpha, NUM2INT (mode));
 
   return Qnil;
 }

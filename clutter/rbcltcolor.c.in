@@ -22,11 +22,11 @@
 /* MAKE_BOXED(ClutterColor INIT:0xff red:guint8 green:guint8 blue:guint8 alpha:guint8) */
 
 static VALUE
-rbclt_color_parse (VALUE self, VALUE name)
+rbclt_color_from_string (VALUE self, VALUE name)
 {
   ClutterColor color;
 
-  if (!clutter_color_parse (StringValuePtr (name), &color))
+  if (!clutter_color_from_string (&color, StringValuePtr (name) ))
     rb_raise (rb_eArgError, "can't parse color name `%s'", StringValuePtr (name));
 
   return BOXED2RVAL (&color, CLUTTER_TYPE_COLOR);
@@ -173,7 +173,7 @@ rbclt_color_init ()
 {
   VALUE klass = G_DEF_CLASS (CLUTTER_TYPE_COLOR, "Color", rbclt_c_clutter);
 
-  rb_define_singleton_method (klass, "parse", rbclt_color_parse, 1);
+  rb_define_singleton_method (klass, "from_string", rbclt_color_from_string, 1);
   rb_define_singleton_method (klass, "from_hls", rbclt_color_from_hls, 3);
   rb_define_singleton_method (klass, "from_pixel", rbclt_color_from_pixel, 1);
   /* METHOD_DEFINITIONS */

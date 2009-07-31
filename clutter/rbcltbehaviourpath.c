@@ -23,18 +23,14 @@
 #include "rbclutter.h"
 
 static VALUE
-rbclt_behaviour_path_initialize (int argc, VALUE *argv, VALUE self)
+rbclt_behaviour_path_initialize (VALUE self, VALUE alpha, VALUE path)
 {
-  ClutterBehaviour *behaviour = clutter_behaviour_path_new (NULL, 0);
-  int i;
+  ClutterAlpha *c_alpha = CLUTTER_ALPHA (RVAL2GOBJ (alpha));
+  ClutterPath *c_path = CLUTTER_PATH (RVAL2GOBJ (path));
+
+  ClutterBehaviour *behaviour = clutter_behaviour_path_new (c_alpha, c_path);
 
   G_INITIALIZE (self, behaviour);
-
-  if (argc >= 1)
-    clutter_behaviour_set_alpha (behaviour, RVAL2GOBJ (argv[0]));
-  for (i = 1; i < argc; i++)
-    clutter_behaviour_path_append_knot (CLUTTER_BEHAVIOUR_PATH (behaviour),
-                                        RVAL2BOXED (argv[i], CLUTTER_TYPE_KNOT));
 
   return Qnil;
 }
@@ -88,7 +84,7 @@ rbclt_behaviour_path_init ()
 {
   VALUE klass = G_DEF_CLASS (CLUTTER_TYPE_BEHAVIOUR_PATH, "BehaviourPath", rbclt_c_clutter);
 
-  rb_define_method (klass, "initialize", rbclt_behaviour_path_initialize, -1);
+  rb_define_method (klass, "initialize", rbclt_behaviour_path_initialize, 2);
   rb_define_method (klass, "knots", rbclt_behaviour_path_knots, 0);
   rb_define_method (klass, "append_knot", rbclt_behaviour_path_append_knot, -1);
   rb_define_alias (klass, "append_knots", "append_knot");

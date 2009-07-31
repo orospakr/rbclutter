@@ -42,12 +42,6 @@ rbclt_get_debug_enabled ()
 }
 
 static VALUE
-rbclt_get_show_fps ()
-{
-  return clutter_get_show_fps () ? Qtrue : Qfalse;
-}
-
-static VALUE
 rbclt_get_timestamp ()
 {
   return ULONG2NUM (clutter_get_timestamp ());
@@ -294,8 +288,6 @@ rbclt_main_init ()
 
   rb_define_module_function (rbclt_c_clutter, "debug_enabled?",
                              rbclt_get_debug_enabled, 0);
-  rb_define_module_function (rbclt_c_clutter, "show_fps?",
-                             rbclt_get_show_fps, 0);
   rb_define_module_function (rbclt_c_clutter, "timestamp",
                              rbclt_get_timestamp, 0);
   rb_define_module_function (rbclt_c_clutter, "main", rbclt_main, 0);

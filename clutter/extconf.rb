@@ -34,7 +34,7 @@ $objs = %w{ rbclutter.o rbcltactor.o rbcltalpha.o rbcltbehaviour.o rbcltbehaviou
 + %w{ rbcltrectangle.o rbcltfeature.o rbcltbackend.o } \
 + %w{ rbcltmedia.o rbcltshader.o rbcltcallbackfunc.o rbcltframesource.o } \
 + %w{ rbcltstagemanager.o rbcltchildmeta.o rbcltscript.o rbcltscore.o } \
-+ %w{ rbcltlistmodel.o rbcltmodel.o }
++ %w{ rbcltlistmodel.o rbcltmodel.o rbcltpath.o }
 
 # Disabled building the COGL components for now. - andrew@orospakr.ca
 
