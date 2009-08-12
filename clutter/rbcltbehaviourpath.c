@@ -34,7 +34,7 @@ rbclt_behaviour_path_initialize (VALUE self, VALUE alpha, VALUE path)
      However, I may have the GObject floating reference semantics a bit wrong
      and this might be leaky.  Way better than crashing, though...
   */
-  g_object_ref(c_path);
+  g_object_ref (c_path);
 
   ClutterBehaviour *behaviour = clutter_behaviour_path_new (c_alpha, c_path);
 
