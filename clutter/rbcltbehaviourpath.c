@@ -28,6 +28,14 @@ rbclt_behaviour_path_initialize (VALUE self, VALUE alpha, VALUE path)
   ClutterAlpha *c_alpha = CLUTTER_ALPHA (RVAL2GOBJ (alpha));
   ClutterPath *c_path = CLUTTER_PATH (RVAL2GOBJ (path));
 
+  /* increase the refcount by 1, because even though path is a GInitiallyUnowned,
+     ruby-gnome2 is still unref'ing it when it goes out of scope in Ruby.
+
+     However, I may have the GObject floating reference semantics a bit wrong
+     and this might be leaky.  Way better than crashing, though...
+  */
+  g_object_ref(c_path);
+
   ClutterBehaviour *behaviour = clutter_behaviour_path_new (c_alpha, c_path);
 
   G_INITIALIZE (self, behaviour);
