@@ -22,8 +22,8 @@ require 'pkg-config'
 TOPDIR = File.expand_path(File.dirname(__FILE__) + '/..')
 
 PKGConfig.have_package('glib-2.0') or show_fail
-PKGConfig.have_package('clutter-0.9') or show_fail
-PKGConfig.have_package('clutter-gtk-0.9') or show_fail
+PKGConfig.have_package('clutter-1.0') or show_fail
+PKGConfig.have_package('clutter-gtk-0.10') or show_fail
 PKGConfig.have_package('gtk+-2.0') or show_fail
 
 find_header("rbgobject.h", *$:) or show_fail

@@ -658,6 +658,58 @@ rbclt_actor_stage (VALUE self)
   return GOBJ2RVAL (clutter_actor_get_stage (actor));
 }
 
+static VALUE
+rbclt_actor_animate (VALUE self, VALUE mode, VALUE duration, VALUE properties)
+{
+  gint c = 0;
+  VALUE current_property = Qnil;
+  VALUE current_value = Qnil;
+  gchar ** properties_vector = NULL;
+  GValue * values_vector = NULL;
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterAnimation *animation;
+
+  VALUE props_lengthv = rb_funcall (properties, rb_intern("length"), 0);
+  gint props_length = NUM2INT (props_lengthv);
+
+  // TODO validate properties is a hash
+
+  // man this is such an annoying way to iterate through a hash...
+
+  properties_vector = g_malloc (sizeof (gchar*) * props_length);
+  values_vector = g_malloc (sizeof (GValue) * props_length);
+
+  VALUE keys = rb_funcall (properties, rb_intern("keys"), 0);
+
+  for (c = 0; c < props_length; c++)
+    {
+      VALUE key = rb_ary_entry (keys, c);
+      current_property = rb_hash_aref (properties, key);
+      GValue gv = {0, };
+
+      if (current_property == Qnil) {
+        rb_raise(rb_eArgError, "Properties must not be nil!");
+        return;
+       }
+
+      rbgobj_initialize_gvalue(&gv, current_property);
+
+      properties_vector[c] = StringValuePtr (key);
+      values_vector[c] = gv;
+      // printf("Hello: %s : %s \n", StringValuePtr (key), StringValuePtr (current_property));
+    }
+
+  gint mode_int = NUM2INT (mode);
+  gint duration_int = NUM2INT (duration);
+
+  animation = clutter_actor_animatev (actor, mode_int, duration_int, props_length, properties_vector, values_vector);
+
+  g_free(properties_vector);
+  g_free(values_vector);
+
+  return GOBJ2RVAL (animation);
+}
+
 void
 rbclt_actor_init ()
 {
@@ -749,6 +801,7 @@ rbclt_actor_init ()
   rb_define_method (klass, "rotated?", rbclt_actor_is_rotated, 0);
   rb_define_method (klass, "scaled?", rbclt_actor_is_scaled, 0);
   rb_define_method (klass, "stage", rbclt_actor_stage, 0);
+  rb_define_method (klass, "animate", rbclt_actor_animate, 3);
 
   G_DEF_SETTERS (klass);
 }

@@ -47,6 +47,7 @@ extern void rbclt_texture_init ();
 extern void rbclt_knot_init ();
 extern void rbclt_timeline_init ();
 extern void rbclt_alpha_init ();
+extern void rbclt_animation_init ();
 extern void rbclt_behaviour_init ();
 extern void rbclt_behaviour_bspline_init ();
 extern void rbclt_behaviour_depth_init ();
@@ -301,6 +302,7 @@ Init_clutter ()
   rbclt_knot_init ();
   rbclt_timeline_init ();
   rbclt_alpha_init ();
+  rbclt_animation_init ();
   rbclt_behaviour_init ();
   rbclt_behaviour_depth_init ();
   rbclt_behaviour_ellipse_init ();

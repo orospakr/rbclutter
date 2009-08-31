@@ -113,8 +113,12 @@ rbcltg_texture_set_from_pixbuf (VALUE self, VALUE texture_arg, VALUE pixbuf_arg)
 {
   ClutterTexture *texture = (ClutterTexture *) RVAL2GOBJ (texture_arg);
   GdkPixbuf *pixbuf = (GdkPixbuf *) RVAL2GOBJ (pixbuf_arg);
+  GError *error = NULL;
 
-  gtk_clutter_texture_set_from_pixbuf (texture, pixbuf);
+  gtk_clutter_texture_set_from_pixbuf (texture, pixbuf, &error);
+
+  if (error)
+    RAISE_GERROR (error);
 
   return Qnil;
 }
@@ -126,11 +130,16 @@ rbcltg_texture_set_from_stock (VALUE self, VALUE texture_arg, VALUE widget_arg,
   ClutterTexture *texture = (ClutterTexture *) RVAL2GOBJ (texture_arg);
   GtkWidget *widget = (GtkWidget *) RVAL2GOBJ (widget_arg);
   GtkIconSize size = RVAL2GENUM (size_arg, GTK_TYPE_ICON_SIZE);
+  GError *error = NULL;
 
   gtk_clutter_texture_set_from_stock (texture,
                                       widget,
                                       StringValuePtr (stock_id),
-                                      size);
+                                      size,
+                                      &error);
+
+  if (error)
+    RAISE_GERROR (error);
 
   return Qnil;
 }
@@ -143,11 +152,16 @@ rbcltg_texture_set_from_icon_name (VALUE self, VALUE texture_arg,
   ClutterTexture *texture = (ClutterTexture *) RVAL2GOBJ (texture_arg);
   GtkWidget *widget = (GtkWidget *) RVAL2GOBJ (widget_arg);
   GtkIconSize size = RVAL2GENUM (size_arg, GTK_TYPE_ICON_SIZE);
+  GError *error = NULL;
 
   gtk_clutter_texture_set_from_icon_name (texture,
                                           widget,
                                           StringValuePtr (icon_name),
-                                          size);
+                                          size,
+                                          &error);
+
+  if (error)
+    RAISE_GERROR (error);
 
   return Qnil;
 }
