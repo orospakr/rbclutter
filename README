@@ -1,11 +1,34 @@
-Ruby-Clutter -- Ruby bindings for Clutter-0.8.x
+Ruby-Clutter -- Ruby bindings for Clutter-1.x.x
 ===============================================
 
-This is a set of bindings for the Clutter 0.8 libraries for use from
+This is a set of bindings for the Clutter 1.x.x libraries for use from
 Ruby.
+
+This particular branch is a patch that was done in 2009 to add support
+for Clutter 1.0 to the Ruby bindings, which no longer appeared to be
+maintained (this is still apparently so in 2011).  Note that some of
+the components have been disabled.  This isn't a complete port.
+
+I did this patch back in 2009 and haven't really done much to it
+since, and it's only just now occurred to me that I ought to toss it
+up on github.  As such, there might be a few notes that I have
+entirely forgotten about and therefore forgotten to add here. Sorry.
+
+This has been tested with Clutter 1.2 (at least as far as building
+goes).  I assume that this is because 1.x has A(P|B)I stability.
+
+Please note that there is another project on GitHub which has done the
+same, but has not ported the GStreamer bindings amoung other things.
+I haven't been arsed to properly merge them.
+
+https://github.com/mieko/rbclutter-unofficial
 
 Install
 -------
+
+Note that you'll want the headers installed for Ruby Glib (from the
+Ruby GNOME2 project), including those for gstreamer and gtk (if you
+elect to use those components).
 
  1. ruby extconf.rb
  2. make
@@ -18,19 +41,20 @@ Dependencies
 To install the bindings the following is also needed:
 
  - Ruby >= 1.8
- - Clutter 0.8.x
+ - Clutter 1.x.x
  - Ruby GLib bindings
 
-The optional clutter-gtk bindings depend on the Ruby GTK+ bindings and
-clutter-cairo depends on the Ruby clutter bindings.
+The optional clutter-gtk bindings depend on the Ruby GTK+ bindings,
+clutter-cairo depends on the Ruby clutter bindings, and clutter-gst
+depends on the Ruby gstreamer bindings.  All of these are available
+from the Ruby GNOME2 project, at:
 
-The clutter-gst bindings depend on the 0.10 version of the GStreamer
-bindings available from here:
-
-https://trac.luon.net/ruby-gstreamer0.10/
+http://ruby-gnome2.sourceforge.jp/
 
 Issues
 ------
+
+I imagine that this list is still mostly true:
 
 There's a few issues to be aware of with this release:
 
