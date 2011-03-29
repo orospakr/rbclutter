@@ -6,8 +6,9 @@ Ruby.
 
 This particular branch is a patch that was done in 2009 to add support
 for Clutter 1.0 to the Ruby bindings, which no longer appeared to be
-maintained (this is still apparently so in 2011).  Note that some of
-the components have been disabled.  This isn't a complete port.
+maintained (this is still apparently so in 2011).  This isn't a
+complete port.  Clutter-cairo, in particular, has been disabled, and
+some of the newer API may be missing.
 
 I did this patch back in 2009 and haven't really done much to it
 since, and it's only just now occurred to me that I ought to toss it
@@ -18,7 +19,7 @@ This has been tested with Clutter 1.2 (at least as far as building
 goes).  I assume that this is because 1.x has A(P|B)I stability.
 
 Please note that there is another project on GitHub which has done the
-same, but has not ported the GStreamer bindings amoung other things.
+same, but has not ported the GStreamer bindings among other things.
 I haven't been arsed to properly merge them.
 
 https://github.com/mieko/rbclutter-unofficial
