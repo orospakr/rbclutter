@@ -23,15 +23,14 @@ TOPDIR = File.expand_path(File.dirname(__FILE__) + '/..')
 
 PKGConfig.have_package('glib-2.0') or show_fail
 PKGConfig.have_package('clutter-1.0') or show_fail
-PKGConfig.have_package('clutter-gst-0.10') or show_fail
+PKGConfig.have_package('clutter-gst-1.0') or show_fail
 PKGConfig.have_package('gstreamer-0.10') or show_fail
 
 find_header("rbgobject.h", *$:) or show_fail
 
 add_depend_package("clutter", "clutter", TOPDIR)
 
-$objs = %w{ rbcluttergst.o rbcltgstvideosink.o rbcltgstvideotexture.o } \
-+ %w{ rbcltgstaudio.o }
+$objs = %w{ rbcluttergst.o rbcltgstvideosink.o rbcltgstvideotexture.o }
 
 $INSTALLFILES = [ [ "clutter_gst.rb", "$(RUBYLIBDIR)" ] ]
 

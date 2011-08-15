@@ -18,7 +18,7 @@
  */
 
 #include <rbgobject.h>
-#include <clutter-gst/clutter-gst-video-sink.h>
+#include <clutter-gst/clutter-gst.h>
 
 #include "rbcluttergst.h"
 

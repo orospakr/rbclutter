@@ -20,8 +20,7 @@
 #include <ruby.h>
 #include <rbgobject.h>
 #include <gst/gstobject.h>
-#include <clutter-gst/clutter-gst-util.h>
-#include <clutter-gst/clutter-gst-version.h>
+#include <clutter-gst/clutter-gst.h>
 #include <clutter/clutter-enum-types.h>
 #include <rbclutter.h>
 
@@ -31,7 +30,6 @@ VALUE rbcltgst_c_clutter_gst = Qnil;
 
 extern void rbcltgst_video_sink_init ();
 extern void rbcltgst_video_texture_init ();
-extern void rbcltgst_audio_init ();
 
 void
 rbcltgst_initialize_gst_object (VALUE obj, gpointer gstobj)
@@ -72,5 +70,4 @@ Init_clutter_gst ()
 
   rbcltgst_video_sink_init ();
   rbcltgst_video_texture_init ();
-  rbcltgst_audio_init ();
 }
