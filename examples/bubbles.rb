@@ -3,7 +3,6 @@
 # Adapted from bubbles.py in the Python bindings
 
 require 'clutter'
-require 'clutter_cairo'
 require 'cairo'
 
 Clutter::init

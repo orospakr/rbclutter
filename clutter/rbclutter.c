@@ -273,6 +273,9 @@ Init_clutter ()
   G_DEF_CLASS (CLUTTER_TYPE_PICK_MODE, "PickMode", rbclt_c_clutter);
   G_DEF_CONSTANTS (rbclt_c_clutter, CLUTTER_TYPE_PICK_MODE, "CLUTTER_");
 
+  G_DEF_CLASS (CLUTTER_TYPE_FLOW_ORIENTATION, "FlowOrientation", rbclt_c_clutter);
+  G_DEF_CONSTANTS (rbclt_c_clutter, CLUTTER_TYPE_FLOW_ORIENTATION, "CLUTTER_");
+
   mglib = rb_const_get (rb_cObject, rb_intern ("GLib"));
   /* This is only defined in later versions of the Ruby-glib
      bindings */
@@ -327,6 +330,8 @@ Init_clutter ()
   rbclt_list_model_init ();
   rbclt_fog_init ();
   rbclt_path_init ();
+  rbclt_layout_manager_init ();
+  rbclt_flow_layout_init ();
 
   /* rb_cogl_init (); */
   /* rb_cogl_texture_init (); */

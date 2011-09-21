@@ -19,8 +19,8 @@ This has been tested with Clutter 1.2 (at least as far as building
 goes).  I assume that this is because 1.x has A(P|B)I stability.
 
 Please note that there is another project on GitHub which has done the
-same, but has not ported the GStreamer bindings among other things.
-I haven't been arsed to properly merge them.
+same, but has not ported the GStreamer bindings among other things.  I
+haven't been arsed to properly merge them.
 
 https://github.com/mieko/rbclutter-unofficial
 
@@ -55,7 +55,67 @@ http://ruby-gnome2.sourceforge.jp/
 Issues
 ------
 
-I imagine that this list is still mostly true:
+Missing from 1.x port:
+
+* Fixed examples
+* ClutterCairoTexture
+* LayoutManagers
+* A systematic trip through the entire API to add anything missing
+
+Here is my quick list of things that are (probably) missing.  I might
+have marked some things that are internal by mistake:
+
+action
+actor-meta
+animatable
+animator
+bezier ?
+binding-pool ?
+cairo-texture
+click-action
+clone
+constraint
+path-constraint
+bind-constraint
+align-constraint
+layout-manager
+layout-meta
+fixed-layout
+flow-layout
+bin-layout
+box
+deform-effect
+desaturate-effect
+colorize-effect
+offscreen-effect
+page-turn-effect
+blur-effect
+shader-effect
+device-manager
+drag-action
+effect
+event-translator ?
+fixed ?
+id-pool ? 
+input-device
+interval ? 
+master-clock ?
+paint-volume ?
+profile ?
+script-parser ?
+settings
+shader-types ?
+snap-constraint
+stage-window ?
+state
+table-layout
+timeout-interval ?
+timeout-pool ?
+units
+util
+
+I imagine that this list from the original project is still mostly
+true:
 
 There's a few issues to be aware of with this release:
 
