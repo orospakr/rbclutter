@@ -24,6 +24,8 @@ PKGConfig.have_package('clutter-1.0') or show_fail
 
 find_header("rbgobject.h", *$:) or show_fail
 
+$defs.push("-Wall")
+
 BOXED_TYPES = %w{ color geometry knot vertex actorbox perspective fog }
 
 $objs = %w{ rbclutter.o rbcltactor.o rbcltalpha.o rbcltbehaviour.o rbcltbehaviourpath.o } \
@@ -35,7 +37,7 @@ $objs = %w{ rbclutter.o rbcltactor.o rbcltalpha.o rbcltbehaviour.o rbcltbehaviou
 + %w{ rbcltmedia.o rbcltshader.o rbcltcallbackfunc.o rbcltframesource.o } \
 + %w{ rbcltstagemanager.o rbcltchildmeta.o rbcltscript.o rbcltscore.o } \
 + %w{ rbcltlistmodel.o rbcltmodel.o rbcltpath.o rbcltanimation.o rbcltlayoutmanager.o } \
-+ %w{ rbcltflowlayout.o }
++ %w{ rbcltflowlayout.o rbcltbox.o }
 
 # Disabled building the COGL components for now. - andrew@orospakr.ca
 
