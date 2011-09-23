@@ -25,15 +25,15 @@
 
 /* http://docs.clutter-project.org/docs/clutter/stable/ClutterBox.html */
 
-/* static VALUE */
-/* rbclt_flow_layout_initialize (VALUE self, VALUE layout_manager) */
-/* { */
-/*   rbclt_initialize_unowned (self, clutter_box_new () */
-/*   return Qnil; */
-/* } */
+static VALUE
+rbclt_box_initialize (VALUE self, VALUE layout_manager)
+{
+  rbclt_initialize_unowned (self, clutter_box_new ()
+  return Qnil;
+}
 
 void
-rbclt_flow_layout_init ()
+rbclt_box_init ()
 {
   VALUE klass = G_DEF_CLASS (CLUTTER_TYPE_BOX, "Box", rbclt_c_clutter);
 
