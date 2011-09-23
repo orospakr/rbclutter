@@ -663,7 +663,6 @@ rbclt_actor_animate (VALUE self, VALUE mode, VALUE duration, VALUE properties)
 {
   gint c = 0;
   VALUE current_property = Qnil;
-  VALUE current_value = Qnil;
   gchar ** properties_vector = NULL;
   GValue * values_vector = NULL;
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
@@ -702,7 +701,7 @@ rbclt_actor_animate (VALUE self, VALUE mode, VALUE duration, VALUE properties)
   gint mode_int = NUM2INT (mode);
   gint duration_int = NUM2INT (duration);
 
-  animation = clutter_actor_animatev (actor, mode_int, duration_int, props_length, properties_vector, values_vector);
+  animation = clutter_actor_animatev (actor, mode_int, duration_int, props_length, (const gchar * const *)properties_vector, values_vector);
 
   g_free(properties_vector);
   g_free(values_vector);

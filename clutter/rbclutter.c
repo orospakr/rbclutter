@@ -332,6 +332,7 @@ Init_clutter ()
   rbclt_path_init ();
   rbclt_layout_manager_init ();
   rbclt_flow_layout_init ();
+  rbclt_box_init ();
 
   /* rb_cogl_init (); */
   /* rb_cogl_texture_init (); */
