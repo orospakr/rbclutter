@@ -102,13 +102,53 @@ rbclt_box_pack (VALUE self, VALUE actor, VALUE properties)
       
       properties_vector[c] = StringValuePtr (key);
       values_vector[c] = gv;
-      // printf("Hello: %s : %s \n", StringValuePtr (key), StringValuePtr (current_property));
+      // printf("Hello: %s : %s \n", StringValuePtr ok(key), StringValuePtr (current_property));
     }
   
   clutter_box_packv (box, g_actor, props_length, (const gchar * const *)properties_vector, values_vector);
 
   g_free (properties_vector);
   g_free (values_vector);
+
+  return Qnil;
+}
+
+/* I am unable to accept layout manager properties here, due to a lack
+   of clutter_box_pack_afterv().  Set the layout parameters via the
+   layout manager directly.  Sorry. */
+static VALUE
+rbclt_box_pack_after (VALUE self, VALUE actor, VALUE sibling)
+{
+  ClutterBox *box = CLUTTER_BOX (RVAL2GOBJ (self));
+  ClutterActor *g_actor = CLUTTER_ACTOR (RVAL2GOBJ (actor));
+  ClutterActor *g_sibling = CLUTTER_ACTOR (RVAL2GOBJ (sibling));
+
+  clutter_box_pack_after (box, g_actor, g_sibling, NULL);
+
+  return Qnil;
+}
+
+/* The same issue, here. */
+static VALUE
+rbclt_box_pack_before (VALUE self, VALUE actor, VALUE sibling)
+{
+  ClutterBox *box = CLUTTER_BOX (RVAL2GOBJ (self));
+  ClutterActor *g_actor = CLUTTER_ACTOR (RVAL2GOBJ (actor));
+  ClutterActor *g_sibling = CLUTTER_ACTOR (RVAL2GOBJ (sibling));
+
+  clutter_box_pack_before (box, g_actor, g_sibling, NULL);
+
+  return Qnil;
+}
+
+/* ... and here, too. */
+static VALUE
+rbclt_box_pack_at (VALUE self, VALUE actor, VALUE position)
+{
+  ClutterBox *box = CLUTTER_BOX (RVAL2GOBJ (self));
+  ClutterActor *g_actor = CLUTTER_ACTOR (RVAL2GOBJ (actor));
+
+  clutter_box_pack_at (box, g_actor, NUM2INT (position), NULL);
 
   return Qnil;
 }
@@ -124,4 +164,7 @@ rbclt_box_init ()
   rb_define_method (klass, "set_color", rbclt_box_set_color, 1);
   rb_define_method (klass, "set_color", rbclt_box_get_color, 0);
   rb_define_method (klass, "pack", rbclt_box_pack, 2);
+  rb_define_method (klass, "pack_after", rbclt_box_pack_after, 2);
+  rb_define_method (klass, "pack_before", rbclt_box_pack_before, 2);
+  rb_define_method (klass, "pack_at", rbclt_box_pack_at, 2);
 }
