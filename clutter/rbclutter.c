@@ -84,6 +84,7 @@ extern void rbclt_constraint_init ();
 extern void rbclt_align_constraint_init ();
 extern void rbclt_bind_constraint_init ();
 extern void rbclt_path_constraint_init ();
+extern void rbclt_snap_constraint_init ();
 
 extern void rb_cogl_init ();
 extern void rb_cogl_texture_init ();
@@ -306,6 +307,9 @@ Init_clutter ()
   G_DEF_CLASS (CLUTTER_TYPE_BIND_COORDINATE, "BindCoordinate", rbclt_c_clutter);
   G_DEF_CONSTANTS (rbclt_c_clutter, CLUTTER_TYPE_BIND_COORDINATE, "CLUTTER_");
 
+  G_DEF_CLASS (CLUTTER_TYPE_SNAP_EDGE, "SnapEdge", rbclt_c_clutter);
+  G_DEF_CONSTANTS (rbclt_c_clutter, CLUTTER_TYPE_SNAP_EDGE, "CLUTTER_");
+
   mglib = rb_const_get (rb_cObject, rb_intern ("GLib"));
   /* This is only defined in later versions of the Ruby-glib
      bindings */
@@ -371,6 +375,7 @@ Init_clutter ()
   rbclt_align_constraint_init ();
   rbclt_bind_constraint_init ();
   rbclt_path_constraint_init ();
+  rbclt_snap_constraint_init ();
 
   /* rb_cogl_init (); */
   /* rb_cogl_texture_init (); */
