@@ -39,7 +39,7 @@ $objs = %w{ rbclutter.o rbcltactor.o rbcltalpha.o rbcltbehaviour.o rbcltbehaviou
 + %w{ rbcltlistmodel.o rbcltmodel.o rbcltpath.o rbcltanimation.o rbcltlayoutmanager.o } \
 + %w{ rbcltflowlayout.o rbcltbox.o rbcltlayoutmeta.o rbcltboxlayout.o rbcltfixedlayout.o } \
 + %w{ rbcltbinlayout.o rbcltconstraint.o rbcltalignconstraint.o rbcltbindconstraint.o } \
-+ %w{ rbcltsnapconstraint.o }
++ %w{ rbcltsnapconstraint.o rbcltpathconstraint.o }
 
 # Disabled building the COGL components for now. - andrew@orospakr.ca
 # $objs += %w{ rbcogl.o rbcogltexture.o rbcoglprimitives.o } \
