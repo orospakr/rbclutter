@@ -97,14 +97,57 @@ rbclt_layout_manager_get_child_meta (VALUE self, VALUE container, VALUE actor)
    code for iterating through a hash, but I'm lazy */
 
 static VALUE
-rbclt_layout_manager_set_property (VALUE self, VALUE container, VALUE actor, VALUE property, VALUE value)
+rbclt_layout_manager_child_set_property (VALUE self, VALUE container, VALUE actor, VALUE property, VALUE value)
+{
+  ClutterLayoutManager *manager = CLUTTER_LAYOUT_MANAGER (RVAL2GOBJ (self));
+  ClutterContainer *g_container = CLUTTER_CONTAINER (RVAL2GOBJ (container));
+  ClutterActor *g_actor = CLUTTER_ACTOR (RVAL2GOBJ (actor));
+  GValue g_value;
+  g_value_init (&g_value, RVAL2GTYPE (value));
+
+  rbgobj_rvalue_to_gvalue (value, &g_value);
+  clutter_layout_manager_child_set_property (manager, g_container, g_actor, RVAL2CSTR (property), &g_value);
+  g_value_unset (&g_value);
+  return Qnil;
+}
+
+static VALUE
+rbclt_layout_manager_child_get_property (VALUE self, VALUE container, VALUE actor, VALUE property)
 {
   ClutterLayoutManager *manager = CLUTTER_LAYOUT_MANAGER (RVAL2GOBJ (self));
   ClutterContainer *g_container = CLUTTER_CONTAINER (RVAL2GOBJ (container));
   ClutterActor *g_actor = CLUTTER_ACTOR (RVAL2GOBJ (actor));
 
-  // ANDREW START HERE
+  GValue answer;
+
+  clutter_layout_manager_child_get_property (manager, g_container, g_actor, RVAL2CSTR (property), &answer);
+  VALUE r_answer = GVAL2RVAL (&answer);
+
+  g_value_unset (&answer);
+  
+  return r_answer;
+}
+
+static VALUE
+rbclt_layout_manager_begin_animation (VALUE self, VALUE duration, VALUE mode)
+{
+  ClutterLayoutManager *manager = CLUTTER_LAYOUT_MANAGER (RVAL2GOBJ (self));
+  return GOBJ2RVAL (clutter_layout_manager_begin_animation (manager, NUM2UINT (duration), RVAL2GENUM (mode, CLUTTER_TYPE_ANIMATION_MODE)));
+}
+
+static VALUE
+rbclt_layout_manager_end_animation (VALUE self)
+{
+  ClutterLayoutManager *manager = CLUTTER_LAYOUT_MANAGER (RVAL2GOBJ (self));
+  clutter_layout_manager_end_animation (manager);
   return Qnil;
+}
+
+static VALUE
+rbclt_layout_manager_get_animation_progress (VALUE self)
+{
+  ClutterLayoutManager *manager = CLUTTER_LAYOUT_MANAGER (RVAL2GOBJ (self));
+  return DBL2NUM (clutter_layout_manager_get_animation_progress (manager));
 }
 
 void
@@ -118,5 +161,9 @@ rbclt_layout_manager_init ()
   rb_define_method (klass, "layout_changed", rbclt_layout_manager_layout_changed, 0);
   rb_define_method (klass, "set_container", rbclt_layout_manager_set_container, 1);
   rb_define_method (klass, "get_child_meta", rbclt_layout_manager_get_child_meta, 2);
-  rb_define_method (klass, "set_property", rbclt_layout_manager_set_property, 4);
+  rb_define_method (klass, "child_set_property", rbclt_layout_manager_child_set_property, 4);
+  rb_define_method (klass, "child_get_property", rbclt_layout_manager_child_get_property, 3);
+  rb_define_method (klass, "begin_animation", rbclt_layout_manager_begin_animation, 2);
+  rb_define_method (klass, "end_animation", rbclt_layout_manager_end_animation, 0);
+  rb_define_method (klass, "get_animation_progress", rbclt_layout_manager_get_animation_progress, 0);
 }

@@ -72,6 +72,10 @@ extern void rbclt_score_init ();
 extern void rbclt_model_init ();
 extern void rbclt_list_model_init ();
 extern void rbclt_fog_init ();
+extern void rbclt_layout_manager_init ();
+extern void rbclt_flow_layout_init ();
+extern void rbclt_box_init ();
+extern void rbclt_layout_meta_init ();
 
 extern void rb_cogl_init ();
 extern void rb_cogl_texture_init ();
@@ -278,6 +282,9 @@ Init_clutter ()
 
   G_DEF_CLASS (CLUTTER_TYPE_ALLOCATION_FLAGS, "AllocationFlags", rbclt_c_clutter);
   G_DEF_CONSTANTS (rbclt_c_clutter, CLUTTER_TYPE_ALLOCATION_FLAGS, "CLUTTER_");
+
+  G_DEF_CLASS (CLUTTER_TYPE_ANIMATION_MODE, "AnimationMode", rbclt_c_clutter);
+  G_DEF_CONSTANTS (rbclt_c_clutter, CLUTTER_TYPE_ANIMATION_MODE, "CLUTTER_");
 
   mglib = rb_const_get (rb_cObject, rb_intern ("GLib"));
   /* This is only defined in later versions of the Ruby-glib
