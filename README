@@ -55,6 +55,9 @@ Issues
 * ClutterCairoTexture
 * A systematic trip through the entire API to add anything missing
 
+* There are a lot of warnings, the results of both bugs and
+  deprecations.  They were hidden before because -Wall wasn't enabled.
+
 Here is my quick list of things that are (probably) missing.  I might
 have marked some things that are internal by mistake:
 
