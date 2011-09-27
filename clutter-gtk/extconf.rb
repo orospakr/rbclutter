@@ -22,7 +22,7 @@ require 'pkg-config'
 TOPDIR = File.expand_path(File.dirname(__FILE__) + '/..')
 
 PKGConfig.have_package('glib-2.0') or show_fail
-PKGConfig.have_package('clutter-1.0') or show_fail
+PKGConfig.have_package('clutter-1.0', 1, 6) or show_fail
 PKGConfig.have_package('clutter-gtk-0.10') or show_fail
 PKGConfig.have_package('gtk+-2.0') or show_fail
 

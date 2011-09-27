@@ -31,10 +31,13 @@ rbclt_layout_manager_get_preferred_width (VALUE self, VALUE container, VALUE for
   ClutterLayoutManager *manager = CLUTTER_LAYOUT_MANAGER (RVAL2GOBJ (self));
   ClutterContainer *g_container = CLUTTER_CONTAINER (RVAL2GOBJ (container));
   gfloat min_width, nat_width;
+  VALUE answer = rb_hash_new ();
 
   clutter_layout_manager_get_preferred_width (manager, g_container, NUM2INT (for_height), &min_width, &nat_width);
+  rb_hash_aset (answer, rb_intern("min"), rb_float_new (min_width));
+  rb_hash_aset (answer, rb_intern("nat"), rb_float_new (nat_width));
   
-  return rb_ary_new3 (2, rb_float_new (min_width), rb_float_new (nat_width));
+  return answer;
 }
 
 static VALUE
@@ -43,10 +46,13 @@ rbclt_layout_manager_get_preferred_height (VALUE self, VALUE container, VALUE fo
   ClutterLayoutManager *manager = CLUTTER_LAYOUT_MANAGER (RVAL2GOBJ (self));
   ClutterContainer *g_container = CLUTTER_CONTAINER (RVAL2GOBJ (container));
   gfloat min_height, nat_height;
+  VALUE answer = rb_hash_new ();
 
   clutter_layout_manager_get_preferred_height (manager, g_container, NUM2INT (for_width), &min_height, &nat_height);
+  rb_hash_aset (answer, rb_intern("min"), rb_float_new (min_height));
+  rb_hash_aset (answer, rb_intern("nat"), rb_float_new (nat_height));
 
-  return rb_ary_new3 (2, rb_float_new (min_height), rb_float_new (nat_height));
+  return answer;
 }
 
 static VALUE

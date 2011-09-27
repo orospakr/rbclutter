@@ -20,7 +20,7 @@ require 'mkmf'
 require 'pkg-config'
 
 PKGConfig.have_package('glib-2.0') or show_fail
-PKGConfig.have_package('clutter-1.0') or show_fail
+PKGConfig.have_package('clutter-1.0', 1, 6) or show_fail
 
 find_header("rbgobject.h", *$:) or show_fail
 
@@ -37,10 +37,10 @@ $objs = %w{ rbclutter.o rbcltactor.o rbcltalpha.o rbcltbehaviour.o rbcltbehaviou
 + %w{ rbcltmedia.o rbcltshader.o rbcltcallbackfunc.o rbcltframesource.o } \
 + %w{ rbcltstagemanager.o rbcltchildmeta.o rbcltscript.o rbcltscore.o } \
 + %w{ rbcltlistmodel.o rbcltmodel.o rbcltpath.o rbcltanimation.o rbcltlayoutmanager.o } \
-+ %w{ rbcltflowlayout.o rbcltbox.o rbcltlayoutmeta.o rbcltboxlayout.o }
++ %w{ rbcltflowlayout.o rbcltbox.o rbcltlayoutmeta.o rbcltboxlayout.o rbcltfixedlayout.o } \
++ %w{ rbcltbinlayout.o rbcltalignconstraint.o rbcltbindconstraint.o }
 
 # Disabled building the COGL components for now. - andrew@orospakr.ca
-
 # $objs += %w{ rbcogl.o rbcogltexture.o rbcoglprimitives.o } \
 # + %w{ rbcoglshader.o rbcoglprogram.o rbcogloffscreen.o }
 

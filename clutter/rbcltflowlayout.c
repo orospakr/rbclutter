@@ -1,6 +1,6 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
  * Copyright (C) 2007-2008  Neil Roberts
- * Copyright (C) 2011       Andrew Clunis
+ * Copyright (C) 2011       Andrew Clunis <andrew@orospakr.ca>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -121,9 +121,12 @@ rbclt_flow_layout_get_column_width (VALUE self)
 {
   ClutterFlowLayout *flow_layout = CLUTTER_FLOW_LAYOUT (RVAL2GOBJ (self));
   gfloat min_width, max_width;
+  VALUE answer = rb_hash_new();
 
   clutter_flow_layout_get_column_width (flow_layout, &min_width, &max_width);
-  return rb_ary_new3 (2, rb_float_new (min_width), rb_float_new (max_width));
+  rb_hash_aset (answer, rb_intern("min"), rb_float_new (min_width));
+  rb_hash_aset (answer, rb_intern("max"), rb_float_new (max_width));
+  return answer;
 }
 
 static VALUE
@@ -141,10 +144,13 @@ rbclt_flow_layout_get_row_height (VALUE self)
 {
   ClutterFlowLayout *flow_layout = CLUTTER_FLOW_LAYOUT (RVAL2GOBJ (self));
   gfloat min_height, max_height;
+  VALUE answer = rb_hash_new ();
 
   clutter_flow_layout_get_row_height (flow_layout, &min_height, &max_height);
+  rb_hash_aset (answer, rb_intern("min"), rb_float_new (min_height));
+  rb_hash_aset (answer, rb_intern("max"), rb_float_new (max_height));
   
-  return rb_ary_new3 (2, rb_float_new (min_height), rb_float_new (max_height));
+  return answer;
 }
 
 void

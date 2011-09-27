@@ -1,6 +1,6 @@
 /* Ruby bindings for the Clutter 'interactive canvas' library.
  * Copyright (C) 2007-2008  Neil Roberts
- * Copyright (C) 2011       Andrew Clunis
+ * Copyright (C) 2011       Andrew Clunis <andrew@orospakr.ca>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
