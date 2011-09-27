@@ -36,7 +36,7 @@ static VALUE
 rbclt_box_layout_pack (VALUE self, VALUE actor, VALUE expand, VALUE x_fill, VALUE y_fill, VALUE x_align, VALUE y_align)
 {
   ClutterBoxLayout *layout = CLUTTER_BOX_LAYOUT (RVAL2GOBJ (self));
-  ClutterActor *g_actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterActor *g_actor = CLUTTER_ACTOR (RVAL2GOBJ (actor));
 
   clutter_box_layout_pack (layout, g_actor, RVAL2CBOOL (expand), RVAL2CBOOL (x_fill), RVAL2CBOOL (y_fill), RVAL2GENUM (x_align, CLUTTER_TYPE_BOX_ALIGNMENT), RVAL2GENUM (y_align, CLUTTER_TYPE_BOX_ALIGNMENT));
   return Qnil;
@@ -46,7 +46,7 @@ static VALUE
 rbclt_box_layout_set_alignment (VALUE self, VALUE actor, VALUE x_align, VALUE y_align)
 {
   ClutterBoxLayout *layout = CLUTTER_BOX_LAYOUT (RVAL2GOBJ (self));
-  ClutterActor *g_actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterActor *g_actor = CLUTTER_ACTOR (RVAL2GOBJ (actor));
 
   clutter_box_layout_set_alignment (layout, g_actor, RVAL2GENUM (x_align, CLUTTER_TYPE_BOX_ALIGNMENT), RVAL2GENUM (y_align, CLUTTER_TYPE_BOX_ALIGNMENT));
 
@@ -57,7 +57,7 @@ static VALUE
 rbclt_box_layout_get_alignment (VALUE self, VALUE actor)
 {
   ClutterBoxLayout *layout = CLUTTER_BOX_LAYOUT (RVAL2GOBJ (self));
-  ClutterActor *g_actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterActor *g_actor = CLUTTER_ACTOR (RVAL2GOBJ (actor));
 
   ClutterBoxAlignment x_align, y_align;
   VALUE answer = rb_hash_new ();
@@ -72,7 +72,7 @@ static VALUE
 rbclt_box_layout_set_expand (VALUE self, VALUE actor, VALUE expand)
 {
   ClutterBoxLayout *layout = CLUTTER_BOX_LAYOUT (RVAL2GOBJ (self));
-  ClutterActor *g_actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterActor *g_actor = CLUTTER_ACTOR (RVAL2GOBJ (actor));
 
   clutter_box_layout_set_expand (layout, g_actor, RVAL2CBOOL (expand));
 
@@ -83,7 +83,7 @@ static VALUE
 rbclt_box_layout_get_expand (VALUE self, VALUE actor)
 {
   ClutterBoxLayout *layout = CLUTTER_BOX_LAYOUT (RVAL2GOBJ (self));
-  ClutterActor *g_actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterActor *g_actor = CLUTTER_ACTOR (RVAL2GOBJ (actor));
 
   return CBOOL2RVAL (clutter_box_layout_get_expand (layout, g_actor));
 }
@@ -92,7 +92,7 @@ static VALUE
 rbclt_box_layout_set_fill (VALUE self, VALUE actor, VALUE x_fill, VALUE y_fill)
 {
   ClutterBoxLayout *layout = CLUTTER_BOX_LAYOUT (RVAL2GOBJ (self));
-  ClutterActor *g_actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterActor *g_actor = CLUTTER_ACTOR (RVAL2GOBJ (actor));
 
   clutter_box_layout_set_fill (layout, g_actor, RVAL2CBOOL (x_fill), RVAL2CBOOL (y_fill));
 
@@ -103,7 +103,7 @@ static VALUE
 rbclt_box_layout_get_fill (VALUE self, VALUE actor)
 {
   ClutterBoxLayout *layout = CLUTTER_BOX_LAYOUT (RVAL2GOBJ (self));
-  ClutterActor *g_actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterActor *g_actor = CLUTTER_ACTOR (RVAL2GOBJ (actor));
   gboolean x_fill, y_fill;
   VALUE answer = rb_hash_new ();
   
