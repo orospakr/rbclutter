@@ -1,26 +1,22 @@
-Ruby-Clutter -- Ruby bindings for Clutter-1.x.x
+Ruby-Clutter -- Ruby bindings for Clutter-1.6.x
 ===============================================
 
-This is a set of bindings for the Clutter 1.x.x libraries for use from
+This is a set of bindings for the Clutter 1.6.x libraries for use from
 Ruby.
 
-This particular branch is a patch that was done in 2009 to add support
-for Clutter 1.0 to the Ruby bindings, which no longer appeared to be
-maintained (this is still apparently so in 2011).  This isn't a
-complete port.  Clutter-cairo, in particular, has been disabled, and
-some of the newer API may be missing.
+This particular branch was started in 2009 to add support for Clutter
+1.0 to the Ruby bindings, which no longer appeared to be maintained
+(this is still apparently so in 2011).  This isn't a complete port.
+Clutter-cairo, in particular, has been disabled, and some of the newer
+API may be missing (although I've been trying to add most of it).
 
-I did this patch back in 2009 and haven't really done much to it
-since, and it's only just now occurred to me that I ought to toss it
-up on github.  As such, there might be a few notes that I have
-entirely forgotten about and therefore forgotten to add here. Sorry.
-
-This has been tested with Clutter 1.2 (at least as far as building
-goes).  I assume that this is because 1.x has A(P|B)I stability.
+This has been tested with Clutter 1.6 (at least as far as building
+goes).
 
 Please note that there is another project on GitHub which has done the
 same, but has not ported the GStreamer bindings among other things.  I
-haven't been arsed to properly merge them.
+haven't been arsed to properly merge them, if there's anything that it
+covers that I don't.
 
 https://github.com/mieko/rbclutter-unofficial
 
@@ -41,12 +37,12 @@ Dependencies
 
 To install the bindings the following is also needed:
 
- - Ruby >= 1.8
- - Clutter 1.x.x
- - Ruby GLib bindings
+ - Ruby ~> 1.8
+ - Clutter ~> 1.6.x
+ - Ruby-GNOME2 glib/gobject bindings
 
 The optional clutter-gtk bindings depend on the Ruby GTK+ bindings,
-clutter-cairo depends on the Ruby clutter bindings, and clutter-gst
+clutter-cairo depends on the Ruby cairo bindings, and clutter-gst
 depends on the Ruby gstreamer bindings.  All of these are available
 from the Ruby GNOME2 project, at:
 
@@ -55,11 +51,8 @@ http://ruby-gnome2.sourceforge.jp/
 Issues
 ------
 
-Missing from 1.x port:
-
 * Fixed examples
 * ClutterCairoTexture
-* LayoutManagers
 * A systematic trip through the entire API to add anything missing
 
 Here is my quick list of things that are (probably) missing.  I might
@@ -74,16 +67,6 @@ binding-pool ?
 cairo-texture
 click-action
 clone
-constraint
-path-constraint
-bind-constraint
-align-constraint
-layout-manager
-layout-meta
-fixed-layout
-flow-layout
-bin-layout
-box
 deform-effect
 desaturate-effect
 colorize-effect
