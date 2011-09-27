@@ -310,6 +310,27 @@ rbclt_actor_get_abs_allocation_vertices (VALUE self)
 }
 
 static VALUE
+rbclt_actor_add_constraint (VALUE self, VALUE constraint)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterConstraint *g_constraint = CLUTTER_CONSTRAINT (RVAL2GOBJ (constraint));
+
+  clutter_actor_add_constraint (actor, g_constraint);
+
+  return Qnil;
+}
+
+static VALUE
+rbclt_actor_add_constraint_with_name (VALUE self, VALUE name, VALUE constraint)
+{
+  ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterConstraint *g_constraint = CLUTTER_CONSTRAINT (RVAL2GOBJ (constraint));
+
+  clutter_actor_add_constraint_with_name (actor, RVAL2CSTR(name), g_constraint);
+  return Qnil;
+}
+
+static VALUE
 rbclt_actor_geometry (VALUE self)
 {
   ClutterActor *actor = CLUTTER_ACTOR (RVAL2GOBJ (self));
@@ -688,7 +709,7 @@ rbclt_actor_animate (VALUE self, VALUE mode, VALUE duration, VALUE properties)
 
       if (current_property == Qnil) {
         rb_raise(rb_eArgError, "Properties must not be nil!");
-        return;
+        return Qnil;
        }
 
       rbgobj_initialize_gvalue(&gv, current_property);
@@ -752,6 +773,8 @@ rbclt_actor_init ()
   rb_define_alias (klass, "allocation_vertices", "get_allocation_vertices");
   rb_define_method (klass, "abs_allocation_vertices",
                     rbclt_actor_get_abs_allocation_vertices, 0);
+  rb_define_method (klass, "add_constraint", rbclt_actor_add_constraint, 1);
+  rb_define_method (klass, "add_constraint_with_name", rbclt_actor_add_constraint_with_name, 2);
   rb_define_method (klass, "geometry", rbclt_actor_geometry, 0);
   rb_define_method (klass, "set_geometry", rbclt_actor_set_geometry, 1);
   rb_define_method (klass, "set_size", rbclt_actor_set_size, 2);

@@ -51,11 +51,13 @@ http://ruby-gnome2.sourceforge.jp/
 Issues
 ------
 
-* Fixed examples
-* ClutterCairoTexture
-* A systematic trip through the entire API to add anything missing
+* Examples are all broken
+* A systematic trip needed through the entire API to add anything
+  missing
 * There are a lot of warnings, the results of both bugs and
   deprecations.  They were hidden before because -Wall wasn't enabled.
+* Thanks to GIR, https://github.com/mvz/ruby-gir-ffi is probably going
+  to entirely obsolete this before too long.
 
 Here is my quick list of things that are (probably) missing.  I might
 have marked some things that are internal by mistake:
