@@ -37,7 +37,7 @@ static VALUE
 rbclt_bin_layout_set_alignment (VALUE self, VALUE child, VALUE x_align, VALUE y_align)
 {
   ClutterBinLayout *layout = CLUTTER_BIN_LAYOUT (RVAL2GOBJ (self));
-  ClutterActor *g_child = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterActor *g_child = CLUTTER_ACTOR (RVAL2GOBJ (child));
 
   clutter_bin_layout_set_alignment (layout, g_child, RVAL2GENUM (x_align, CLUTTER_TYPE_BIN_ALIGNMENT), RVAL2GENUM (y_align, CLUTTER_TYPE_BIN_ALIGNMENT));
   return Qnil;
@@ -47,7 +47,7 @@ static VALUE
 rbclt_bin_layout_get_alignment (VALUE self, VALUE child)
 {
   ClutterBinLayout *layout = CLUTTER_BIN_LAYOUT (RVAL2GOBJ (self));
-  ClutterActor *g_child = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterActor *g_child = CLUTTER_ACTOR (RVAL2GOBJ (child));
   VALUE answer = rb_hash_new ();
   ClutterBinAlignment x_align, y_align;
 
@@ -61,7 +61,7 @@ static VALUE
 rbclt_bin_layout_add (VALUE self, VALUE child, VALUE x_align, VALUE y_align)
 {
   ClutterBinLayout *layout = CLUTTER_BIN_LAYOUT (RVAL2GOBJ (self));
-  ClutterActor *g_child = CLUTTER_ACTOR (RVAL2GOBJ (self));
+  ClutterActor *g_child = CLUTTER_ACTOR (RVAL2GOBJ (child));
 
   clutter_bin_layout_add (layout, g_child, RVAL2GENUM (x_align, CLUTTER_TYPE_BIN_ALIGNMENT), RVAL2GENUM (y_align, CLUTTER_TYPE_BIN_ALIGNMENT));
 
