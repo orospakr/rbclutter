@@ -54,6 +54,14 @@ rbclt_text_initialize (int argc, VALUE *argv, VALUE self)
 }
 
 static VALUE
+rbclt_text_set_line_alignment (VALUE self, VALUE alignment)
+{
+  ClutterText *text = CLUTTER_TEXT (RVAL2GOBJ (self));
+  clutter_text_set_line_alignment (text, RVAL2GENUM (alignment, PANGO_TYPE_ALIGNMENT));
+  return Qnil;
+}
+
+static VALUE
 rbclt_text_layout (VALUE self)
 {
   ClutterText *text = CLUTTER_TEXT (RVAL2GOBJ (self));
@@ -66,5 +74,6 @@ rbclt_text_init ()
   VALUE klass = G_DEF_CLASS (CLUTTER_TYPE_TEXT, "Text", rbclt_c_clutter);
 
   rb_define_method (klass, "initialize", rbclt_text_initialize, -1);
+  rb_define_method (klass, "set_line_alignment", rbclt_text_set_line_alignment, 1);
   rb_define_method (klass, "layout", rbclt_text_layout, 0);
 }
