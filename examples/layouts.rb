@@ -10,6 +10,8 @@ TEXT_COLOR = Clutter::Color.new(0x00, 0x00, 0x00, 0xff)
 # In order to see the weird assertion failure on destruction:
 # gdb --args ruby ./layouts.rb --g-fatal-warnings
 
+# I ran this against Clutter 1.6.
+
 # This is the traceback I get:
 
 # GLib-GObject-WARNING **: instance with invalid (NULL) class pointer
