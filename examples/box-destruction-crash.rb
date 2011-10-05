@@ -60,6 +60,7 @@ Clutter::init()
 class Window
   def destroy_clutter_box()
     @container.destroy()
+#    @layout.destroy()
   end
 
   def initialize()
@@ -71,7 +72,10 @@ class Window
     default = Clutter::Backend.default()
     default.set_resolution(96)
 
-    @container = Clutter::Box.new(Clutter::BinLayout.new())
+    puts "MAKING BINLAYOUT"
+    @layout = Clutter::BinLayout.new(Clutter::BinAlignment::CENTER, Clutter::BinAlignment::CENTER)
+    puts "DONE MAKING BINLAYOUT"
+    @container = Clutter::Box.new(@layout)
 
 
     stage.add(@container)
@@ -87,6 +91,7 @@ puts "Wait 4 seconds..."
 GLib::Timeout.add(4000) do
   puts "Attempting to destroy my ClutterBox!"
   w.destroy_clutter_box()
+  return false
 end
 
 Clutter::main()

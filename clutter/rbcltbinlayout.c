@@ -73,7 +73,7 @@ rbclt_bin_layout_init ()
 {
   VALUE klass = G_DEF_CLASS (CLUTTER_TYPE_BIN_LAYOUT, "BinLayout", rbclt_c_clutter);
 
-  rb_define_method (klass, "initalize", rbclt_bin_layout_initialize, 2);
+  rb_define_method (klass, "initialize", rbclt_bin_layout_initialize, 2);
   rb_define_method (klass, "set_alignment", rbclt_bin_layout_set_alignment, 3);
   rb_define_method (klass, "get_alignment", rbclt_bin_layout_get_alignment, 1);
   rb_define_method (klass, "add", rbclt_bin_layout_add, 3);

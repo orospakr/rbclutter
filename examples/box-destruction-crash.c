@@ -36,8 +36,8 @@ int main (int argc, char *argv[]) {
   clutter_actor_set_size (stage, 800, 600);
 
   // I only crash if I use a bin layout...!?
-  layout = clutter_bin_layout_new (CLUTTER_BIN_ALIGNMENT_CENTER,
-                                               CLUTTER_BIN_ALIGNMENT_CENTER);
+  layout = g_object_ref_sink (clutter_bin_layout_new (CLUTTER_BIN_ALIGNMENT_CENTER,
+                                                      CLUTTER_BIN_ALIGNMENT_CENTER));
 
   box = clutter_box_new (layout);
   
